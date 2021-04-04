@@ -18,7 +18,7 @@ unzip, and burn into the new raspberry sdcard, ex:
 > SDCARD_DEV=/dev/mmcblk0
 
 # burn it to the card
-> dd if=2021-03-04-raspios-buster-armhf-lite.img of=$SDCARD_DEV
+> dd if=2021-03-04-raspios-buster-armhf-lite.img of=$SDCARD_DEV conv=fsync
 ```
 
 Now insert the card in the raspberry pi, and plug in:
@@ -37,4 +37,25 @@ password: raspberry
 > sudo systemctl start ssh
 ```
 
-From there you can run the ansible scripts to get the rest.
+Then you'll have to run the setup pi using the playbook, first add the new host
+to the inventory:
+
+```
+# inventory.yml
+...
+            cluster1:
+              ansible_host: 192.168.1.21
+              # needed as raspberry os currently uses python2 by default
+              ansible_python_interpreter: /usr/bin/python3
++            cluster2:
++              ansible_host: 192.168.1.22
++              # needed as raspberry os currently uses python2 by default
++              ansible_python_interpreter: /usr/bin/python3
+```
+
+And apply it:
+```
+> ansible-palybook -i inventory.yml setup-raspberry.yml
+```
+
+That will setup the users and cleanup some of the default stuff.

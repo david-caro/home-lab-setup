@@ -1,0 +1,10 @@
+---
+- name: Disable SSH password authentication
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify:
+    - Reboot PI

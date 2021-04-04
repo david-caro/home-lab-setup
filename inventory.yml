@@ -1,0 +1,33 @@
+---
+all:
+  children:
+    cluster:
+      children:
+        rasbperries:
+          hosts:
+            node1:
+              ansible_host: 192.168.1.21
+              ipaddress: 192.168.1.21
+              # needed as raspberry os currently uses python2 by default
+              ansible_python_interpreter: /usr/bin/python3
+              hostname: node1
+            node2:
+              ansible_host: 192.168.1.30
+              ipaddress: 192.168.1.22
+              # needed as raspberry os currently uses python2 by default
+              ansible_python_interpreter: /usr/bin/python3
+              hostname: node2
+            node3:
+              ansible_host: 192.168.1.30
+              ipaddress: 192.168.1.23
+              # needed as raspberry os currently uses python2 by default
+              ansible_python_interpreter: /usr/bin/python3
+              hostname: node3
+            node4:
+              ansible_host: 192.168.1.24
+              ipaddress: 192.168.1.24
+              # needed as raspberry os currently uses python2 by default
+              ansible_python_interpreter: /usr/bin/python3
+              hostname: node4
+
+

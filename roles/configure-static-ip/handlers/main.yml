@@ -1,0 +1,10 @@
+---
+- name: Reboot PI
+  become: true
+  vars:
+    ansible_ssh_user: "{{ users[0].name }}"
+  command: shutdown -r +0 'Ansible Reboot triggered'
+  async: 0
+  poll: 0
+  ignore_errors: true
+
