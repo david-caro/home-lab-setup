@@ -5,7 +5,8 @@ all:
       children:
         rasbperries:
           children:
-            server:
+            # this should be an odd number of servers
+            servers:
               hosts:
                 node1:
                   # change this to the ip the host gets when turned on the
@@ -17,8 +18,6 @@ all:
                   # needed as raspberry os currently uses python2 by default
                   ansible_python_interpreter: /usr/bin/python3
                   hostname: node1
-            agents:
-              hosts:
                 node2:
                   ansible_host: 192.168.1.22
                   ipaddress: 192.168.1.22
@@ -31,6 +30,8 @@ all:
                   # needed as raspberry os currently uses python2 by default
                   ansible_python_interpreter: /usr/bin/python3
                   hostname: node3
+            agents:
+              hosts:
                 node4:
                   ansible_host: 192.168.1.24
                   ipaddress: 192.168.1.24

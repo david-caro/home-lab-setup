@@ -1,0 +1,16 @@
+---
+- name: remove the agents
+  hosts: agents
+  tasks:
+    - name: uninstall agent
+      shell:
+        cmd: k3s-agent-uninstall.sh
+        removes: /usr/local/bin/k3s
+
+- name: remove the servers
+  hosts: servers
+  tasks:
+    - name: uninstall server
+      shell:
+        cmd: k3s-uninstall.sh
+        removes: /usr/local/bin/k3s

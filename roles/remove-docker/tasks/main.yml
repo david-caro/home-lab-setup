@@ -1,7 +1,0 @@
----
-- name: remove docker.io
-  become: true
-  ansible.builtin.apt:
-    name: docker.io
-    state: removed
-    update_cache: yes
