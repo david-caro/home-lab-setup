@@ -12,13 +12,13 @@ all:
               ansible_python_interpreter: /usr/bin/python3
               hostname: node1
             node2:
-              ansible_host: 192.168.1.30
+              ansible_host: 192.168.1.22
               ipaddress: 192.168.1.22
               # needed as raspberry os currently uses python2 by default
               ansible_python_interpreter: /usr/bin/python3
               hostname: node2
             node3:
-              ansible_host: 192.168.1.30
+              ansible_host: 192.168.1.23
               ipaddress: 192.168.1.23
               # needed as raspberry os currently uses python2 by default
               ansible_python_interpreter: /usr/bin/python3

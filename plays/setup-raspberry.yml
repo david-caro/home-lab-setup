@@ -1,13 +1,16 @@
 ---
-- name: setup rasberry pi for the first time
+- name: add users to pi
   hosts: rasbperries
+  vars:
+    ansible_ssh_user: pi
+    ansible_ssh_pass: raspberry
   roles:
     - setup-users
+
+- name: finish setting up
+  hosts: rasbperries
+  roles:
     - set-hostname
     - configure-static-ip
     - disable-ssh-password
-
-  tasks:
-    - name: Wait for the PI to be up again
-      local_action: "wait_for host={{ ipaddress }} state=started port=22 delay=50 timeout=120"
-      become: false
+    - remove-pi-user

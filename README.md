@@ -18,7 +18,7 @@ unzip, and burn into the new raspberry sdcard, ex:
 > SDCARD_DEV=/dev/mmcblk0
 
 # burn it to the card
-> dd if=2021-03-04-raspios-buster-armhf-lite.img of=$SDCARD_DEV conv=fsync
+> sudo dd if=2021-03-04-raspios-buster-armhf-lite.img of=$SDCARD_DEV bs=4M conv=fsync status=progress
 ```
 
 Now insert the card in the raspberry pi, and plug in:
@@ -35,6 +35,17 @@ login: pi
 password: raspberry
 > sudo systemctl enable ssh
 > sudo systemctl start ssh
+```
+
+You'll need ansible to follow the next steps. On CentOs based systems you can install it by running the following command as root:
+```
+> sudo dnf install ansible
+```
+
+You might also want to install ansible-collection-ansible-posix.noarch if it's not already installed. It's used for setting up ssh keys (in setup_users tasks).
+
+```
+> dnf install ansible-collection-ansible-posix.noarch
 ```
 
 Then you'll have to run the setup pi using the playbook, first add the new host

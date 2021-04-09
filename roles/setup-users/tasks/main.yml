@@ -1,9 +1,6 @@
 ---
 - name: setup users
   become: true
-  vars:
-    ansible_ssh_pass: raspberry
-    ansible_ssh_user: pi
   ansible.builtin.user:
     name: "{{ item.name }}"
     groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi
@@ -11,9 +8,6 @@
 
 - name: setup ssh keys
   become: true
-  vars:
-    ansible_ssh_pass: raspberry
-    ansible_ssh_user: pi
   ansible.posix.authorized_key:
     state: present
     user: "{{ item.name }}"
@@ -22,9 +16,6 @@
 
 - name: enable ssh
   become: true
-  vars:
-    ansible_ssh_pass: raspberry
-    ansible_ssh_user: pi
   ansible.builtin.service:
     name: ssh
     enabled: true
@@ -32,9 +23,6 @@
 
 - name: allow passwordless sudo
   become: true
-  vars:
-    ansible_ssh_pass: raspberry
-    ansible_ssh_user: pi
   ansible.builtin.copy:
     dest: "/etc/sudoers.d/010_{{ item.name }}-nopasswd"
     owner: root
@@ -42,16 +30,3 @@
     mode: '0440'
     content: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
   loop: "{{ users }}"
-
-- name: remove pi default user
-  become: true
-  ansible.builtin.user:
-    name: "pi"
-    force: true
-    state: absent
-
-- name: remove pi user passwordless sudo
-  become: true
-  ansible.builtin.file:
-    dest: "/etc/sudoers.d/010_pi-nopasswd"
-    state: absent

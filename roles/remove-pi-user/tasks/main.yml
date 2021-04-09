@@ -1,0 +1,12 @@
+- name: remove pi default user
+  become: true
+  ansible.builtin.user:
+    name: "pi"
+    force: true
+    state: absent
+
+- name: remove pi user passwordless sudo
+  become: true
+  ansible.builtin.file:
+    dest: "/etc/sudoers.d/010_pi-nopasswd"
+    state: absent
