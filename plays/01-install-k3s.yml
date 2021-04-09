@@ -1,0 +1,20 @@
+---
+- name: install k3s users and common tasks
+  hosts: server,agents
+  roles:
+    #- install-docker # not needed, k3s uses containerd directly (crictl)
+    - remove-docker
+    - k3s-common
+
+- name: install k3s server node
+  hosts: server
+  vars:
+    ansible_ssh_user: kubeadmin
+  roles:
+    - k3s-server
+
+#- name: install k3s agents
+#  hosts: agents
+#  roles:
+#    - k3s-agent
+#

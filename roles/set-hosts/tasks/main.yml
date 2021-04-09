@@ -1,0 +1,9 @@
+---
+- name: add all nodes to the hosts file
+  become: true
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: ".*{{ hostvars[item].hostname }}$"
+    line: "{{ hostvars[item].ipaddress }} {{ hostvars[item].hostname}}"
+    state: "present"
+  loop: "{{ groups['cluster'] }}"

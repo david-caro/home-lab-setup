@@ -1,0 +1,33 @@
+---
+- name: Add kubeadmin user
+  become: true
+  ansible.builtin.user:
+    name: kubeadmin
+    groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi,docker
+
+- name: Add our users to the kubeadmin ssh auth keys
+  become: true
+  ansible.posix.authorized_key:
+    state: present
+    user: kubeadmin
+    key: "{{ item.ssh_public_key }}"
+  loop: "{{ users }}"
+
+- name: allow passwordless sudo for kuebadmin
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/010_kubeadmin-nopasswd"
+    owner: root
+    group: root
+    mode: '0440'
+    content: "kubeadmin ALL=(ALL) NOPASSWD: ALL"
+
+- name: copy k3s installer
+  become: true
+  copy:
+    src: roles/k3s-common/files/k3s_installer.sh
+    dest: /home/kubeadmin/k3s_installer.sh
+    owner: kubeadmin
+    group: kubeadmin
+    mode: 0750
+

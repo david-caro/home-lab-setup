@@ -1,0 +1,5 @@
+---
+- name: install k3s
+  become: true
+  shell:
+    cmd: ./k3s_installer.sh
