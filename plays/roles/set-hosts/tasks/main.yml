@@ -3,7 +3,7 @@
   become: true
   lineinfile:
     dest: "/etc/hosts"
-    regexp: ".*{{ hostvars[item].hostname }}$"
-    line: "{{ hostvars[item].ipaddress }} {{ hostvars[item].hostname}}"
+    regexp: ".*{{ item }}$"
+    line: "{{ hostvars[item].desired_ipaddress }} {{ item }}"
     state: "present"
-  loop: "{{ groups['cluster'] }}"
+  loop: "{{ groups['all'] }}"

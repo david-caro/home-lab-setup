@@ -51,49 +51,41 @@ not already installed. It's used for setting up ssh keys (in setup_users tasks).
 ```
 
 Then you'll have to run the setup pi using the playbook, first add the new host
-to the inventory:
+to the inventory, first to the `raspberries` group, with the current ip of the
+server, and then to the `cluster` and `k3servers` groups:
 
 If it's an k3s agent:
 ```
-# inventory.yml
+# inventory.ini
+[raspberries]
 ...
-  cluster:
-    children:
-      ...
-      agents:
-        hosts:
-          node2:
-            ansible_host: 192.168.1.22
-            ipaddress: 192.168.1.22
-            # needed as raspberry os currently uses python2 by default
-            ansible_python_interpreter: /usr/bin/python3
-            hostname: node2
-+         node3:
-+           ansible_host: 192.168.1.153
-+           ipaddress: 192.168.1.23
-+           # needed as raspberry os currently uses python2 by default
-+           ansible_python_interpreter: /usr/bin/python3
-+           hostname: node3
+node1 ansible_host=192.168.1.21
+node2 ansible_host=192.168.1.22
++ node3 ansible_host=192.168.1.187
+
+[cluster]
+node1
+node2
++ node3
+
+[k3servers]
+# there should be an odd number of hosts in this group
+node1
+node2
++ node3
 ```
 
-If it's one of the k3s servers (remember that they should be an odd number):
+Now we need to add a new host var file under `host_vars/node3.yml` with the
+desired ip:
 ```
-# inventory.yml
-...
-  cluster:
-    children:
-      servers:
-        hosts:
-+         node1:
-+           ansible_host: 192.168.1.212
-+           ipaddress: 192.168.1.21
-+           # needed as raspberry os currently uses python2 by default
-+           ansible_python_interpreter: /usr/bin/python3
-+           hostname: node2
+# host_vars/node3.yml
+---
+desired_ipaddress: 192.168.1.23
 ```
 
-For all, this requires the `pi` user to exist with the default password,
-so it can only be run once (then the user is deleted):
+
+The first time, the system only has th `pi` user, and the following expects
+that user to exist with the default password (then the user is deleted):
 ```
 > ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.yml plays/setup-raspberry-01.yml
 ```
@@ -111,28 +103,27 @@ playbook (in a different play as it uses a different user now):
 That will update the hosts file on all the nodes, change some kernel setting,
 and finish up the basic installation.
 
+
 #### Upgrading to Debian 11
-As we want Debian 11, we have to upgrade (until the Raspberry OS images are
-out), for that you havet to run setup 03, that might take a while though, so
-prepare some coffe or something:
+As we want Debian 11 on the k3s nodes, we have to upgrade (until the Raspberry
+OS images are out), for that you havet to run setup 03, that might take a
+while though, so prepare some coffe or something:
 ```
 > ansible-playbook -i inventory.yml setup-laptop-03.yml
 ```
-
 
 ### Refresh your laptop settings
 Now that we have the host set properly, we can update the inventory with the
 correct ip, and update our laptop hosts settings:
 
-Changes the `inventory.yml` file:
+Changes the `inventory.ini` file:
 ```
-       node3:
--           ansible_host: 192.168.1.153
-+           ansible_host: 192.168.1.23
-           ipaddress: 192.168.1.23
-           # needed as raspberry os currently uses python2 by default
-           ansible_python_interpreter: /usr/bin/python3
-           hostname: node3
+[raspberries]
+...
+node1 ansible_host=192.168.1.21
+node2 ansible_host=192.168.1.22
+- node3 ansible_host=192.168.1.187
++ node3 ansible_host=192.168.1.23
 ```
 
 Run the laptop setup playbook, needs sudo to change the `/etc/hosts` file, so
@@ -165,8 +156,3 @@ with:
 ```
 > kubectl cluster-info
 ```
-
-
-## Preparing to install ceph
-
-In order to install ceph (using cephadmin), we need to make sure 

@@ -1,6 +1,6 @@
 ---
 - name: finish setting up
-  hosts: rasbperries
+  hosts: raspberries
   roles:
     - set-hostname
     - configure-static-ip

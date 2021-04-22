@@ -1,5 +1,5 @@
 ---
 - name: Upgrade to bullseye (debian 11)
-  hosts: rasbperries
+  hosts: raspberries:&cluster
   roles:
     - debian-11-upgraded

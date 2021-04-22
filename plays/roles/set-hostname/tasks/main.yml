@@ -2,19 +2,19 @@
 - name: set hostname
   become: true
   ansible.builtin.hostname:
-    name: "{{ hostname }}"
+    name: "{{ inventory_hostname }}"
 
 - name: set localhost hostname entry in /etc/hosts
   become: true
   lineinfile:
     dest: /etc/hosts
-    line: "127.0.0.1 {{ hostname }}"
+    line: "127.0.0.1 {{ inventory_hostname }}"
     state: present
 
 - name: set hostname entry in /etc/hosts
   become: true
   lineinfile:
     dest: /etc/hosts
-    line: "{{ ipaddress }} {{ hostname }}"
+    line: "{{ desired_ipaddress }} {{ inventory_hostname }}"
     state: present
 
