@@ -1,0 +1,5 @@
+---
+- name: Upgrade to bullseye (debian 11)
+  hosts: rasbperries
+  roles:
+    - debian-11-upgraded

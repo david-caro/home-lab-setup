@@ -3,12 +3,12 @@ Scripts and code to setup and maintain my home lab
 
 # Install
 ## Install the basic OS
-Download the latest Raspberry Pi OS Lite image:
+Download the latest Raspberry Pi OS arm64 Lite image:
 https://www.raspberrypi.org/software/operating-systems/
 
 unzip, and burn into the new raspberry sdcard, ex:
 ```
-> unzip 2021-03-04-raspios-buster-armhf-lite.zip
+> unzip 2021-03-04-raspios-buster-arm64-lite.zip
 
 # check what is the device for the sd card
 > lsblk -p
@@ -16,8 +16,8 @@ unzip, and burn into the new raspberry sdcard, ex:
 # in my laptop is usually
 > SDCARD_DEV=/dev/mmcblk0
 
-# burn it to the card
-> sudo dd if=2021-03-04-raspios-buster-armhf-lite.img of=$SDCARD_DEV bs=4M conv=fsync status=progress
+# burn it to the card, the sync is to make sure caches are flushed
+> sudo dd if=2021-03-04-raspios-buster-arm64-lite.img of=$SDCARD_DEV bs=4M conv=fsync status=progress && sync
 ```
 
 Now insert the card in the raspberry pi, and plug in:
@@ -95,8 +95,12 @@ If it's one of the k3s servers (remember that they should be an odd number):
 For all, this requires the `pi` user to exist with the default password,
 so it can only be run once (then the user is deleted):
 ```
-> ansible-playbook -i inventory.yml plays/setup-raspberry-01.yml
+> ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.yml plays/setup-raspberry-01.yml
 ```
+
+The skipping of host key checking is needed the first time otherwise ansible
+will refuse to ssh to the new node (if you are replacing a node, you might need
+to remove the old ssh key from your `known_hosts` file).
 
 That will setup the users and ssh keys, then you have to run the second
 playbook (in a different play as it uses a different user now):
@@ -106,6 +110,14 @@ playbook (in a different play as it uses a different user now):
 
 That will update the hosts file on all the nodes, change some kernel setting,
 and finish up the basic installation.
+
+#### Upgrading to Debian 11
+As we want Debian 11, we have to upgrade (until the Raspberry OS images are
+out), for that you havet to run setup 03, that might take a while though, so
+prepare some coffe or something:
+```
+> ansible-playbook -i inventory.yml setup-laptop-03.yml
+```
 
 
 ### Refresh your laptop settings
@@ -141,8 +153,7 @@ kubectl and the config from the server host:
 > ansible-playbook -i inventory.yml setup-laptop-02.yml
 ```
 
-
-## Test that everything went ok
+### Test that everything went ok
 
 You can now run, from your laptop:
 ```
@@ -154,3 +165,8 @@ with:
 ```
 > kubectl cluster-info
 ```
+
+
+## Preparing to install ceph
+
+In order to install ceph (using cephadmin), we need to make sure 

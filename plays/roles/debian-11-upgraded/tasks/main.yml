@@ -1,0 +1,36 @@
+---
+- name: Set debian 11 sources
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+    state: present
+    update_cache: no
+  with_items:
+    - deb http://deb.debian.org/debian bullseye main contrib non-free
+    - deb http://deb.debian.org/debian bullseye-updates main contrib non-free
+    - deb http://security.debian.org/debian-security bullseye-security main
+    - deb http://ftp.debian.org/debian bullseye-backports main contrib non-free
+
+- name: Disable debian 10 sources
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+    state: absent
+    update_cache: no
+  with_items:
+    - deb http://deb.debian.org/debian buster main contrib non-free
+    - deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+    - deb http://deb.debian.org/debian buster-updates main contrib non-free
+
+- name: Perform upgrade
+  become: true
+  apt:
+    upgrade: full
+    autoremove: yes
+    update_cache: yes
+    dpkg_options: 'force-confold,force-confdef'
+  when:
+    - ansible_facts['distribution'] == "Debian"
+    - ansible_facts['distribution_major_version'] == "10"
+  notify:
+    - Reboot PI
