@@ -24,7 +24,7 @@
 
 - name: Perform upgrade
   become: true
-  apt:
+  ansible.builtin.apt:
     upgrade: full
     autoremove: yes
     update_cache: yes

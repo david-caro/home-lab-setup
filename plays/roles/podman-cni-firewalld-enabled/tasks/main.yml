@@ -1,0 +1,14 @@
+---
+- name: Install podman
+  become: true
+  ansible.builtin.apt:
+    name: podman
+    dpkg_options: 'force-confold,force-confdef'
+
+- name: setup cni with firewalld
+  become: true
+  lineinfile:
+    dest:  /etc/cni/net.d/87-podman-ptp.conflist
+    state: present
+    regexp: "\"backend\": \"(iptables|firewalld)\""
+    line: "\"backend\": \"firewalld\""

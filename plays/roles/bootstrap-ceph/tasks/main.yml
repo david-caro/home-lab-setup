@@ -1,0 +1,12 @@
+---
+- name: Run cephadm bootstrap
+  become: yes
+  shell:
+    cmd: "cephadm --image={{cephadm_image}} bootstrap --mon-ip {{ansible_host}} --skip-monitoring-stack"
+    creates: /etc/ceph/ceph.pub
+
+- name: Get the cephadm ssh key
+  become: yes
+  slurp:
+    src: '/etc/ceph/ceph.pub'
+  register: cephadm_ssh_key_encoded

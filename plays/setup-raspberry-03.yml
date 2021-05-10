@@ -3,3 +3,9 @@
   hosts: raspberries:&cluster
   roles:
     - debian-11-upgraded
+
+- name: Install podman
+  hosts: raspberries:&cluster
+  roles:
+    - podman-cni-firewalld-enabled
+    - podman-local-registry

@@ -1,0 +1,46 @@
+# [Ceph]
+# name=Ceph packages for $basearch
+# baseurl=http://download.ceph.com/rpm-pacific/el8/$basearch
+# enabled=1
+# gpgcheck=1
+# type=rpm-md
+# gpgkey=https://download.ceph.com/keys/release.asc
+# 
+# [Ceph-noarch]
+# name=Ceph noarch packages
+# baseurl=http://download.ceph.com/rpm-pacific/el8/noarch
+# enabled=1
+# gpgcheck=1
+# type=rpm-md
+# gpgkey=https://download.ceph.com/keys/release.asc
+# 
+# [ceph-source]
+# name=Ceph source packages
+# baseurl=http://download.ceph.com/rpm-pacific/el8/SRPMS
+# enabled=1
+# gpgcheck=1
+# type=rpm-md
+# gpgkey=https://download.ceph.com/keys/release.asc
+
+# Packages with the PMULL fix: https://github.com/ceph/ceph/pull/41079
+[ceph]
+name=ceph packages for $basearch
+baseurl=https://4.chacra.ceph.com/r/ceph/pacific-rocksdb-kefu/b065629155f8a2b420f0d9c32b0fb98e79b86aeb/centos/8/flavors/default/$basearch
+enabled=1
+gpgcheck=0
+type=rpm-md
+
+[ceph-noarch]
+name=ceph noarch packages
+baseurl=https://4.chacra.ceph.com/r/ceph/pacific-rocksdb-kefu/b065629155f8a2b420f0d9c32b0fb98e79b86aeb/centos/8/flavors/default/noarch
+enabled=1
+gpgcheck=0
+type=rpm-md
+
+[ceph-source]
+name=ceph source packages
+baseurl=https://4.chacra.ceph.com/r/ceph/pacific-rocksdb-kefu/b065629155f8a2b420f0d9c32b0fb98e79b86aeb/centos/8/flavors/default/SRPMS
+enabled=1
+gpgcheck=0
+type=rpm-md
+

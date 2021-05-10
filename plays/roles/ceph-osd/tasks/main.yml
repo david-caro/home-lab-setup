@@ -1,0 +1,9 @@
+---
+- name: Wipe USB device
+  become: true
+  shell:
+    cmd: "wipefs --all --force /dev/{{ item }}"
+    removes: "/dev/{{ item }}1"
+  loop: "{{ usb_devices }}"
+  notify:
+    - Refresh devices on ceph orch

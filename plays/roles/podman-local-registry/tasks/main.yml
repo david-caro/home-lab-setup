@@ -1,0 +1,9 @@
+---
+- name: setup local registry entry
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/containers/registries.conf
+    src: roles/podman-local-registry/files/registries.conf
+    owner: root
+    group: root
+    mode: '0644'

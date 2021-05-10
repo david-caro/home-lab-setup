@@ -1,0 +1,5 @@
+---
+- name: Wipe the USB devices
+  hosts: osds
+  become: true
+  tasks:

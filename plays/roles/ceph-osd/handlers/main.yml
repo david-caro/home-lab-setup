@@ -1,0 +1,25 @@
+---
+- name: Refresh devices on ceph orch
+  # it takes a few seconds for ceph to do the refresh
+  delegate_to: "{{ groups['cluster'][0] }}"
+  become: true
+  shell:
+    cmd: "cephadm --image={{ cephadm_image }} shell -- ceph orch device ls --refresh"
+  changed_when: true
+  notify:
+    - Wait for ceph orch device refresh
+
+- name: Wait for ceph orch device refresh
+  delegate_to: "{{ groups['cluster'][0] }}"
+  become: true
+  pause:
+    seconds: 30
+  changed_when: true
+  notify:
+    - Add all detected devices
+
+- name: Add all detected devices
+  delegate_to: "{{ groups['cluster'][0] }}"
+  become: true
+  shell:
+    cmd: "cephadm --image={{ cephadm_image }} shell -- ceph orch apply osd --all-available-devices"

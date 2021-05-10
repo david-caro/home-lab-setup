@@ -1,8 +1,15 @@
 ---
 routers: 192.168.1.254
-dns_servers: 192.168.1.254,8.8.8.8,1.1.1.1
+dns_servers: "192.168.1.254 8.8.8.8 1.1.1.1"
 users:
   - name: dcaro
     ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDRLt5Ss9ykeA6uUfQdB+LeO80zqHND6FiG6aNZ79FaJwGSnVB0QdIvjZUbn6ubllLo/Xx0SfmWvbqp6HLwi5J5xZP21dkUAVDyWqHIbUvDwHrsxYhHw25OnkGE4i/uKzoT1LCCJHt8OF0tgcPLSQZwK9De4xVLgAmZrxWAUzPxLvHnTVsN6qOS6nRG3mgcol90Ny2F1lxIMrsbJEPd3Iso8l2GqCABIXatPPNjiqBel4mJ1VR88gx2vDg2Y8hJqeQ5EYFWincJENq8D812HnunkjKaej5VMK1vCq5H4Q+9UESBWQcT0qNfyRbzfaUuvgxrH0ZslT86yurejusxC8QV/stFzUSoPb7F+8bKkCJL7GmxjBGHOBZWh1Ez7fWys+lkA8Z/gIbq1mRuENkGFnxPazUykH+FV2dpc1x6FrMLpMf4yYKgvQzRTPFK/W9anAp/2CRrECIK21zG+pgARYWnXeWOhrfi5l0Glf5mgVBKmbSJhLPGzmVyfaPkdceLXNM= david@magnum
   - name: dinika
     ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC9xeUD/FhL9egEXZdY7RL67AIYu7O7Lv9LM5SHUh7zJMgYzj4e/gV2maH7HiKXUcyRiYPCj0wFdEsoit1bv4BX48haURKeyt3ITZJ3nQcg8bbtLaTxhGM4YJePuhPTy09J49rifAiWxPqMmydepntBoXrUyjal60UBYHfrsh4iL9xk2isfDEjIHViO+8vY2sToy8VfMjqk3m6gD/YwMV+8LZXHsiOfpoqsz3qvN6vJL1TBW92MIZDZBpaCpvUS9ioaUCniSKoAspxdzpF9J0oHdHO5YNI2Bey021yupTuPiVjM7L7uEQ3KUxgx0LQ4HyFIzCS0G7seIUWmHEEgW7SNiDN2zXtB7Y4Y7fXByoHwm4vdDrFQVvpwr950L4fCZVOoSVnlSt4DK8OI4O+Oh4tOwlwaLE9JQw4eIcViN69rtzE2eWDLq2W6LtHBY8205Oa0Q0RY16NCH39ACprzKdS7qfXJC1aK7UddW85ijoQ7fQzqv/y8B7CgNjcX/EkuhZ7VXC+Pqtg88Jgq0Gvc7DLm/ah1vnIDdRHogOWs7qsNwXYdpVFUpZ/7yovB3VNcVD5JY6oBDI/yLivY47kEY41+MUF9+sINIfEap8CZzyR9E99cdnfFs6N8onq2YDJamEHRMFxiIAYISbkEmiyHc2gdknoR1C2bGYmdGRxihmZwLQ== dinikasaxenas@fedora
+
+# Custom images with the packages from
+# https://4.chacra.ceph.com/r/ceph/pacific-rocksdb-kefu/b065629155f8a2b420f0d9c32b0fb98e79b86aeb/centos/8/flavors/default/
+# with patches:
+# * https://github.com/ceph/ceph/pull/41079 - aarcm64 rocksdb fix
+# * https://github.com/ceph/ceph/pull/41118 - ceph-volume tmpfs fix
+cephadm_image: docker://192.168.1.12:5000/ceph/ceph:v16.2.1_aarch64_rpi4

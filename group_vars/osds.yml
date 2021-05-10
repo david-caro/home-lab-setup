@@ -1,0 +1,4 @@
+---
+usb_devices:
+  - sda
+  - sdb

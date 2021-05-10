@@ -1,0 +1,36 @@
+---
+- name: destroy the current ceph cluster (CAREFUL!)
+  hosts: cluster
+  gather_facts: false
+  vars_prompt:
+    - name: i_am_really_sure
+      prompt: Are you really really sure?
+      default: no
+      private: no
+
+  tasks:
+    - name: get existing cluster ids
+      become: true
+      ansible.builtin.shell:
+        cmd: "cephadm --image={{ cephadm_image }} ls | jq '.[].fsid' -r | sort | uniq"
+      register: fsids_raw
+      when: i_am_really_sure | bool
+
+    - name: Delete cluster
+      become: true
+      ansible.builtin.shell:
+        cmd: "cephadm --image={{ cephadm_image }} rm-cluster --force --fsid {{ item }}"
+      with_items: "{{ fsids_raw.stdout_lines }}"
+      when: i_am_really_sure | bool
+
+    - name: Wipe usbs
+      become: true
+      ansible.builtin.shell:
+        cmd: "wipefs --all --force /dev/{{ item }}"
+      loop: "{{ usb_devices }}"
+      when: i_am_really_sure | bool
+
+    - name: Reboot everyone
+      become: true
+      ansible.builtin.reboot:
+      when: i_am_really_sure | bool

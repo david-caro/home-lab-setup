@@ -8,4 +8,4 @@
     - remove-pi-user
     - set-hosts
     - activate-cgroup-support
-    - enable-legacy-iptables
+    # - enable-legacy-iptables
