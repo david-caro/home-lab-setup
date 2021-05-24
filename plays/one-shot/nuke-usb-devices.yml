@@ -1,0 +1,10 @@
+---
+- name: Wipe the USB devices
+  hosts: osds
+  become: true
+  tasks:
+    - name: Wipe USB device
+      become: true
+      shell:
+        cmd: "wipefs --all --force /dev/{{ item }}"
+      loop: "{{ usb_devices }}"

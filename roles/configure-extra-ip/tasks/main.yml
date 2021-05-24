@@ -1,0 +1,15 @@
+---
+- name: Add dhcpcd exit hook
+  become: true
+  template:
+    src: roles/configure-extra-ip/templates/extra_eth0.j2
+    dest: /etc/network/interfaces.d/extra_eth0
+  when: k3s_address is defined
+
+- name: Add dhcpcd exit hook
+  become: true
+  copy:
+    dest: "/etc/dhcpcd.exit-hook"
+    content: "ifup eth0:0"
+  when: k3s_address is defined
+  notify: Manually add extra IP

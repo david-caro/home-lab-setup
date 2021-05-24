@@ -1,0 +1,6 @@
+---
+- name: Create apps
+  include_tasks: create_app.yml
+  loop: "{{ apps }}"
+  loop_control:
+    loop_var: current_app

@@ -1,0 +1,12 @@
+---
+- name: install first k3s server
+  become: true
+  shell:
+    cmd: ./k3s_installer.sh
+    creates: /usr/local/bin/k3s
+
+- name: Get join token
+  become: yes
+  slurp:
+    src: '/var/lib/rancher/k3s/server/node-token'
+  register: k3s_node_token_encoded

@@ -1,0 +1,17 @@
+---
+- name: "Checking if volume {{ current_volume.name }} exists"
+  shell:
+    cmd: cephadm shell -- rbd ls {{ app_volumes_ceph_pool }}
+
+  register: volume_exists
+  ignore_errors: true
+
+- name: "Create volume '{{ current_volume.name }}'"
+  become: true
+  shell:
+    cmd: >-
+      cephadm shell -- rbd create
+      --pool {{ app_volumes_ceph_pool }}
+      --image {{ current_volume.name }}
+      --size {{ current_volume.size }}
+  when: volume_exists.stdout.find(current_volume.name) == -1

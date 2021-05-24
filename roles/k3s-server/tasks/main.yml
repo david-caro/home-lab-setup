@@ -1,0 +1,11 @@
+---
+- name: install k3s
+  become: true
+  shell:
+    cmd: ./k3s_installer.sh
+    creates: /usr/local/bin/k3s
+  environment:
+    INSTALL_K3S_EXEC: >-
+      server
+      --server=https://{{ hostvars[groups['k3servers'][0]].ansible_host }}:6443
+      --cluster-secret={{ hostvars[groups['k3servers'][0]].k3s_node_token_encoded.content | b64decode | trim }}

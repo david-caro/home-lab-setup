@@ -1,0 +1,37 @@
+---
+- name: Setup basic ceph prerequisites
+  hosts: cluster
+  roles:
+    - ceph-common
+
+- name: Bootstrap the cluster
+  hosts: cluster[0]
+  roles:
+    - bootstrap-ceph
+
+- name: Add the other nodes
+  hosts: cluster[1:]
+  roles:
+    - init-ceph-node
+
+- name: Add all of them as osds
+  hosts: cluster
+  roles:
+    - ceph-osd
+
+- name: Raise open files limit
+  become: true
+  hosts: cluster
+  tasks:
+    - name: Set fs.nr_open to very high limit
+      ansible.builtin.copy:
+        dest: "/etc/sysctl.d/98-open-file-limit.conf"
+        owner: root
+        group: root
+        mode: '0440'
+        content: "fs.nr_open=104857600"
+      notify: Manually set the number of open files
+  handlers:
+    - name: Manually set the number of open files
+      shell:
+        cmd: "sysctl fs.nr_open=104857600"

@@ -1,0 +1,12 @@
+---
+- name: finish setting up
+  hosts: raspberries
+  roles:
+    - set-hostname
+    - configure-static-ip
+    - disable-ssh-password
+    - remove-pi-user
+    - set-hosts
+      #- configure-extra-ip
+    - activate-cgroup-support
+    - enable-legacy-iptables

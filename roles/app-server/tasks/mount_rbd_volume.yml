@@ -1,0 +1,36 @@
+---
+- name: "Gather nbd mapped volumes"
+  nbd_mappings_facts:
+
+- name: "Map volume '{{ current_volume.name }}' under /dev/nbd*"
+  shell:
+    cmd: "(nohup rbd-nbd map {{ app_volumes_ceph_pool }}/{{ current_volume.name }} >/dev/null 2>&1 &); sleep 10"
+  when: current_volume.name not in ansible_facts['nbd_mappings']
+  register: mapping_result
+
+- name: "Refresh nbd mapped volumes (in case we mapped a new one)"
+  nbd_mappings_facts:
+  when: mapping_result.changed
+
+- name: "Check if {{ current_volume.name }} is partitioned"
+  shell:
+    cmd: "file -sL {{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+  register: is_partitioned
+
+- name: "Partition {{ current_volume.name }}:{{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+  shell:
+    cmd: "mkfs.btrfs {{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+  when: is_partitioned.stdout.find('data') != -1
+
+- name: "Create mountpoint"
+  ansible.builtin.file:
+    path: "/mnt/{{ current_volume.name }}"
+    state: "directory"
+    mode: "0775"
+
+- name: "Mount volume '{{ current_volume.name }}'"
+  ansible.posix.mount:
+    path: "/mnt/{{ current_volume.name }}"
+    src: "{{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+    fstype: btrfs
+    state: mounted

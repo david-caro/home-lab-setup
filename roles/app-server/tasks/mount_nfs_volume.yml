@@ -1,0 +1,13 @@
+---
+- name: "Create mountpoint"
+  ansible.builtin.file:
+    path: "/mnt/{{ current_volume.name }}"
+    state: "directory"
+    mode: "0775"
+
+- name: "Mount volume '{{ current_volume.name }}'"
+  ansible.posix.mount:
+    path: "/mnt/{{ current_volume.name }}"
+    src: "{{ current_volume.src }}"
+    fstype: nfs
+    state: mounted

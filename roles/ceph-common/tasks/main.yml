@@ -1,0 +1,19 @@
+---
+- name: Install a container runtime (podman)
+  become: true
+  ansible.builtin.apt:
+    name:
+      - podman
+      - lvm2
+      - rdb-nbd
+      - btrfs-progs
+    state: present
+
+- name: Install cephadm
+  become: true
+  copy:
+    src: roles/ceph-common/files/cephadm
+    dest: /usr/local/bin/cephadm
+    owner: root
+    group: root
+    mode: 0750

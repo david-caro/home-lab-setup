@@ -1,0 +1,12 @@
+---
+apps:
+  - name: mosquitto
+    image: "docker.io/library/eclipse-mosquitto"
+    volumes:
+      - name: "mosquitto01"
+        contents: "../../home-lab-secrets/home_automation/mosquitto"
+        size: "50MB"
+        dest: "/mosquitto/config"
+        mode: "rw"
+    ports:
+      - "1883:1883/tcp"

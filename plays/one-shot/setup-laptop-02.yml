@@ -1,0 +1,35 @@
+---
+- name: Install and setup kubectl
+  hosts: 127.0.0.1
+  connection: local4
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: install kubectl
+      become: true
+      package:
+        name: kubernetes-client
+
+- name: fetch kubectl config
+  hosts: node1
+  tasks:
+    - name: get kubectl config
+      become: true
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: ~/.kube/config
+        flat: true
+
+- name: Fixe the config server line
+  hosts: 127.0.0.1
+  connection: local
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: fix the ip on the kube config
+      lineinfile:
+        dest: ~/.kube/config
+        regex: "    server: https://.*:6443"
+        line: "    server: https://{{ hostvars[groups['k3servers'][0]].ansible_host }}:6443"
+        state: present

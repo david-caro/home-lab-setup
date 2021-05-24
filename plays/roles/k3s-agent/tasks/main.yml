@@ -1,8 +1,0 @@
----
-- name: install k3s
-  become: true
-  shell:
-    cmd: ./k3s_installer.sh
-  environment:
-    K3S_URL: "https://{{ groups['k3servers'][0] }}:6443"
-    K3S_TOKEN: "{{ hostvars[groups['k3servers'][0]].k3s_node_token_encoded.content | b64decode | trim }}"

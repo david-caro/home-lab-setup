@@ -1,0 +1,21 @@
+---
+- name: Install docker
+  become: true
+  ansible.builtin.apt:
+    name: docker.io
+    dpkg_options: 'force-confold,force-confdef'
+
+- name: Ensure group "docker" exists
+  ansible.builtin.group:
+    name: docker
+    state: present
+  notify:
+    - Add all users to the docker group
+
+- name: Ensure users are in "docker" group
+  become: true
+  ansible.builtin.user:
+    append: true
+    name: "{{ item.name }}"
+    groups: docker
+  loop: "{{ users }}"

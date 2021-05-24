@@ -1,0 +1,8 @@
+---
+- name: "Populate volume '{{ current_volume.name }}' with {{ current_volume.contents }}"
+  ansible.builtin.copy:
+    src: "{{ current_volume.contents }}/"
+    dest: "/mnt/{{ current_volume.name }}"
+    mode: "u+rw,g+rw,o+rw"
+    directory_mode: "0777"
+  when: current_volume.contents is defined

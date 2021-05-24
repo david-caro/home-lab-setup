@@ -1,0 +1,7 @@
+---
+- name: Setup all appliactions in the server
+  hosts: cluster
+  gather_facts: false
+  become: true
+  roles:
+    - app-server

@@ -1,0 +1,30 @@
+---
+- name: install k3s users and common tasks
+  gather_facts: true
+  hosts: k3servers,k3agents
+  roles:
+    - k3s-common
+
+- name: install first k3s server node
+  gather_facts: false
+  hosts: node1
+  vars:
+    ansible_ssh_user: kubeadmin
+  roles:
+    - k3s-init-server
+
+- name: install the rest of the k3s server nodes
+  gather_facts: false
+  hosts: k3servers,!node1
+  vars:
+    ansible_ssh_user: kubeadmin
+  roles:
+    - k3s-server
+
+- name: install k3s agents
+  gather_facts: false
+  hosts: k3agents
+  vars:
+    ansible_ssh_user: kubeadmin
+  roles:
+    - k3s-agent

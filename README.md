@@ -50,6 +50,11 @@ not already installed. It's used for setting up ssh keys (in setup_users tasks).
 > dnf install ansible-collection-ansible-posix.noarch
 ```
 
+And you will need also some galaxy modules:
+```
+> ansible-galaxy collection install containers.podman
+```
+
 Then you'll have to run the setup pi using the playbook, first add the new host
 to the inventory, first to the `raspberries` group, with the current ip of the
 server, and then to the `cluster` and `k3servers` groups:
@@ -87,7 +92,7 @@ desired_ipaddress: 192.168.1.23
 The first time, the system only has th `pi` user, and the following expects
 that user to exist with the default password (then the user is deleted):
 ```
-> ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.yml plays/setup-raspberry-01.yml
+> ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook plays/one-shot/setup-raspberry-01.yml
 ```
 
 The skipping of host key checking is needed the first time otherwise ansible
@@ -97,7 +102,7 @@ to remove the old ssh key from your `known_hosts` file).
 That will setup the users and ssh keys, then you have to run the second
 playbook (in a different play as it uses a different user now):
 ```
-> ansible-playbook -i inventory.yml plays/setup-raspberry-02.yml
+> ansible-playbook plays/one-shot/setup-raspberry-02.yml
 ```
 
 That will update the hosts file on all the nodes, change some kernel setting,
@@ -109,7 +114,7 @@ As we want Debian 11 on the k3s nodes, we have to upgrade (until the Raspberry
 OS images are out), for that you havet to run setup 03, that might take a
 while though, so prepare some coffe or something:
 ```
-> ansible-playbook -i inventory.yml setup-laptop-03.yml
+> ansible-playbook plays/one-shot/setup-laptop-03.yml
 ```
 
 ### Refresh your laptop settings
@@ -129,19 +134,21 @@ node2 ansible_host=192.168.1.22
 Run the laptop setup playbook, needs sudo to change the `/etc/hosts` file, so
 pass the `-K` flag to prompt for it:
 ```
-> ansible-playbook -i inventory.yml plays/setup-laptop-01.yml -K
+> ansible-playbook plays/one-shot/setup-laptop-01.yml -K
 ```
 
 ## Install k3s
+__NOTE__: this is still not working along with ceph, current setup prefers CEPH
+overs k3s so we installed CEPH only.
 Just run the playbook:
 ```
-> ansible-playbook -i inventory.yml plays/install-k3s.yml
+> ansible-playbook plays/one-shot/install-k3s.yml
 ```
 
 If you installed the server, you'll have to run the second part too, to get
 kubectl and the config from the server host:
 ```
-> ansible-playbook -i inventory.yml setup-laptop-02.yml
+> ansible-playbook plays/one-shot/setup-laptop-02.yml
 ```
 
 ### Test that everything went ok
@@ -155,4 +162,27 @@ And you should see a bunch of pods around :), you can check the cluster status
 with:
 ```
 > kubectl cluster-info
+```
+
+## Install CEPH
+There's a few issues that we had to deal with when installing CEPH.
+Current setup uses cephadm with a custom image with all the bugs fixed/applied
+(until they are released/backported upstream).
+
+
+Just run the playbook:
+```
+> ansible-playbook plays/one-shot/install-ceph.yml
+```
+
+That should trigger the whole installation setup, that cephadm will take over.
+It usually takes a few minutes for everything to get setup (pulling images,
+starting containers...), to check the progress you can login to one of the
+nodes and run:
+```
+node1> sudo cephadm shell -- ceph orch ps
+```
+And/or:
+```
+node1> sudo cephadm shell -- ceph orch ls
 ```

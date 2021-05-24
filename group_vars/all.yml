@@ -12,4 +12,7 @@ users:
 # with patches:
 # * https://github.com/ceph/ceph/pull/41079 - aarcm64 rocksdb fix
 # * https://github.com/ceph/ceph/pull/41118 - ceph-volume tmpfs fix
-cephadm_image: docker://192.168.1.12:5000/ceph/ceph:v16.2.1_aarch64_rpi4
+cephadm_image: quay.io/dcaro/ceph:v16.2.1_with_aarch64_fixes
+
+app_volumes_ceph_pool: storage01
+secrets_repo_path: ~/Work/repos/per_user/david-caro/home-lab-secrets

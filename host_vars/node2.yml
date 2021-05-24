@@ -1,2 +1,16 @@
 ---
 desired_ipaddress: 192.168.1.22
+apps:
+  - name: "emby"
+    image: "docker.io/emby/embyserver_arm64v8"
+    rbd_volumes:
+      - name: "emby_program_data01"
+        size: "2GB"
+        dest: "/config"
+        mode: "rw"
+    nfs_volumes:
+      - name: "emby_data"
+        src: "/data"
+        dest: "/data"
+    ports:
+      - "8096:8096/tcp"

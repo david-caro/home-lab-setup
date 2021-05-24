@@ -1,0 +1,7 @@
+---
+- name: Add all users to the docker group
+  become: true
+  shell:
+    cmd: "usermod -aG docker {{ item.name }}"
+  loop: "{{ users }}"
+
