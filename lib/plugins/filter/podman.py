@@ -3,9 +3,14 @@
 
 def _to_volume_string(volume):
     mode = ""
-    if volume["mode"]:
-        mode = f":{volume['mode']}"
-    return f"/mnt/{volume['name']}:{volume['dest']}{mode}"
+    if volume.get("mount_mode"):
+        mode = f":{volume['mount_mode']}"
+
+    host_src = f"/mnt/{volume['name']}"
+    if volume.get("host_src"):
+        host_src = volume["host_src"]
+
+    return f"{host_src}:{volume['dest']}{mode}"
 
 
 def format_volumes(volumes):

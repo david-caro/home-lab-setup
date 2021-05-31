@@ -7,6 +7,3 @@ ff02::2         ip6-allrouters
 {% for item in groups['all'] %}
 {{ hostvars[item]['ansible_host'] }}  {{ item }}
 {% endfor %}
-{% for item in groups['cluster'] %}
-{{ hostvars[item]['k3s_address'] }}  {{ item }}-k3s
-{% endfor %}

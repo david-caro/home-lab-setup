@@ -1,2 +1,53 @@
 ---
 desired_ipaddress: 192.168.1.24
+apps:
+  - name: "grafana"
+    image: "docker.io/grafana/grafana:latest"
+    rbd_volumes:
+      - name: "grafana_data01"
+        size: "1GB"
+        dest: "/var/lib/grafana"
+        mount_mode: "rw"
+      - name: "grafana_logs01"
+        size: "50MB"
+        dest: "/var/log/grafana"
+        mount_mode: "rw"
+    nfs_volumes: []
+    simple_volumes:
+      - name: "Timezone"
+        host_src: "/etc/timezone"
+        dest: "/etc/timezone"
+        mount_mode: "ro"
+      - name: "Localtime"
+        host_src: "/etc/localtime"
+        dest: "/etc/localtime"
+        mount_mode: "ro"
+    ports:
+      - "8000:3000/tcp"
+  - name: "prometheus"
+    image: "docker.io/prom/prometheus:latest"
+    rbd_volumes:
+      - name: "prometheus_data01"
+        size: "10GB"
+        dest: "/prometheus"
+        mount_mode: "rw"
+        contents: "{{ secrets_repo_path }}/prometheus"
+    nfs_volumes: []
+    file_volumes:
+      - name: "Prometheus config"
+        host_src: "/mnt/prometheus.yml"
+        dest: "/etc/prometheus/prometheus.yml"
+        file_mode: "644"
+        mount_mode: "ro"
+        template: "prometheus.yml.j2"
+    simple_volumes:
+      - name: "Timezone"
+        host_src: "/etc/timezone"
+        dest: "/etc/timezone"
+        mount_mode: "ro"
+      - name: "Localtime"
+        host_src: "/etc/localtime"
+        dest: "/etc/localtime"
+        mount_mode: "ro"
+    ports:
+      - "9090:9090/tcp"

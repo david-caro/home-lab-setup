@@ -1,0 +1,4 @@
+---
+- name: Refresh exports
+  ansible.builtin.shell:
+    cmd: "exportfs -a"

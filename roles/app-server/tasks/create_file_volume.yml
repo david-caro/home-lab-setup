@@ -1,0 +1,25 @@
+---
+- name: "Create empty file '{{current_volume.name}}'"
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ current_volume.host_src }}"
+    mode: " {{ current_volume.file_mode }}"
+  when:
+    - current_volume.template is not defined
+    - current_volume.local_src is not defined
+
+- name: "Render template for file '{{current_volume.name}}'"
+  ansible.builtin.template:
+    src: "{{ current_volume.template }}"
+    dest: "{{ current_volume.host_src }}"
+    mode: " {{ current_volume.file_mode }}"
+  when:
+    - current_volume.template is defined
+
+- name: "Copy file '{{current_volume.name}}'"
+  ansible.builtin.copy:
+    src: "{{ current_volume.template }}"
+    dest: "{{ current_volume.host_src }}"
+    mode: " {{ current_volume.file_mode }}"
+  when:
+    - current_volume.local_src is defined

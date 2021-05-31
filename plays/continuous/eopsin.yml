@@ -1,0 +1,7 @@
+---
+- name: Setup the NFS exports on the storage server
+  hosts: eopsin
+  become: true
+  roles:
+    - nfs-server
+    - nginx-proxy

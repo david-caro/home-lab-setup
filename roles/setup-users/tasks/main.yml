@@ -1,10 +1,21 @@
 ---
-- name: setup users
+- name: setup users (raspberry)
   become: true
   ansible.builtin.user:
     name: "{{ item.name }}"
     groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi
   loop: "{{ users }}"
+  when: >-
+    'raspberries' in group_names
+
+- name: setup users (other)
+  become: true
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: adm,dialout,cdrom,audio,video,games,users,input
+  loop: "{{ users }}"
+  when: >-
+    'raspberries' not in group_names
 
 - name: setup ssh keys
   become: true
@@ -14,12 +25,23 @@
     key: "{{ item.ssh_public_key }}"
   loop: "{{ users }}"
 
-- name: enable ssh
+- name: enable ssh (raspberry)
   become: true
   ansible.builtin.service:
     name: ssh
     enabled: true
     state: started
+  when: >-
+    'raspberries' in group_names
+
+- name: enable ssh (other)
+  become: true
+  ansible.builtin.service:
+    name: sshd
+    enabled: true
+    state: started
+  when: >-
+    'raspberries' in group_names
 
 - name: allow passwordless sudo
   become: true

@@ -1,0 +1,17 @@
+[Unit]
+Description=Map {{ app_volumes_ceph_pool}}/{{ current_volume.name }} nbd volume
+After=network-online.target ceph.target
+Before=remote-fs-pre.target mnt-{{ current_volume.name }}.mount
+Wants=network-online.target remote-fs-pre.target ceph.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/ceph
+Environment=
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/rbd-nbd map {{ app_volumes_ceph_pool}}/{{ current_volume.name }}
+ExecReload=/usr/bin/rbd-nbd map {{ app_volumes_ceph_pool}}/{{ current_volume.name }}
+ExecStrop=/usr/bin/rbd-nbd unmap {{ app_volumes_ceph_pool}}/{{ current_volume.name }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,42 @@
+---
+exports:
+  - name: /data
+    options: rw,sync,no_root_squash
+    nodes: cluster
+  - name: /data
+    options: ro,sync,no_root_squash
+    nodes: 192.168.1.0/24
+
+# TODO: extract from the same apps definition instead
+nginx_domains:
+  base_port: 18443
+  domains:
+    - name: "emby.dcaro.es"
+      dest: "http://127.0.0.1:8096"
+    - name: "sudo.dcaro.es"
+      dest: "http://192.168.1.12:8080"
+    - name: "expenses.dcaro.es"
+      dest: "http://127.0.0.1:1234"
+    - name: "homeassistant.dcaro.es"
+      dest: "http://192.168.1.23:8123"
+
+# TODO: dynamic host entries in the dns
+# TODO: find an automated way to get the external ip
+dns_domains:
+  - name: "emby.dcaro.es"
+  - name: "sudo.dcaro.es"
+  - name: "homeassistant.dcaro.es"
+  - name: "expenses.dcaro.es"
+  - name: "znc.dcaro.es"
+
+apps:
+  - name: "nginx-node-exporter"
+    image: "docker.io/nginx/nginx-prometheus-exporter:latest"
+    command: >-
+      -nginx.scrape-uri=http://{{ ansible_host }}:8080/stub_status
+    rbd_volumes: []
+    nfs_volumes: []
+    file_volumes: []
+    simple_volumes: []
+    ports:
+      - "9113:9113/tcp"

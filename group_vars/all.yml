@@ -16,3 +16,4 @@ cephadm_image: quay.io/dcaro/ceph:v16.2.1_with_aarch64_fixes
 
 app_volumes_ceph_pool: storage01
 secrets_repo_path: ~/Work/repos/per_user/david-caro/home-lab-secrets
+nfs_server: 192.168.1.92

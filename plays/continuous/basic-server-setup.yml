@@ -1,0 +1,8 @@
+---
+- name: Basic setup for all servers
+  hosts: all
+  become: true
+  roles:
+    - setup-users
+    - set-hosts
+    - basic-server

@@ -1,0 +1,7 @@
+---
+- name: "Setup exports"
+  ansible.builtin.template:
+    src: exports.j2
+    dest: /etc/exports
+  notify: Refresh exports
+

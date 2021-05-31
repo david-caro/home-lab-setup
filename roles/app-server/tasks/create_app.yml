@@ -1,5 +1,5 @@
 ---
-- name: "Create app '{{ current_app.name }}' rbd volumes"
+- name: "Create rbd volumes for app '{{ current_app.name }}'"
   include_tasks: create_rbd_volume.yml
   loop: "{{ current_app.rbd_volumes }}"
   loop_control:
@@ -18,7 +18,9 @@
   loop: "{{ current_app.rbd_volumes }}"
   loop_control:
     loop_var: current_volume
-  when: current_app.rbd_volumes is defined
+  when:
+    - current_app.rbd_volumes is defined
+    - current_app.rbd_volumes.src is defined
 
 - name: "Mount nfs volumes for app '{{ current_app.name }}'"
   include_tasks: mount_nfs_volume.yml
@@ -27,12 +29,30 @@
     loop_var: current_volume
   when: current_app.nfs_volumes is defined
 
+- name: "Create file volumes for app '{{ current_app.name }}'"
+  include_tasks: create_file_volume.yml
+  loop: "{{ current_app.file_volumes }}"
+  loop_control:
+    loop_var: current_volume
+  when: current_app.file_volumes is defined
+
 - name: "Start app '{{ current_app.name }}'"
   containers.podman.podman_container:
     name: "{{ current_app.name }}"
     image: "{{ current_app.image }}"
     state: started
     privileged: "{{ current_app.privileged | default(false) }}"
-    ports: "{{ current_app.ports }}"
-    volumes: "{{ (current_app.nfs_volumes + current_app.rbd_volumes) | to_podman_volumes }}"
-    device: "{{ current_app.device | default('') }}"
+    ports: "{{ current_app.ports | default([]) }}"
+    command: "{{ current_app.command | default(omit) }}"
+    # file volumes at the end so they are mounted inside the other ones if
+    # needed
+    volumes: >-
+      {{
+        (
+        current_app.nfs_volumes | default([])
+        + current_app.rbd_volumes | default([])
+        + current_app.simple_volumes | default([])
+        + current_app.file_volumes | default([])
+        ) | to_podman_volumes
+      }}
+    device: "{{ current_app.device | default(omit) }}"

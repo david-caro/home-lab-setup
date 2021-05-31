@@ -1,0 +1,20 @@
+---
+- ansible.builtin.apt:
+    name: "{{ item }}"
+  when:
+    - ansible_facts['distribution'] == "Debian"
+  with_items:
+    - vim
+    - mosh
+    - prometheus-node-exporter
+
+- ansible.builtin.package:
+    name: "{{ item }}"
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+  with_items:
+    - vim
+    - mosh
+    - byobu
+    - golang-github-prometheus-node-exporter
+

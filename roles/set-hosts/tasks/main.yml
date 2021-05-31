@@ -1,6 +1,6 @@
 ---
-- name: add k3s nodes to the hosts file
+- name: add known nodes to the hosts file
   become: true
   template:
-    src: roles/set-hosts/templates/hosts.j2
+    src: hosts.j2
     dest: /etc/hosts

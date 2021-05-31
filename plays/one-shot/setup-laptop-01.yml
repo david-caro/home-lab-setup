@@ -6,20 +6,5 @@
   gather_facts: false
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  tasks:
-    - name: Set host lines
-      lineinfile:
-        dest: "/etc/hosts"
-        regexp: ".*{{ item }}$"
-        line: "{{ hostvars[item].ansible_host }} {{ item }}"
-        state: "present"
-      loop: "{{ groups['all'] }}"
-
-    - name: Set k3s host lines
-      lineinfile:
-        dest: "/etc/hosts"
-        regexp: ".*{{ item }}-k3s$"
-        line: "{{ hostvars[item].k3s_address }} {{ item }}-k3s"
-        state: "present"
-      loop: "{{ groups['cluster'] }}"
-
+  roles:
+    - set-hosts

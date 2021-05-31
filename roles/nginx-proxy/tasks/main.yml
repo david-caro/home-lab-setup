@@ -1,0 +1,21 @@
+---
+- name: "Install packages"
+  ansible.builtin.package:
+    name: "nginx"
+    state: present
+
+- name: "Make sure it's running"
+  ansible.builtin.systemd:
+    name: nginx
+    state: started
+    enabled: True
+
+- name: "Add nginx proxy config"
+  template:
+    src: server_block.conf.j2
+    dest: "/etc/nginx/conf.d/{{ domain.name }}.conf"
+  loop: "{{ nginx_domains.domains }}"
+  loop_control:
+    loop_var: domain
+  notify:
+    - "Reload Nginx"

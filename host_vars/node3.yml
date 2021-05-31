@@ -1,28 +1,16 @@
 ---
 desired_ipaddress: 192.168.1.23
 apps:
-  #  - name: "homeassistant"
-  #    image: "docker.io/homeassistant/home-assistant:stable"
-  #    rbd_volumes:
-  #      - name: "homeassistant01"
-  #        size: "500MB"
-  #        dest: "/config"
-  #        mode: "rw"
-  #    nfs_volumes: []
-  #    ports:
-  #      - "8123:8123/tcp"
-  #
-  #  - name: "mosquitto"
-  #    image: "docker.io/library/eclipse-mosquitto"
-  #    rbd_volumes:
-  #      - name: "mosquitto01"
-  #        contents: "{{ secrets_repo_path }}/home-lab-secrets/home_automation/mosquitto"
-  #        size: "50MB"
-  #        dest: "/mosquitto/config"
-  #        mode: "rw"
-  #    nfs_volumes: []
-  #    ports:
-  #      - "1883:1883/tcp"
+  - name: "mosquitto"
+    image: "docker.io/library/eclipse-mosquitto"
+    rbd_volumes:
+      - name: "mosquitto01"
+        contents: "{{ secrets_repo_path }}/home-lab-secrets/home_automation/mosquitto"
+        size: "50MB"
+        dest: "/mosquitto/config"
+        mount_mode: "rw"
+    ports:
+      - "1883:1883/tcp"
 
   - name: "zigbee2mqtt"
     image: "docker.io/zigbee2mqtt/zigbee2mqtt-edge-aarch64"
@@ -31,8 +19,18 @@ apps:
         contents: "{{ secrets_repo_path }}/home_automation/zigbee2mqtt"
         size: "50MB"
         dest: "/data"
-        mode: "rw"
-    nfs_volumes: []
+        mount_mode: "rw"
     privileged: true
     device: "/dev/ttyACM0"
     ports: []
+
+  - name: "homeassistant"
+    image: "docker.io/homeassistant/home-assistant:stable"
+    rbd_volumes:
+      - name: "homeassistant01"
+        size: "500MB"
+        dest: "/config"
+        mount_mode: "rw"
+    ports:
+      - "8123:8123/tcp"
+

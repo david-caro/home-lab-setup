@@ -1,0 +1,9 @@
+{% for export in exports %}
+{% if export.nodes in groups %}
+{% for node in groups[export.nodes] %}
+{{export.name}} {{node}}({{export.options}})
+{% endfor %}
+{% else %}
+{{export.name}} {{export.nodes}}({{export.options}})
+{% endif %}
+{% endfor %}
