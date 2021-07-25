@@ -19,6 +19,8 @@ nginx_domains:
       dest: "http://127.0.0.1:1234"
     - name: "homeassistant.dcaro.es"
       dest: "http://192.168.1.23:8123"
+    - name: "grafana.dcaro.es"
+      dest: "http://192.168.1.24:18443"
 
 # TODO: dynamic host entries in the dns
 # TODO: find an automated way to get the external ip

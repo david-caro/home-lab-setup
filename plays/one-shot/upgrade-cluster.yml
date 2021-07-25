@@ -1,0 +1,5 @@
+---
+- name: Upgrade packages
+  hosts: cluster
+  roles:
+    - upgraded-packages

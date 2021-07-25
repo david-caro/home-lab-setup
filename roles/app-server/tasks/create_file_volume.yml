@@ -18,7 +18,7 @@
 
 - name: "Copy file '{{current_volume.name}}'"
   ansible.builtin.copy:
-    src: "{{ current_volume.template }}"
+    src: "{{ current_volume.local_src }}"
     dest: "{{ current_volume.host_src }}"
     mode: " {{ current_volume.file_mode }}"
   when:

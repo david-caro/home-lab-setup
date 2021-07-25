@@ -1,0 +1,18 @@
+---
+- name: Upgrade packages (debian)
+  become: true
+  ansible.builtin.apt:
+    upgrade: safe
+    autoremove: yes
+    update_cache: yes
+    dpkg_options: "force-confold,force-confdef"
+  when:
+    - ansible_facts['distribution'] == "Debian"
+
+- name: Upgrade packages (fedora)
+  become: true
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  when:
+    - ansible_facts['distribution'] == "Fedora"

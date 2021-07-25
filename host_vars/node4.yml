@@ -12,7 +12,13 @@ apps:
         size: "50MB"
         dest: "/var/log/grafana"
         mount_mode: "rw"
-    nfs_volumes: []
+    file_volumes:
+      - name: "Grafana config"
+        host_src: "/mnt/grafana.ini"
+        dest: "/etc/grafana/grafana.ini"
+        file_mode: "644"
+        mount_mode: "ro"
+        local_src: "{{ secrets_repo_path }}/grafana.ini"
     simple_volumes:
       - name: "Timezone"
         host_src: "/etc/timezone"
@@ -23,7 +29,7 @@ apps:
         dest: "/etc/localtime"
         mount_mode: "ro"
     ports:
-      - "8000:3000/tcp"
+      - "18443:18443/tcp"
   - name: "prometheus"
     image: "docker.io/prom/prometheus:latest"
     rbd_volumes:

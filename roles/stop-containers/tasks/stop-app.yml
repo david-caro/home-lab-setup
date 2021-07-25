@@ -1,0 +1,5 @@
+---
+- name: "Stop app '{{ current_app.name }}'"
+  containers.podman.podman_container:
+    name: "{{ current_app.name }}"
+    state: stopped

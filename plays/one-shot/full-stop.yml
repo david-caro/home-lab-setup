@@ -1,0 +1,23 @@
+---
+- name: Full stop the clients
+  hosts: cluster
+  roles:
+    - stop-containers
+    - stop-mounts
+      #
+      #
+      #- name: Shutdown the ceph cluster
+      #  hosts: mons[0]
+      #  roles:
+      #    - pause-ceph
+      #
+      #- name: Shutdown the ceph cluster (osds)
+      #  hosts: osds
+      #  roles:
+      #    - stop-osd
+      #
+      #
+      #- name: Shutdown the ceph cluster (mons)
+      #  hosts: osds
+      #  roles:
+      #    - stop-mons

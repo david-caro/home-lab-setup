@@ -36,10 +36,16 @@ scrape_configs:
 
     static_configs:
     - targets:
-      # nginx status exporter
-      - "192.168.1.92:9113"
-      # nginx log exporter
-      - "192.168.1.92:4040"
 {% for node in groups['all'] %}
       - "{{ hostvars[node]['ansible_host'] }}:9100"
 {% endfor %}
+
+  - job_name: 'proxy'
+
+    metrics_path: '/stats/prometheus'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets:
+      # envoy stats
+      - "192.168.1.92:9901"

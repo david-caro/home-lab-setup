@@ -1,0 +1,7 @@
+---
+- name: Stop apps
+  include_tasks: stop-app.yml
+  loop: "{{ apps }}"
+  loop_control:
+    loop_var: current_app
+  when: apps is defined
