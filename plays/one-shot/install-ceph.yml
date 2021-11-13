@@ -1,4 +1,9 @@
 ---
+- name: Setup basic node prerequisites
+  hosts: cluster
+  roles:
+    - enable-legacy-iptables
+
 - name: Setup basic ceph prerequisites
   hosts: cluster
   roles:
