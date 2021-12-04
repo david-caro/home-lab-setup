@@ -3,5 +3,11 @@
   hosts: all
   gather_facts: false
   become: true
+  pre_tasks:
+    - name: "load secrets"
+      include_vars:
+        file: "{{ secrets_repo_path }}/home_automation/expenses/db_config.yaml"
+        name: expenses_db_config
+      no_log: true
   roles:
     - app-server

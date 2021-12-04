@@ -5,6 +5,7 @@
 
   register: volume_exists
   ignore_errors: true
+  check_mode: false
 
 - name: "Create volume '{{ current_volume.name }}'"
   become: true
@@ -15,3 +16,4 @@
       --image {{ current_volume.name }}
       --size {{ current_volume.size }}
   when: volume_exists.stdout.find(current_volume.name) == -1
+  check_mode: true

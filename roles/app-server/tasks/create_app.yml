@@ -1,10 +1,37 @@
 ---
+- name: "Create rbd (nbd) volumes for app '{{ current_app.name }}'"
+  include_tasks: create_rbd_volume.yml
+  loop: "{{ current_app.nbd_volumes }}"
+  loop_control:
+    loop_var: current_volume
+  when: current_app.nbd_volumes is defined
+  tags: "{{current_app.name}}"
+
+- name: "Mount nbd volumes for app '{{ current_app.name }}'"
+  include_tasks: mount_nbd_volume.yml
+  loop: "{{ current_app.nbd_volumes }}"
+  loop_control:
+    loop_var: current_volume
+  when: current_app.nbd_volumes is defined
+  tags: "{{current_app.name}}"
+
+- name: "Populate nbd volumes for app '{{ current_app.name }}' "
+  include_tasks: populate_nbd_volume.yml
+  loop: "{{ current_app.nbd_volumes }}"
+  loop_control:
+    loop_var: current_volume
+  when:
+    - current_app.nbd_volumes is defined
+    - current_app.nbd_volumes.src is defined
+  tags: "{{current_app.name}}"
+
 - name: "Create rbd volumes for app '{{ current_app.name }}'"
   include_tasks: create_rbd_volume.yml
   loop: "{{ current_app.rbd_volumes }}"
   loop_control:
     loop_var: current_volume
   when: current_app.rbd_volumes is defined
+  tags: "{{current_app.name}}"
 
 - name: "Mount rbd volumes for app '{{ current_app.name }}'"
   include_tasks: mount_rbd_volume.yml
@@ -12,6 +39,7 @@
   loop_control:
     loop_var: current_volume
   when: current_app.rbd_volumes is defined
+  tags: "{{current_app.name}}"
 
 - name: "Populate rbd volumes for app '{{ current_app.name }}' "
   include_tasks: populate_rbd_volume.yml
@@ -21,6 +49,7 @@
   when:
     - current_app.rbd_volumes is defined
     - current_app.rbd_volumes.src is defined
+  tags: "{{current_app.name}}"
 
 - name: "Mount nfs volumes for app '{{ current_app.name }}'"
   include_tasks: mount_nfs_volume.yml
@@ -28,6 +57,7 @@
   loop_control:
     loop_var: current_volume
   when: current_app.nfs_volumes is defined
+  tags: "{{current_app.name}}"
 
 - name: "Create file volumes for app '{{ current_app.name }}'"
   include_tasks: create_file_volume.yml
@@ -35,6 +65,7 @@
   loop_control:
     loop_var: current_volume
   when: current_app.file_volumes is defined
+  tags: "{{current_app.name}}"
 
 - name: "Start app '{{ current_app.name }}'"
   containers.podman.podman_container:
@@ -44,15 +75,18 @@
     privileged: "{{ current_app.privileged | default(false) }}"
     ports: "{{ current_app.ports | default([]) }}"
     command: "{{ current_app.command | default(omit) }}"
+    env: "{{ current_app.env | default({}) }}"
     # file volumes at the end so they are mounted inside the other ones if
     # needed
     volumes: >-
       {{
         (
         current_app.nfs_volumes | default([])
+        + current_app.nbd_volumes | default([])
         + current_app.rbd_volumes | default([])
         + current_app.simple_volumes | default([])
         + current_app.file_volumes | default([])
         ) | to_podman_volumes
       }}
     device: "{{ current_app.device | default(omit) }}"
+  tags: "{{current_app.name}}"

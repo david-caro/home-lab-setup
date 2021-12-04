@@ -1,20 +1,20 @@
 ---
-- name: "Gather nbd mapped volumes"
-  nbd_mappings_facts:
+- name: "Gather rbd mapped volumes"
+  rbd_mappings_facts:
 
 - name: "Add mapping volume service for '{{ current_volume.name }}'"
   template:
-    src: "rbdmap-volume.service.j2"
-    dest: "/usr/lib/systemd/system/rbdmap-{{ app_volumes_ceph_pool }}-{{ current_volume.name }}.service"
+    src: "rbd-volume.service.j2"
+    dest: "/usr/lib/systemd/system/rbd-{{ app_volumes_ceph_pool }}-{{ current_volume.name }}.service"
 
-- name: "Map volume '{{ current_volume.name }}' under /dev/nbd*"
+- name: "Map volume '{{ current_volume.name }}' under /dev/rbd*"
   ansible.builtin.systemd:
     state: started
-    name: "rbdmap-{{ app_volumes_ceph_pool }}-{{ current_volume.name }}.service"
+    name: "rbd-{{ app_volumes_ceph_pool }}-{{ current_volume.name }}.service"
   register: mapping_result
 
-- name: "Refresh nbd mapped volumes (in case we mapped a new one)"
-  nbd_mappings_facts:
+- name: "Refresh rbd mapped volumes (in case we mapped a new one)"
+  rbd_mappings_facts:
   when: mapping_result.changed
 
 - name: "Fail if volume is not mapped"
@@ -23,17 +23,17 @@
       Failed to map volume {{ current_volume.name }}: \n
         {{ mapping_result.stdout }}\n
         {{ mapping_result.stderr }}
-  when: current_volume.name not in ansible_facts['nbd_mappings']
+  when: current_volume.name not in ansible_facts['rbd_mappings']
 
 # TODO: figure out how to use x-systemd.mkfs in the mount instead
 - name: "Check if {{ current_volume.name }} is partitioned"
   shell:
-    cmd: "file -sL {{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+    cmd: "file -sL {{ ansible_facts['rbd_mappings'][current_volume.name]['device'] }}"
   register: is_partitioned
 
-- name: "Partition {{ current_volume.name }}:{{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+- name: "Partition {{ current_volume.name }}:{{ ansible_facts['rbd_mappings'][current_volume.name]['device'] }}"
   shell:
-    cmd: "mkfs.btrfs {{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+    cmd: "mkfs.btrfs {{ ansible_facts['rbd_mappings'][current_volume.name]['device'] }}"
   when: is_partitioned.stdout.find('data') != -1
 
 - name: "Create mountpoint"
@@ -45,7 +45,7 @@
 - name: "Mount volume '{{ current_volume.name }}'"
   ansible.posix.mount:
     path: "/mnt/{{ current_volume.name }}"
-    opts: "noauto,rw,x-systemd.requires=rbdmap-{{ app_volumes_ceph_pool }}-{{ current_volume.name }}"
-    src: "{{ ansible_facts['nbd_mappings'][current_volume.name]['device'] }}"
+    opts: "noauto,rw,x-systemd.requires=rbd-{{ app_volumes_ceph_pool }}-{{ current_volume.name }}"
+    src: "{{ ansible_facts['rbd_mappings'][current_volume.name]['device'] }}"
     fstype: btrfs
     state: mounted

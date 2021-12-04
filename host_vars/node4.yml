@@ -28,10 +28,12 @@ apps:
         host_src: "/etc/localtime"
         dest: "/etc/localtime"
         mount_mode: "ro"
+    nbd_volumes: []
     ports:
       - "18443:18443/tcp"
   - name: "prometheus"
     image: "docker.io/prom/prometheus:latest"
+    nbd_volumes: []
     rbd_volumes:
       - name: "prometheus_data01"
         size: "10GB"
@@ -57,3 +59,50 @@ apps:
         mount_mode: "ro"
     ports:
       - "9090:9090/tcp"
+  - name: "expenses_db"
+    image: "docker.io/arm64v8/mariadb:latest"
+    rbd_volumes:
+      - name: "expenses_db"
+        size: "1GB"
+        dest: "/var/lib/mysql"
+        mount_mode: "rw"
+    nfs_volumes: []
+    file_volumes: []
+    simple_volumes: []
+    nbd_volumes: []
+    ports:
+      - "3306:3306/tcp"
+  - name: "expenses_app"
+    image: "quay.io/farting_lizards/expenses:latest"
+    rbd_volumes: []
+    nfs_volumes: []
+    file_volumes: []
+    simple_volumes: []
+    nbd_volumes: []
+    env:
+      DB_PASSWORD: "{{expenses_db_config.DB_PASSWORD}}"
+      DB_USERNAME: "{{expenses_db_config.DB_USERNAME}}"
+      DB_HOST: "{{expenses_db_config.DB_HOST}}"
+    ports:
+      - "8081:8080/tcp"
+  - name: "expenses_nginx"
+    image: "docker.io/library/nginx"
+    rbd_volumes: []
+    nfs_volumes: []
+    file_volumes:
+      - name: "Nginx htpasswd"
+        host_src: "/mnt/expenes_auth"
+        dest: "/etc/nginx/.htpasswd"
+        file_mode: "644"
+        mount_mode: "ro"
+        local_src: "{{ secrets_repo_path }}/home_automation/expenses/expenses_auth"
+      - name: "Nginx config"
+        host_src: "/mnt/expenses_nginx.conf"
+        dest: "/etc/nginx/nginx.conf"
+        file_mode: "644"
+        mount_mode: "ro"
+        local_src: "{{ secrets_repo_path }}/home_automation/expenses/expenses_nginx.conf"
+    simple_volumes: []
+    nbd_volumes: []
+    ports:
+      - "8080:80/tcp"

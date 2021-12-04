@@ -3,7 +3,7 @@ desired_ipaddress: 192.168.1.23
 apps:
   - name: "mosquitto"
     image: "docker.io/library/eclipse-mosquitto"
-    rbd_volumes:
+    nbd_volumes:
       - name: "mosquitto01"
         contents: "{{ secrets_repo_path }}/home-lab-secrets/home_automation/mosquitto"
         size: "50MB"
@@ -14,7 +14,7 @@ apps:
 
   - name: "zigbee2mqtt"
     image: "docker.io/zigbee2mqtt/zigbee2mqtt-edge-aarch64"
-    rbd_volumes:
+    nbd_volumes:
       - name: "zigbee2mqtt01"
         contents: "{{ secrets_repo_path }}/home_automation/zigbee2mqtt"
         size: "50MB"
@@ -26,11 +26,10 @@ apps:
 
   - name: "homeassistant"
     image: "docker.io/homeassistant/home-assistant:stable"
-    rbd_volumes:
+    nbd_volumes:
       - name: "homeassistant01"
         size: "500MB"
         dest: "/config"
         mount_mode: "rw"
     ports:
       - "8123:8123/tcp"
-
