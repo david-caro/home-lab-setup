@@ -8,19 +8,29 @@ exports:
     nodes: 192.168.1.0/24
 
 # TODO: extract from the same apps definition instead
-nginx_domains:
+envoy_config:
   base_port: 18443
   domains:
-    - name: "emby.dcaro.es"
-      dest: "http://127.0.0.1:8096"
-    - name: "sudo.dcaro.es"
-      dest: "http://192.168.1.12:8080"
-    - name: "expenses.dcaro.es"
-      dest: "http://127.0.0.1:1234"
-    - name: "homeassistant.dcaro.es"
-      dest: "http://192.168.1.23:8123"
-    - name: "grafana.dcaro.es"
-      dest: "http://192.168.1.24:18443"
+    - name: "emby"
+      address: 127.0.0.1
+      port: 9096
+      proto: https
+    - name: "sudo"
+      address: 192.168.1.12
+      port: 8080
+      proto: http
+    - name: "expenses"
+      address: node4
+      port: 8080
+      proto: http
+    - name: "homeassistant"
+      address: node3
+      port: 8123
+      proto: http
+    - name: "grafana"
+      address: node4
+      port: 18443
+      proto: http
 
 # TODO: dynamic host entries in the dns
 # TODO: find an automated way to get the external ip
@@ -30,15 +40,3 @@ dns_domains:
   - name: "homeassistant.dcaro.es"
   - name: "expenses.dcaro.es"
   - name: "znc.dcaro.es"
-
-apps:
-  - name: "nginx-node-exporter"
-    image: "docker.io/nginx/nginx-prometheus-exporter:latest"
-    command: >-
-      -nginx.scrape-uri=http://{{ ansible_host }}:8080/stub_status
-    rbd_volumes: []
-    nfs_volumes: []
-    file_volumes: []
-    simple_volumes: []
-    ports:
-      - "9113:9113/tcp"

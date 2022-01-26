@@ -1,0 +1,13 @@
+[Unit]
+Description=Envoy proxy server
+After=network-online.target
+
+[Service]
+Environment=
+Type=simple
+ExecStart=/bin/bash -c '/usr/bin/envoy --config-path /etc/envoy.yaml | tee'
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

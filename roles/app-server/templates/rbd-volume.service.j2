@@ -11,7 +11,7 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/bin/rbd map {{ app_volumes_ceph_pool}}/{{ current_volume.name }}
 ExecReload=/usr/bin/rbd map {{ app_volumes_ceph_pool}}/{{ current_volume.name }}
-ExecStrop=/usr/bin/rbd unmap {{ app_volumes_ceph_pool}}/{{ current_volume.name }}
+ExecStop=/usr/bin/rbd unmap {{ app_volumes_ceph_pool}}/{{ current_volume.name }}
 
 [Install]
 WantedBy=multi-user.target

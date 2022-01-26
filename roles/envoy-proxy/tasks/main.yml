@@ -1,0 +1,35 @@
+---
+- name: "Add envoy repo"
+  yum_repository:
+    name: "Tetrate GetEnvoy - Stable"
+    baseurl: "https://rpm.dl.getenvoy.io/public/rpm/el/8/$basearch"
+    enabled: true
+    gpgkey: "https://rpm.dl.getenvoy.io/public/gpg.CF716AF503183491.key"
+    gpgcheck: false
+    sslverify: true
+    sslcacert: "/etc/pki/tls/certs/ca-bundle.crt"
+    metadata_expire: "300"
+    description: "Envoy packages"
+
+- name: "Install packages"
+  ansible.builtin.package:
+    name: "getenvoy-envoy"
+    state: present
+
+- name: "Add envoy service"
+  ansible.builtin.copy:
+    src: envoy.service
+    dest: "/usr/lib/systemd/system/envoy.service"
+
+- name: "Add envoy proxy config"
+  template:
+    src: envoy.yaml.j2
+    dest: "/etc/envoy.yaml"
+  notify:
+    - "Reload envoy"
+
+- name: "Make sure it's running"
+  ansible.builtin.systemd:
+    name: envoy
+    state: started
+    enabled: True

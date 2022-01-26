@@ -4,4 +4,4 @@
   become: true
   roles:
     - nfs-server
-    - nginx-proxy
+    - envoy-proxy

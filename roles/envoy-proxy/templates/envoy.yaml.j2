@@ -1,0 +1,65 @@
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901
+
+static_resources:
+  clusters:
+{% for domain in envoy_config["domains"] %} 
+  - connect_timeout: 10s
+    dns_lookup_family: V4_ONLY
+    load_assignment:
+      cluster_name: service_{{ domain["name"] }}
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: {{ domain["address"] }}
+                port_value: {{ domain["port"] }}
+    name: service_{{ domain["name"] }}
+    type: LOGICAL_DNS
+{% endfor %}
+
+  listeners:
+  - address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: {{ envoy_config["base_port"] }}
+    filter_chains:
+    - transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            tls_certificates:
+            - certificate_chain: {filename: "/etc/letsencrypt/live/dcaro.es/fullchain.pem"}
+              private_key: {filename: "/etc/letsencrypt/live/dcaro.es/privkey.pem"}
+      filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          upgrade_configs:
+          - upgrade_type: websocket
+          access_log:
+          - name: envoy.access_loggers.stdout
+            typed_config:
+              '@type': type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+          http_filters:
+          - name: envoy.filters.http.router
+          route_config:
+            name: local_route
+            virtual_hosts:
+{% for domain in envoy_config["domains"] %}
+            - domains:
+              - '{{ domain["name"] }}.dcaro.es:{{ envoy_config["base_port"] }}'
+              name: {{ domain["name"] }}
+              routes:
+              - match:
+                  prefix: /
+                route:
+                  cluster: service_{{ domain["name"] }}
+{% endfor %}
+          stat_prefix: ingress_http
+    name: listener_0
