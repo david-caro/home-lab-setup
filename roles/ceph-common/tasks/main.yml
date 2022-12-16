@@ -5,14 +5,14 @@
     name:
       - podman
       - lvm2
-      - rdb-nbd
+      - rbd-nbd
       - btrfs-progs
     state: present
 
 - name: Install cephadm
   become: true
   copy:
-    src: roles/ceph-common/files/cephadm
+    src: cephadm
     dest: /usr/local/bin/cephadm
     owner: root
     group: root

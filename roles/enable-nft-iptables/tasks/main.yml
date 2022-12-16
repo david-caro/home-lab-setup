@@ -1,0 +1,22 @@
+---
+- name: Flush iptables before changing to iptables-nft
+  become: true
+  iptables:
+    flush: true
+  changed_when: false   # iptables flush always returns changed
+
+- name: Changing to iptables-nft
+  become: true
+  alternatives:
+    path: /usr/sbin/iptables-nft
+    name: iptables
+  register: ip4_nft
+  notify: Reboot PI
+
+- name: Changing to ip6tables-nft
+  become: true
+  alternatives:
+    path: /usr/sbin/ip6tables-nft
+    name: ip6tables
+  register: ip6_nft
+  notify: Reboot PI
