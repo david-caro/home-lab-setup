@@ -1,0 +1,20 @@
+[Unit]
+Description=Jellyfin container
+
+[Service]
+Restart=always
+# podman run \
+#        --detach  \
+#        --label "io.containers.autoupdate=registry"  \
+#        --name jellyfin  \
+#        --publish 8096:8096/tcp  \
+#        --user $(id -u):$(id -g)  \
+#        --userns keep-id  \
+#        --volume /data/jellyfin/cache/:/cache:Z  \
+#        --volume /data/jellyfin/config:/config:Z  \
+#        --volume /data/storage:/media:rw docker.io/jellyfin/jellyfin:latest
+ExecStart=/usr/bin/podman start -a jellyfin
+ExecStop=/usr/bin/podman stop -t 2 jellyfin
+
+[Install]
+WantedBy=multi-user.target

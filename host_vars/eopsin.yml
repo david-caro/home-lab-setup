@@ -14,7 +14,7 @@ envoy_config:
     - name: "media"
       address: 127.0.0.1
       port: 8096
-      proto: https
+      proto: http
     - name: "sudo"
       address: 192.168.1.12
       port: 8080
@@ -40,3 +40,4 @@ dns_domains:
   - name: "homeassistant.dcaro.es"
   - name: "expenses.dcaro.es"
   - name: "znc.dcaro.es"
+  - name: "ssh.dcaro.es"

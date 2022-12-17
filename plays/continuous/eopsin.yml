@@ -4,5 +4,6 @@
   become: true
   roles:
     - nfs-server
+    - jellyfin
     - envoy-proxy
     - fail2ban
