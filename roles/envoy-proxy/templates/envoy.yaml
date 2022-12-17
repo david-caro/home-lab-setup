@@ -5,138 +5,142 @@ admin:
       port_value: 9901
 static_resources:
   clusters:
-  - connect_timeout: 10s
-    dns_lookup_family: V4_ONLY
-    load_assignment:
-      cluster_name: service_homeassistant
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: 192.168.1.23
-                port_value: 8123
-    name: service_homeassistant
-    type: LOGICAL_DNS
-  - connect_timeout: 10s
-    dns_lookup_family: V4_ONLY
-    load_assignment:
-      cluster_name: service_emby
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: 127.0.0.1
-                port_value: 8096
-    name: service_emby
-    type: LOGICAL_DNS
-  - connect_timeout: 10s
-    dns_lookup_family: V4_ONLY
-    load_assignment:
-      cluster_name: service_grafana
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: 192.168.1.24
-                port_value: 18443
-    name: service_grafana
-    type: LOGICAL_DNS
-  - connect_timeout: 10s
-    dns_lookup_family: V4_ONLY
-    load_assignment:
-      cluster_name: service_expenses
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: 192.168.1.24
-                port_value: 8080
-    name: service_expenses
-    type: LOGICAL_DNS
+    - connect_timeout: 10s
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: service_homeassistant
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 192.168.1.23
+                      port_value: 8123
+      name: service_homeassistant
+      type: LOGICAL_DNS
+    - connect_timeout: 10s
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: service_media
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 127.0.0.1
+                      port_value: 8096
+      name: service_media
+      type: LOGICAL_DNS
+    - connect_timeout: 10s
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: service_grafana
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 192.168.1.24
+                      port_value: 18443
+      name: service_grafana
+      type: LOGICAL_DNS
+    - connect_timeout: 10s
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: service_expenses
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 192.168.1.24
+                      port_value: 8080
+      name: service_expenses
+      type: LOGICAL_DNS
   listeners:
-  - address:
-      socket_address:
-        address: 0.0.0.0
-        port_value: 18443
-    filter_chains:
-    - transport_socket:
-        name: envoy.transport_sockets.tls
-        typed_config:
-          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
-          common_tls_context:
-            tls_certificates:
-            - certificate_chain: {filename: "/etc/letsencrypt/live/dcaro.es/fullchain.pem"}
-              private_key: {filename: "/etc/letsencrypt/live/dcaro.es/privkey.pem"}
-      filters:
-      - name: envoy.filters.network.http_connection_manager
-        typed_config:
-          '@type': type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-          upgrade_configs:
-          - upgrade_type: websocket
-          access_log:
-          - name: envoy.access_loggers.stdout
+    - address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 18443
+      filter_chains:
+        - transport_socket:
+            name: envoy.transport_sockets.tls
             typed_config:
-              '@type': type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
-          http_filters:
-          - name: envoy.filters.http.lua
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
-              inline_code: |
-                function envoy_on_request(request_handle)
-                  if request_handle:headers():get(":host") == "grafana.dcaro.es"
-                  then
-                    -- Surely you have to check if request_handle:metadata():get("credentials") has
-                    -- nothing then you need to decide what to do.
-                    for _, credential in pairs(request_handle:metadata():get("credentials")) do
-                      if request_handle:headers():get("authorization") == credential
-                      then
-                        return
-                      end
-                    end
-                    request_handle:respond(
-                      {[":status"] = "401", ["WWW-Authenticate"] = "Basic realm=\"Unknown\""}, "Unauthorized you dumdum"
-                    )
-                  end
-                end 
-          - name: envoy.filters.http.router
-          route_config:
-            name: local_route
-            virtual_hosts:
-            - domains:
-              - 'homeassistant.dcaro.es:18443'
-              name: homeassistant
-              routes:
-              - match:
-                  prefix: /
-                route:
-                  cluster: service_homeassistant
-            - domains:
-              - 'emby.dcaro.es:18443'
-              name: emby
-              routes:
-              - match:
-                  prefix: /
-                route:
-                  cluster: service_emby
-            - domains:
-              - 'expenses.dcaro.es:18443'
-              name: expenses
-              routes:
-              - match:
-                  prefix: /
-                route:
-                  cluster: service_expenses
-            - domains:
-              - 'grafana.dcaro.es:18443'
-              name: grafana
-              routes:
-              - match:
-                  prefix: /
-                route:
-                  cluster: service_grafana
-          stat_prefix: ingress_http
-    name: listener_0
+              "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+              common_tls_context:
+                tls_certificates:
+                  - certificate_chain:
+                      {
+                        filename: "/etc/letsencrypt/live/dcaro.es/fullchain.pem",
+                      }
+                    private_key:
+                      { filename: "/etc/letsencrypt/live/dcaro.es/privkey.pem" }
+          filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                upgrade_configs:
+                  - upgrade_type: websocket
+                access_log:
+                  - name: envoy.access_loggers.stdout
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+                http_filters:
+                  - name: envoy.filters.http.lua
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+                      inline_code: |
+                        function envoy_on_request(request_handle)
+                          if request_handle:headers():get(":host") == "grafana.dcaro.es"
+                          then
+                            -- Surely you have to check if request_handle:metadata():get("credentials") has
+                            -- nothing then you need to decide what to do.
+                            for _, credential in pairs(request_handle:metadata():get("credentials")) do
+                              if request_handle:headers():get("authorization") == credential
+                              then
+                                return
+                              end
+                            end
+                            request_handle:respond(
+                              {[":status"] = "401", ["WWW-Authenticate"] = "Basic realm=\"Unknown\""}, "Unauthorized you dumdum"
+                            )
+                          end
+                        end
+                  - name: envoy.filters.http.router
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - domains:
+                        - "homeassistant.dcaro.es:18443"
+                      name: homeassistant
+                      routes:
+                        - match:
+                            prefix: /
+                          route:
+                            cluster: service_homeassistant
+                    - domains:
+                        - "media.dcaro.es:18443"
+                      name: media
+                      routes:
+                        - match:
+                            prefix: /
+                          route:
+                            cluster: service_media
+                    - domains:
+                        - "expenses.dcaro.es:18443"
+                      name: expenses
+                      routes:
+                        - match:
+                            prefix: /
+                          route:
+                            cluster: service_expenses
+                    - domains:
+                        - "grafana.dcaro.es:18443"
+                      name: grafana
+                      routes:
+                        - match:
+                            prefix: /
+                          route:
+                            cluster: service_grafana
+                stat_prefix: ingress_http
+      name: listener_0

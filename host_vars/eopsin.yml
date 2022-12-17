@@ -11,7 +11,7 @@ exports:
 envoy_config:
   base_port: 18443
   domains:
-    - name: "emby"
+    - name: "media"
       address: 127.0.0.1
       port: 9096
       proto: https
@@ -35,7 +35,7 @@ envoy_config:
 # TODO: dynamic host entries in the dns
 # TODO: find an automated way to get the external ip
 dns_domains:
-  - name: "emby.dcaro.es"
+  - name: "media.dcaro.es"
   - name: "sudo.dcaro.es"
   - name: "homeassistant.dcaro.es"
   - name: "expenses.dcaro.es"
