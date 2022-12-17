@@ -53,7 +53,7 @@ static_resources:
             virtual_hosts:
 {% for domain in envoy_config["domains"] %}
             - domains:
-              - '{{ domain["name"] }}.dcaro.es:{{ envoy_config["base_port"] }}'
+              - '{{ domain["name"] }}.dcaro.es'
               name: {{ domain["name"] }}
               routes:
               - match:

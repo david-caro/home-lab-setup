@@ -1,9 +1,9 @@
 ---
-- name: "Open jellyfin port"
-  ansible.posix.firewalld:
-    port: 8096/tcp
-    permanent: yes
-    state: enabled
+- name: "Disable firewalld"
+  ansible.builtin.systemd:
+    name: firewalld
+    state: stopped
+    enabled: False
 
 - name: "Add jellyfin service"
   ansible.builtin.copy:
