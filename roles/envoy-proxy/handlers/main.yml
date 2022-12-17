@@ -2,4 +2,4 @@
 - name: Reload envoy
   ansible.builtin.systemd:
     name: envoy
-    state: reloaded
+    state: restarted
