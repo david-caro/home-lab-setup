@@ -9,7 +9,7 @@ exports:
 
 # TODO: extract from the same apps definition instead
 envoy_config:
-  base_port: 18443
+  base_port: 443
   domains:
     - name: "media"
       address: 127.0.0.1
