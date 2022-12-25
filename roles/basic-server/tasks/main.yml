@@ -8,6 +8,14 @@
     - mosh
     - prometheus-node-exporter
 
+- ansible.posix.firewalld:
+    port: 9100/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+  when:
+    - ansible_facts['distribution'] == "Debian"
+
 - ansible.builtin.package:
     name: "{{ item }}"
   when:
