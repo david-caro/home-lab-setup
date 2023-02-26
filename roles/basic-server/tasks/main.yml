@@ -8,6 +8,7 @@
     - mosh
     - prometheus-node-exporter
     - python3-firewall
+    - firewalld
 
 - ansible.posix.firewalld:
     port: 9100/tcp
