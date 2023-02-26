@@ -7,6 +7,7 @@
     - vim
     - mosh
     - prometheus-node-exporter
+    - python3-firewall
 
 - ansible.posix.firewalld:
     port: 9100/tcp
