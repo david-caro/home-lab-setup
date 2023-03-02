@@ -1,0 +1,13 @@
+[Unit]
+Description=Run ansible in a loop
+After=network-online.target
+
+[Service]
+Environment=
+Type=simple
+ExecStart=/bin/bash -c '/usr/local/bin/ansible-runner.sh'
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

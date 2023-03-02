@@ -7,3 +7,4 @@
     - jellyfin
     - envoy-proxy
     - fail2ban
+    - ansible-runner
