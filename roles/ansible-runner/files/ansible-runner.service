@@ -4,6 +4,7 @@ After=network-online.target
 
 [Service]
 Environment=
+User=dcaro
 Type=simple
 ExecStart=/bin/bash -c '/usr/local/bin/ansible-runner.sh'
 Restart=always
