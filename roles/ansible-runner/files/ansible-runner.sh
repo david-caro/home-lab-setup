@@ -46,6 +46,7 @@ main() {
         update_repo "$SETUP_DIR"
         update_repo "$SECRETS_DIR"
 
+        cd "$SETUP_DIR"
         run_plays "${SETUP_DIR}/plays/continuous"
         
         echo "sleeping for 1h"
