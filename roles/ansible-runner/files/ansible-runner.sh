@@ -34,7 +34,7 @@ update_repo() {
 run_plays() {
     local plays_dir="${1?No plays_dir passed}"
     for play in "${plays_dir}"/*.yml; do
-        ansible-playbook "$play"
+        ansible-playbook "$play" || :
     done
 }
 
