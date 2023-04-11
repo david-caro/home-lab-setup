@@ -1,6 +1,6 @@
 ---
-routers: 192.168.1.254
-dns_servers: "192.168.1.254 8.8.8.8 1.1.1.1"
+routers: 192.168.1.1
+dns_servers: "1.1.1.1 8.8.8.8"
 users:
   - name: dcaro
     ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDRLt5Ss9ykeA6uUfQdB+LeO80zqHND6FiG6aNZ79FaJwGSnVB0QdIvjZUbn6ubllLo/Xx0SfmWvbqp6HLwi5J5xZP21dkUAVDyWqHIbUvDwHrsxYhHw25OnkGE4i/uKzoT1LCCJHt8OF0tgcPLSQZwK9De4xVLgAmZrxWAUzPxLvHnTVsN6qOS6nRG3mgcol90Ny2F1lxIMrsbJEPd3Iso8l2GqCABIXatPPNjiqBel4mJ1VR88gx2vDg2Y8hJqeQ5EYFWincJENq8D812HnunkjKaej5VMK1vCq5H4Q+9UESBWQcT0qNfyRbzfaUuvgxrH0ZslT86yurejusxC8QV/stFzUSoPb7F+8bKkCJL7GmxjBGHOBZWh1Ez7fWys+lkA8Z/gIbq1mRuENkGFnxPazUykH+FV2dpc1x6FrMLpMf4yYKgvQzRTPFK/W9anAp/2CRrECIK21zG+pgARYWnXeWOhrfi5l0Glf5mgVBKmbSJhLPGzmVyfaPkdceLXNM= david@magnum
