@@ -6,7 +6,7 @@
 # option definitions common to all supported networks...
 option domain-name "dcaro.local";
 # skip the local router as it does not resolve media.dcaro.es
-option domain-name-servers 1.1.1.1, 8.8.8.8;
+option domain-name-servers {{ dhcpd_config['dns-servers'] | join(', ') }};
 
 default-lease-time 600;
 max-lease-time 7200;
@@ -27,7 +27,7 @@ log-facility local7;
 
 subnet 192.168.1.0 netmask 255.255.255.0 {
   range 192.168.1.50 192.168.1.254;
-  option routers 192.168.1.1;
+  option routers {{ dhcpd_config['gateway'] }};
 }
 
 # This is a very basic subnet declaration.

@@ -43,4 +43,8 @@ dns_domains:
   - name: "ssh.dcaro.es"
 
 dhcpd_config:
+    gateway: 192.168.1.1
+    dns-servers:
+      - 1.1.1.1
+      - 8.8.8.8
     static-hosts: []
