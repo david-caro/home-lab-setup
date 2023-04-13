@@ -8,3 +8,4 @@
     - envoy-proxy
     - fail2ban
     - ansible-runner
+    - dhcp-server

@@ -1,0 +1,18 @@
+---
+- name: "Install packages"
+  ansible.builtin.package:
+    name: "dhcp-server"
+    state: present
+
+- name: "Add dhcp config"
+  template:
+    src: dhcpd.conf.j2
+    dest: "/etc/dhcp/dhcpd.conf"
+  notify:
+    - "Reload dhcpd"
+
+- name: "Make sure it's running"
+  ansible.builtin.systemd:
+    name: dhcpd
+    state: started
+    enabled: True

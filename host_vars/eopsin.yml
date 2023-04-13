@@ -41,3 +41,6 @@ dns_domains:
   - name: "expenses.dcaro.es"
   - name: "znc.dcaro.es"
   - name: "ssh.dcaro.es"
+
+dhcpd_config:
+    static-hosts: []
