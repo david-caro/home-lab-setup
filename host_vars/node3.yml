@@ -18,10 +18,13 @@ apps:
       - name: "zigbee2mqtt01"
         contents: "{{ secrets_repo_path }}/home_automation/zigbee2mqtt"
         size: "50MB"
-        dest: "/data"
+        dest: "/app/data"
         mount_mode: "rw"
     privileged: true
     device: "/dev/ttyACM0"
+    entrypoint: "/usr/bin/node"
+    command: "/app/index.js"
+    workdir: "/app"
     ports: []
 
   - name: "homeassistant"

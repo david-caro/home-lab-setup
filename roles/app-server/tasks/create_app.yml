@@ -75,6 +75,8 @@
     privileged: "{{ current_app.privileged | default(false) }}"
     ports: "{{ current_app.ports | default([]) }}"
     command: "{{ current_app.command | default(omit) }}"
+    entrypoint: "{{ current_app.entrypoint | default(omit) }}"
+    workdir: "{{ current_app.workdir | default(omit) }}"
     env: "{{ current_app.env | default({}) }}"
     # file volumes at the end so they are mounted inside the other ones if
     # needed
