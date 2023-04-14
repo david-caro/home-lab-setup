@@ -54,6 +54,7 @@ static_resources:
 {% for domain in envoy_config["domains"] %}
             - domains:
               - '{{ domain["name"] }}.dcaro.es'
+              - '{{ domain["name"] }}.dcaro.es:1234'
               name: {{ domain["name"] }}
               routes:
               - match:
