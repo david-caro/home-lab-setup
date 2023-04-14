@@ -48,8 +48,9 @@ dhcpd_config:
     gateway: 192.168.1.1
     dns-servers:
       - 192.168.1.92
-      - 1.1.1.1
-      - 8.8.8.8
+      # we use the above for recursive resolving
+      #- 1.1.1.1
+      #- 8.8.8.8
     static-hosts: []
 
 dns_config:
