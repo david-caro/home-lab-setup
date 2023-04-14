@@ -3,9 +3,28 @@
   hosts: eopsin
   become: true
   roles:
-    - nfs-server
-    - jellyfin
-    - envoy-proxy
-    - fail2ban
-    - ansible-runner
-    - dhcp-server
+    - role: nfs-server
+      tags:
+        - nfs
+    - role: jellyfin
+      tags:
+        - jellyfin
+        - media
+    - role: envoy-proxy
+      tags:
+        - envoy
+        - proxy
+    - role: fail2ban
+      tags:
+        - fail2ban
+    - role: ansible-runner
+      tags:
+        - ansible-runner
+    - role: dhcp-server
+      tags:
+        - dhcp-server
+        - dhcp
+    - role: dns-server
+      tags:
+        - dns-server
+        - dns

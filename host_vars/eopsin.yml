@@ -9,7 +9,9 @@ exports:
 
 # TODO: extract from the same apps definition instead
 envoy_config:
-  base_port: 443
+  ports:
+    - 443
+    - 1234
   domains:
     - name: "media"
       address: 127.0.0.1
@@ -45,6 +47,12 @@ dns_domains:
 dhcpd_config:
     gateway: 192.168.1.1
     dns-servers:
+      - 192.168.1.92
       - 1.1.1.1
       - 8.8.8.8
     static-hosts: []
+
+dns_config:
+  forwarders:
+    - 1.1.1.1
+    - 8.8.8.8

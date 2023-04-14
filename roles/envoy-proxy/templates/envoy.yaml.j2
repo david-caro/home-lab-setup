@@ -23,10 +23,11 @@ static_resources:
 {% endfor %}
 
   listeners:
+{% for port in envoy_config["ports"] %}
   - address:
       socket_address:
         address: 0.0.0.0
-        port_value: {{ envoy_config["base_port"] }}
+        port_value: {{ port }}
     filter_chains:
     - transport_socket:
         name: envoy.transport_sockets.tls
@@ -63,4 +64,5 @@ static_resources:
                   cluster: service_{{ domain["name"] }}
 {% endfor %}
           stat_prefix: ingress_http
-    name: listener_0
+    name: listener_{{ port }}
+{% endfor %}

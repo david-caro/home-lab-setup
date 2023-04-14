@@ -1,0 +1,25 @@
+---
+- name: "Install packages"
+  ansible.builtin.package:
+    name: "bind"
+    state: present
+
+- name: "Add bind config"
+  template:
+    src: named.conf.j2
+    dest: "/etc/named.conf"
+  notify:
+    - "Reload named"
+
+- name: "Add dcaro.es zone config"
+  template:
+    src: dcaro.es.zone.j2
+    dest: "/etc/named/dcaro.es.zone"
+  notify:
+    - "Reload named"
+
+- name: "Make sure it's running"
+  ansible.builtin.systemd:
+    name: named
+    state: started
+    enabled: True
