@@ -27,3 +27,8 @@
     - mosh
     - byobu
     - golang-github-prometheus-node-exporter
+
+- name: "Add vimrc"
+  ansible.builtin.copy:
+      src: vimrc
+      dest: "/etc/vimrc.local"
