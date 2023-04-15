@@ -52,7 +52,13 @@ dhcpd_config:
       # we use the above for recursive resolving
       #- 1.1.1.1
       #- 8.8.8.8
-    static-hosts: []
+    static-hosts:
+      - name: magnum
+        ip4: 192.168.1.102
+        mac: 28:7f:cf:95:c4:af
+      - name: vulcanus
+        ip4: 192.168.1.101
+        mac: c8:58:c0:ce:a4:dc
 
 dns_config:
   forwarders:
