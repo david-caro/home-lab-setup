@@ -1,0 +1,6 @@
+---
+- name: "Reload ssh-bastion"
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: ssh-bastion
+    state: restarted

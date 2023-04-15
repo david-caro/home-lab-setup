@@ -1,0 +1,38 @@
+---
+- name: "ssh-bastion tasks"
+  tags:
+    - ssh-bastion
+  block:
+    - name: "Make sure ssh dir exists"
+      ansible.builtin.file:
+        state: "directory"
+        path: "/root/.ssh/"
+        owner: root
+        group: root
+        mode: '700'
+
+    - name: "Add ssh bastion credentials"
+      with_items:
+        - "{{ secrets_repo_path }}/home_automation/envoy-tunnel/id_rsa"
+        - "{{ secrets_repo_path }}/home_automation/envoy-tunnel/id_rsa.pub"
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "/root/.ssh/"
+        owner: root
+        group: root
+        mode: '400'
+      notify:
+        - "Reload ssh-bastion"
+
+    - name: "Add ssh bastion service"
+      ansible.builtin.copy:
+        src: ssh-bastion.service
+        dest: "/usr/lib/systemd/system/ssh-bastion.service"
+      notify:
+        - "Reload ssh-bastion"
+
+    - name: "Make sure ssh-bastion is running"
+      ansible.builtin.systemd:
+        name: ssh-bastion
+        state: started
+        enabled: True

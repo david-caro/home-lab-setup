@@ -24,6 +24,8 @@
       ansible.builtin.copy:
         src: envoy.service
         dest: "/usr/lib/systemd/system/envoy.service"
+      notify:
+        - "Reload envoy"
 
     - name: "Add envoy proxy config"
       template:
@@ -60,11 +62,15 @@
         owner: root
         group: root
         mode: '400'
+      notify:
+        - "Reload envoy-tunnel"
 
     - name: "Add ssh tunnel service"
       ansible.builtin.copy:
         src: envoy-tunnel.service
         dest: "/usr/lib/systemd/system/envoy-tunnel.service"
+      notify:
+        - "Reload envoy-tunnel"
 
     - name: "Make sure envoy-tunnel is running"
       ansible.builtin.systemd:

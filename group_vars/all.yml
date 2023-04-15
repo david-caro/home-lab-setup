@@ -1,6 +1,5 @@
 ---
 routers: 192.168.1.1
-dns_servers: "1.1.1.1 8.8.8.8"
 users:
   - name: dcaro
     ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDRLt5Ss9ykeA6uUfQdB+LeO80zqHND6FiG6aNZ79FaJwGSnVB0QdIvjZUbn6ubllLo/Xx0SfmWvbqp6HLwi5J5xZP21dkUAVDyWqHIbUvDwHrsxYhHw25OnkGE4i/uKzoT1LCCJHt8OF0tgcPLSQZwK9De4xVLgAmZrxWAUzPxLvHnTVsN6qOS6nRG3mgcol90Ny2F1lxIMrsbJEPd3Iso8l2GqCABIXatPPNjiqBel4mJ1VR88gx2vDg2Y8hJqeQ5EYFWincJENq8D812HnunkjKaej5VMK1vCq5H4Q+9UESBWQcT0qNfyRbzfaUuvgxrH0ZslT86yurejusxC8QV/stFzUSoPb7F+8bKkCJL7GmxjBGHOBZWh1Ez7fWys+lkA8Z/gIbq1mRuENkGFnxPazUykH+FV2dpc1x6FrMLpMf4yYKgvQzRTPFK/W9anAp/2CRrECIK21zG+pgARYWnXeWOhrfi5l0Glf5mgVBKmbSJhLPGzmVyfaPkdceLXNM= david@magnum
@@ -19,3 +18,6 @@ cephadm_image: quay.io/dcaro/ceph:v16.2.1_with_aarch64_fixes
 app_volumes_ceph_pool: storage01
 secrets_repo_path: ~/Work/repos/per_user/david-caro/home-lab-secrets
 nfs_server: 192.168.1.92
+dns_server: 192.168.1.92
+polaris_server: 68.183.240.105
+polaris_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDhJVUCJXUuqw8Bfp50At/XkDM5apQ3gHGb9+CdOwaBRJigBjPwkUrHzQ5Lo4hpcltfdYKJivpJDL/zFZ/J2SfVAyV9Tivmd+qHT8U20fik5Uh4zg/zkRZxbZsycUmid0CvGvHx0k5wsTBHU0LT0BoDUHkN9oEaU+puM0Ljjzvmki48JYE2cpErStPkuD3GZJwDiW5D9dwmy5pFUUrO+PHgX6KGGiVqOVMDOO4Ff4DZbUcOe4qLDw+L7ksSWSqe0r9vU997uCeav2d+Tj50gMPH/rssiiFYKghSKzCQfK9fdNJxb2L0yQKKEazAC/fVw8gXeCqujjbjUAguKlrQg/Eu66Nepm+iCS10CdkznrqEylOAHJALgrmAlnc44VXVHmFSppBuwGk5OEn0uVkY4gmWNHOkMnrKEnznEIQ0lwkGNVpqYJlS0n/HVNtQrxCuyHLceZUTM4F0it9QKRCNx9iu+H/MTMfmhvJD1glwK4p0OSL4dtGYheHwpOvJeX5MlFs= dcaro@eopsin.localdomain

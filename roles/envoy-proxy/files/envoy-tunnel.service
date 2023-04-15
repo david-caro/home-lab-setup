@@ -5,7 +5,7 @@ After=network-online.target
 [Service]
 Environment=
 Type=exec
-ExecStart=/bin/ssh -tNR  media.dcaro.es:1234:localhost:443 serveo.net 
+ExecStart=/bin/ssh -N -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -R  0.0.0.0:443:localhost:443 polaris.dcaro.es
 Restart=always
 RestartSec=30
 

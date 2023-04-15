@@ -28,3 +28,6 @@
       tags:
         - dns-server
         - dns
+    - role: ssh-bastion
+      tags:
+        - ssh-bastion

@@ -1,0 +1,27 @@
+---
+- name: "polaris-forwarder tasks"
+  tags:
+    - polaris
+    - polaris-forwarder
+  block:
+    - name: "Make sure ssh dir exists"
+      ansible.builtin.file:
+        state: "directory"
+        path: "/root/.ssh/"
+        owner: root
+        group: root
+        mode: '700'
+
+    - name: "setup root ssh key"
+      become: true
+      ansible.posix.authorized_key:
+        state: present
+        user: "root"
+        key: "{{ polaris_ssh_key }}"
+
+    - name: "Add gatewayports to sshd config"
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        line: "GatewayPorts yes"
+        state: present
+      notify: "Reload ssh"

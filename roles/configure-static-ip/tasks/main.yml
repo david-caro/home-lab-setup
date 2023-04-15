@@ -12,6 +12,6 @@
     - regexp: "^static routers"
       line: "static routers={{ routers }}"
     - regexp: "^static domain_name_servers"
-      line: "static domain_name_servers={{ dns_servers }}"
+      line: "static domain_name_servers={{ dns_server }}"
   notify:
     - Reboot PI

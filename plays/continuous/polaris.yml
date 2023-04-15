@@ -1,0 +1,15 @@
+---
+- name: Setup the polaris forwarder
+  hosts: polaris
+  become: false
+  remote_user: root
+  roles:
+    - role: basic-server
+      tags:
+        - basic-server
+    - role: setup-users
+      tags:
+        - setup-users
+    - role: polaris-forwarder
+      tags:
+        - polaris-forwarder
