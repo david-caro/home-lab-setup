@@ -34,5 +34,10 @@ apps:
         size: "500MB"
         dest: "/config"
         mount_mode: "rw"
+    simple_volumes:
+      - name: "Dbus"
+        host_src: "/var/run/dbus"
+        dest: "/run/dbus"
+        mount_mode: "ro"
     ports:
       - "8123:8123/tcp"

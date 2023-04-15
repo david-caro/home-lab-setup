@@ -1,5 +1,7 @@
 ---
 - name: Install packages
+  tags:
+    - install-packages
   ansible.builtin.package:
     name: "{{ item }}"
   with_items:
@@ -10,6 +12,8 @@
   when: apps is defined
 
 - name: Create apps
+  tags:
+    - create-apps
   include_tasks: create_app.yml
   loop: "{{ apps }}"
   loop_control:
