@@ -17,6 +17,7 @@
     immediate: true
   when:
     - ansible_facts['distribution'] == "Debian"
+    - ansible_hostname != 'vulcanus' 
 
 - ansible.builtin.package:
     name: "{{ item }}"

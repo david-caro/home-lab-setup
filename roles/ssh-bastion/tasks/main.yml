@@ -25,8 +25,8 @@
         - "Reload ssh-bastion"
 
     - name: "Add ssh bastion service"
-      ansible.builtin.copy:
-        src: ssh-bastion.service
+      ansible.builtin.template:
+        src: ssh-bastion.service.j2
         dest: "/usr/lib/systemd/system/ssh-bastion.service"
       notify:
         - "Reload ssh-bastion"

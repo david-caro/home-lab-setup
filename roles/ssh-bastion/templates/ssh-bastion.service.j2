@@ -1,0 +1,14 @@
+[Unit]
+Description=Ssh tunnel {{ polaris_server }}:{{ remote_port }} -> {{ local_port }}
+After=network-online.target
+
+[Service]
+Environment=
+Type=exec
+# fancy way of keeping stdin and stdout
+ExecStart=/bin/ssh -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes  -NR  {{ remote_port }}:0.0.0.0:{{ local_port }} {{ polaris_server }}
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
