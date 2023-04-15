@@ -1,0 +1,6 @@
+---
+- name: Reload update_ips
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: update_ips.timer
+    state: started

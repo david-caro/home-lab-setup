@@ -1,0 +1,35 @@
+---
+- name: "Ip-updater tasks"
+  tags:
+    - ip-updater
+  block:
+    - name: "Add ip updater script"
+      ansible.builtin.copy:
+        src: manage_ips.py
+        dest: "/usr/local/bin/manage_ips.py"
+        owner: root
+        group: root
+        mode: "0775"
+
+    - name: "Add systemd timer"
+      ansible.builtin.copy:
+        src: "update_ips.timer"
+        dest: "/usr/lib/systemd/system/update_ips.timer"
+      notify:
+        - "Reload update_ips"
+
+    - name: "Add systemd service"
+      ansible.builtin.template:
+        src: "update_ips.service.j2"
+        dest: "/usr/lib/systemd/system/update_ips.service"
+      notify:
+        - "Reload update_ips"
+
+    - name: "Reload systemd if needed"
+      meta: flush_handlers
+
+    - name: "Make sure update_ips.timer is running"
+      ansible.builtin.systemd:
+        name: update_ips.timer
+        state: started
+        enabled: True

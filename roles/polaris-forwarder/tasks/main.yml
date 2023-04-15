@@ -16,7 +16,7 @@
       become: true
       ansible.posix.authorized_key:
         state: present
-        user: "root"
+        user: root
         key: "{{ polaris_ssh_key }}"
 
     - name: "Add gatewayports to sshd config"

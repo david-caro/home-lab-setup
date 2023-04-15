@@ -2,6 +2,14 @@
 - name: Setup the NFS exports on the storage server
   hosts: eopsin
   become: true
+  pre_tasks:
+    - name: "load ip-updater secrets"
+      include_vars:
+        file: "{{ secrets_repo_path }}/ip_updater.yml"
+        name: ip_updater_config
+      no_log: true
+      tags:
+        - ip-updater
   roles:
     - role: nfs-server
       tags:
@@ -31,3 +39,6 @@
     - role: ssh-bastion
       tags:
         - ssh-bastion
+    - role: ip-updater
+      tags:
+        - ip-updater

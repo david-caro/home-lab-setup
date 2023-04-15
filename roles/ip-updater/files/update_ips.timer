@@ -1,0 +1,10 @@
+[Unit]
+Description=Triggers the update of the external ip records on OVH
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=30min
+
+[Install]
+WantedBy=timers.target
+
