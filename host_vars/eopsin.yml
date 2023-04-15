@@ -43,6 +43,7 @@ dns_domains:
   - name: "expenses.dcaro.es"
   - name: "znc.dcaro.es"
   - name: "ssh.dcaro.es"
+  - name: "grafana.dcaro.es"
 
 dhcpd_config:
     gateway: 192.168.1.1
