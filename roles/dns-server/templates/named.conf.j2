@@ -17,7 +17,7 @@ options {
 	secroots-file	"/var/named/data/named.secroots";
 	recursing-file	"/var/named/data/named.recursing";
 	allow-query     { any; };
-    forwarders { {{ dns_config["forwarders"] | join(' ;') }}; };
+        forwarders { {{ dns_config["forwarders"] | join(' ;') }}; };
 
 
 	/* 

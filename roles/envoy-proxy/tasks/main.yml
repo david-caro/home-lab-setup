@@ -1,9 +1,9 @@
 ---
-- name: "envoy-tunnel tasks"
+- name: "envoy-proxy tasks"
   tags:
     - envoy-proxy
   block:
-    - name: "Add envoy repo"
+    - name: "Add envoy repo - Fedora"
       yum_repository:
         name: "Tetrate GetEnvoy - Stable"
         baseurl: "https://rpm.dl.getenvoy.io/public/rpm/el/8/$basearch"
@@ -14,11 +14,16 @@
         sslcacert: "/etc/pki/tls/certs/ca-bundle.crt"
         metadata_expire: "300"
         description: "Envoy packages"
+      when:
+        - ansible_facts['distribution'] != "Debian"
 
     - name: "Install packages"
       ansible.builtin.package:
         name: "getenvoy-envoy"
         state: present
+        use: apt
+      when:
+        - ansible_facts['distribution'] != "Debian"
 
     - name: "Add envoy service"
       ansible.builtin.copy:
@@ -26,6 +31,8 @@
         dest: "/usr/lib/systemd/system/envoy.service"
       notify:
         - "Reload envoy"
+      when:
+        - ansible_facts['distribution'] != "Debian"
 
     - name: "Add envoy proxy config"
       template:
@@ -39,6 +46,35 @@
         name: envoy
         state: started
         enabled: True
+      when:
+        - ansible_facts['distribution'] != "Debian"
+
+    - name: "Start the envoy container"
+      tags:
+        - podman
+        - container
+      containers.podman.podman_container:
+        name: "envoy"
+        image: "docker.io/envoyproxy/envoy:v1.25-latest"
+        state: started
+        privileged: "true"
+        expose: "443"
+        ports: "443:443"
+        restart_policy: "always"
+        env:
+          ENVOY_UID: 0
+          ENVOY_GID: 0
+        volumes:
+          - /etc/envoy.yaml:/etc/envoy/envoy.yaml:ro
+          - /etc/letsencrypt/archive/dcaro.es/fullchain1.pem:/etc/letsencrypt/live/dcaro.es/fullchain.pem:ro
+          - /etc/letsencrypt/archive/dcaro.es/privkey1.pem:/etc/letsencrypt/live/dcaro.es/privkey.pem:ro
+
+    - name: "Add dns service to firewalld"
+      ansible.posix.firewalld:
+        service: dns
+        permanent: true
+        state: enabled
+
 
 - name: "envoy-tunnel tasks"
   tags:
@@ -75,5 +111,46 @@
     - name: "Make sure envoy-tunnel is running"
       ansible.builtin.systemd:
         name: envoy-tunnel
+        state: started
+        enabled: True
+
+
+- name: "certbot tasks"
+  tags:
+    - certbot
+  block:
+    - name: "Install packages"
+      ansible.builtin.package:
+        name:
+          - "certbot"
+          - "python3-certbot-dns-ovh"
+        state: present
+
+    - name: "Add ovh creds"
+      ansible.builtin.template:
+        src: ovh_creds.ini.j2
+        dest: "/etc/ovh-creds.ini"
+        mode: "0600"
+        owner: "root"
+        group: "root"
+
+    - name: "Add certbot timer"
+      ansible.builtin.copy:
+        src: certbot.timer
+        dest: "/usr/lib/systemd/system/certbot.timer"
+
+    - name: "Add certbot service"
+      ansible.builtin.copy:
+        src: certbot.service
+        dest: "/usr/lib/systemd/system/certbot.service"
+      notify:
+        - "Reload certbot"
+
+    - name: "Flush handlers"
+      meta: flush_handlers
+
+    - name: "Make sure certbot is running"
+      ansible.builtin.systemd:
+        name: certbot
         state: started
         enabled: True

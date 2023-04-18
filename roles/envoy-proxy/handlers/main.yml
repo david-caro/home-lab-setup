@@ -10,3 +10,9 @@
     daemon_reload: true
     name: envoy-tunnel
     state: restarted
+
+- name: Reload certbot
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: certbot
+    state: restarted

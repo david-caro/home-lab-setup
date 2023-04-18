@@ -1,5 +1,5 @@
 ---
 - name: Reload named
   ansible.builtin.systemd:
-    name: named
+    name: "named"
     state: restarted
