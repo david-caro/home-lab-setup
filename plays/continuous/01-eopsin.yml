@@ -5,8 +5,8 @@
   pre_tasks:
     - name: "load ip-updater secrets"
       include_vars:
-        file: "{{ secrets_repo_path }}/ip_updater.yml"
-        name: ip_updater_config
+        file: "{{ secrets_repo_path }}/ovh_creds.yml"
+        name: ovh_creds
       no_log: true
       tags:
         - ip-updater
@@ -18,27 +18,3 @@
       tags:
         - jellyfin
         - media
-    - role: envoy-proxy
-      tags:
-        - envoy
-        - proxy
-    - role: fail2ban
-      tags:
-        - fail2ban
-    - role: ansible-runner
-      tags:
-        - ansible-runner
-    - role: dhcp-server
-      tags:
-        - dhcp-server
-        - dhcp
-    - role: dns-server
-      tags:
-        - dns-server
-        - dns
-    - role: ssh-bastion
-      tags:
-        - ssh-bastion
-    - role: ip-updater
-      tags:
-        - ip-updater

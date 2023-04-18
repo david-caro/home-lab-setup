@@ -1,5 +1,5 @@
 ---
 - name: Reload dhcpd
   ansible.builtin.systemd:
-    name: dhcpd
+    name: "{{ 'dhcp' if ansible_facts['distribution'] != 'Debian' else 'isc-dhcp-server' }}"
     state: restarted
