@@ -2,6 +2,8 @@
 - name: "ssh-bastion tasks"
   tags:
     - ssh-bastion
+  when:
+    - ssh_bastion is defined
   block:
     - name: "Make sure ssh dir exists"
       ansible.builtin.file:
@@ -23,6 +25,11 @@
         mode: '400'
       notify:
         - "Reload ssh-bastion"
+
+    - name: "Add polaris public key"
+      ansible.builtin.known_hosts:
+        name: "polaris.dcaro.es"
+        key: "polaris.dcaro.es ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC3zLlcuEFXRppefTgQ2S1ycfdEzhLSVXpEGVG0iv4djzHBIBPOonpEp3IdmcpkzVGD1659e/UJx83KpNbiepEebxmTz49pl4oH27pYdVIsYCUdIKKLyPTa5M55ElZx773MTZTJQBPK92oeBUiF/RWER8W0716KrZgBJSAlF64IHP7wuqzOk34h/AM7ooUBsRLpewLbJn8fTFnNgK/LiFqeoF2IYAUzcqI5SWOatQccdnK79fJhfi+xjo9FQGn7XdySmjmByyL9BYZ0mSnGrkqaSSIMRyS2nNSC2mOzzdiGY13yebdS9kgVqghODQ4I5IuyAVk0HC0eRdqwHSEwN5E7T08TkaIEBL5YE+8jiJoZw1of+TCOvfCFYfbHMU3WxrwbNREerjHGuP9WCLD8+pnpxH7LTjdCHAkvW8oFzdd7udy64TTCefUPxLfO1+NJLLH4rMdOw2pXA6Sg78qBHnPJdKlkOb966HFmNqOhGRfCFH8XJtIdUNraXxJEqf8LLPs= root@polaris-1"
 
     - name: "Add ssh bastion service"
       ansible.builtin.template:

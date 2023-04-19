@@ -41,3 +41,7 @@ apps:
         mount_mode: "ro"
     ports:
       - "8123:8123/tcp"
+
+ssh_bastion:
+  local_port: 22
+  remote_port: 32203

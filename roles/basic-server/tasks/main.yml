@@ -5,6 +5,7 @@
     - ansible_facts['distribution'] == "Debian"
   with_items:
     - vim
+    - byobu
     - mosh
     - prometheus-node-exporter
     - python3-firewall
@@ -32,4 +33,4 @@
 - name: "Add vimrc"
   ansible.builtin.copy:
       src: vimrc
-      dest: "/etc/vimrc.local"
+      dest: "/etc/vim/vimrc.local"

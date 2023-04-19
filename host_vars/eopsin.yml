@@ -6,3 +6,7 @@ exports:
   - name: /data
     options: ro,sync,no_root_squash
     nodes: 192.168.1.0/24
+
+ssh_bastion:
+  local_port: 22
+  remote_port: 32200

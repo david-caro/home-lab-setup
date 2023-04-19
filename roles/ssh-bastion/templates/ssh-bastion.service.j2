@@ -1,12 +1,12 @@
 [Unit]
-Description=Ssh tunnel {{ polaris_server }}:{{ remote_port }} -> {{ local_port }}
+Description=Ssh tunnel {{ polaris_server }}:{{ ssh_bastion.remote_port }} -> {{ ssh_bastion.local_port }}
 After=network-online.target
 
 [Service]
 Environment=
 Type=exec
 # fancy way of keeping stdin and stdout
-ExecStart=/bin/ssh -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes  -NR  {{ remote_port }}:0.0.0.0:{{ local_port }} {{ polaris_server }}
+ExecStart=/bin/ssh -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes  -NR  {{ ssh_bastion.remote_port }}:0.0.0.0:{{ ssh_bastion.local_port }} polaris.dcaro.es
 Restart=always
 RestartSec=30
 

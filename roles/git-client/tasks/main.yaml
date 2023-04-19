@@ -1,0 +1,28 @@
+---
+- name: "git-client tasks"
+  tags:
+    - "git-client"
+  block:
+    - name: "Install packages"
+      ansible.builtin.package:
+        name:
+          - vim
+          - git
+
+    - name: "Add gitexcludes"
+      ansible.builtin.copy:
+        src: "{{ item.1 }}"
+        dest: "~{{ item.0.name }}/.{{ item.1 }}"
+      loop: "{{ users|zip(files * 10) }}"
+      vars:
+        files:
+          - gitexcludes
+
+    - name: "Add gitconfigs"
+      ansible.builtin.template:
+        src: "{{ item.1 }}.j2"
+        dest: "~{{ item.0.name }}/.{{ item.1 }}"
+      loop: "{{ users|zip(files * 10) }}"
+      vars:
+        files:
+          - gitconfig

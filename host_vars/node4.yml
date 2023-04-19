@@ -106,3 +106,7 @@ apps:
     nbd_volumes: []
     ports:
       - "8080:80/tcp"
+
+ssh_bastion:
+  local_port: 22
+  remote_port: 32204

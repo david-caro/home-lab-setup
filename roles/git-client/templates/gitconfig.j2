@@ -1,0 +1,126 @@
+[user]
+    name = David Caro
+    email = {{ git_config[item.0.name].email }}
+    signingkey = 718083A2AC8B314FB4CE11714071C7E1D26269C3
+    signkey = 718083A2AC8B314FB4CE11714071C7E1D26269C3
+
+[format]
+    signOff = true
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = auto
+
+[color.grep]
+    filename = green
+    linenumber = blue
+
+[push]
+    default = matching
+    gpgSign = if-asked
+
+[core]
+    editor = vim --nofork '+set spell'
+    pager = less -R
+    excludesfile = ~/.gitexcludes
+
+[alias]
+    diverges = !bash -c 'diff -u <(git rev-list --first-parent "${1}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+    st = status
+    ci = commit --signoff
+    rh = reset --hard
+    commit = commit --signoff
+    commita = commit --signoff -a
+    br = branch
+    co = checkout
+    df = diff
+    lg = log -p
+    up = !sh -c 'git pull --rebase --prune && git log --pretty=format:\"%Cred%ae %Creset- %C(yellow)%s %Creset(%ar)\" HEAD@{1}..'
+    lol = log --graph --pretty=format:\"%C(auto)%h%d%Creset %C(cyan)(%cr)%Creset %C(green)%cn <%ce>%Creset %s\"
+    lola = log --graph --pretty=format:\"%C(auto)%h%d%Creset %C(cyan)(%cr)%Creset %C(green)%cn <%ce>%Creset %s\" --all
+    # same as above, but ISO date
+    lold = log --graph --pretty=format:\"%C(auto)%h%d%Creset %C(cyan)(%ci)%Creset %C(green)%cn <%ce>%Creset %s\"
+    ls = ls-files
+    frh = !sh -c 'git fetch --all --tags && git reset --hard FETCH_HEAD'
+    fetch-reset-hard = frh
+    frhc = !sh -c 'git fetch --all --tags && git reset --hard FETCH_HEAD && git clean -dxf'
+    fetch-reset-hard-clean = frhc
+    frm = !sh -c 'git fetch --all --tags && git reset --hard origin/master'
+    fetch-reset-master = frm
+    frmc = !sh -c 'git fetch --all --tags && git reset --hard origin/master && git clean -dxf'
+    fetch-reset-master-clean = frmc
+    frb = !bash -c 'branch="$(git rev-parse --abbrev-ref HEAD)" && git fetch --all --tags && git reset origin/"$branch" --hard'
+    fetch-reset-branch = frb
+    frbc = !bash -c 'branch="$(git rev-parse --abbrev-ref HEAD)" && git fetch --all --tags && git reset origin/"$branch" --hard && git clean -fdx'
+    fetch-reset-branch-clean = frbc
+    pm = push origin HEAD:refs/for/master
+    push-master = pm
+    pmd = push origin HEAD:refs/drafts/master
+    push-master-draft = pmd
+    pd = push origin HEAD:refs/for/development
+    push-development = pd
+    pdd = push origin HEAD:refs/drafts/development
+    push-development-draft = pdd
+    pg = !bash -c 'branch="$(git rev-parse --abbrev-ref HEAD)" && git push origin HEAD:refs/for/"$branch"'
+    push-gerrit = pg
+    pgd = !bash -c 'branch="$(git rev-parse --abbrev-ref HEAD)" && git push origin HEAD:refs/drafts/"$branch"'
+    push-gerrit-draft = pgd
+    pb = !bash -c 'branch="$(git rev-parse --abbrev-ref HEAD)" && git push origin HEAD:refs/heads/"$branch"'
+    push-branch = pb
+    pbf = !bash -c 'branch="$(git rev-parse --abbrev-ref HEAD)" && git push origin HEAD:refs/heads/"$branch" --force'
+    push-branch-force = pbf
+    go = reset --hard
+    pr = !bash -c 'git fetch origin +refs/pull/"${0}"/head:pr/"${0}"'
+    pull-request-fetch = pr
+    copr = !bash -c 'git fetch origin +refs/pull/"${0}"/head:pr/"${0}" && git reset --hard pr/"${0}"'
+    checkout-pull-request-fetch = copr
+    get = cherry-pick
+    ca = commit --signoff -a --amend
+    commit-amend = ca
+    showat = !show_at "$*"
+    g = grep --break --heading -n
+    nice-grep = g
+    arg = !bash -c 'repo="${PWD##*/}" && git remote add "${0}" "git@github.com:${0}/${repo}.git" && git fetch "${0}"'
+    add-remote-github = arg
+    rw = review --reviewers aborrero bstorm abogott mdipietro
+    wmcs = review --reviewers aborrero abogott vrook sstefanova rolisaemeka-ctr fnegri
+    review-wmcs = review --reviewers aborrero abogott vrook sstefanova rolisaemeka-ctr fnegri
+    review-tbs = review --reviewers sstefanova rolisaemeka-ctr fnegri
+    count-lines = "! f() { git log --author=\"$1\" --pretty=tformat: --numstat \"${@:2}\" | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf \"added lines: %s, removed lines: %s, total lines: %s\\n\", add, subs, loc }'; }; f"
+    new-count-lines = "! f() { git log --author=\"$1\" --pretty=tformat: --numstat ; }; f"
+
+[github]
+    user = david-caro
+
+[diff]
+    tool = vimdiff
+    renameLimit = 1024
+
+[difftool "vimdiff"]
+    cmd = vim -Rd $LOCAL $REMOTE -c 'file  local' -c 'buffer 2' -c 'file remote' -c 'buffer 1'
+
+[merge]
+    #tool = meld
+    tool = vimdiff
+    conflictstyle = diff3
+
+[mergetool "vimdiff"]
+    cmd = vim -d $BASE $LOCAL $REMOTE $MERGED -c 'buffer 1 | file base | buffer 2 | file local | buffer 3 | file remote | buffer 1' -c '$wincmd w' -c 'wincmd J' -c 'nnoremap <silent> <leader>1 :diffget 1<CR>' -c 'nnoremap <silent> <leader>3 :diffget 3<CR>' -c 'nnoremap <silent> <leader>2 :diffget 2<CR>'
+
+[http]
+    sslVerify = false
+
+[gitreview]
+    tool = vim -d
+    username = dcaro
+
+[commit]
+    #gpgsign = true
+[hub]
+    protocol = ssh
+[init]
+	defaultBranch = main
+[cola]
+	spellcheck = false

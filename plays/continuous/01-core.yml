@@ -1,0 +1,21 @@
+---
+- name: Setup core network services
+  hosts: core
+  become: true
+  pre_tasks:
+    - name: "load ovh_creds secrets"
+      include_vars:
+        file: "{{ secrets_repo_path }}/ovh_creds.yml"
+        name: ovh_creds
+      no_log: true
+      tags:
+        - certbot
+        - envoy-proxy
+        - ip-updater
+  roles:
+    - envoy-proxy
+    - fail2ban
+    - ansible-runner
+    - dhcp-server
+    - dns-server
+    - ip-updater

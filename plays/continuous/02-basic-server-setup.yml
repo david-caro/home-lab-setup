@@ -6,3 +6,5 @@
     - setup-users
     - set-hosts
     - basic-server
+    - git-client
+    - ssh-bastion

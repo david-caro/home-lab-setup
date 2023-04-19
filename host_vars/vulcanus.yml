@@ -1,3 +1,10 @@
 ---
-remote_port: 32223
-local_port: 22
+ssh_bastion:
+  remote_port: 32223
+  local_port: 22
+
+git_config:
+  dcaro:
+    email: dcaro@wikimedia.org
+  dinika:
+    email: dinikasaxenas@gmail.com

@@ -1,19 +1,23 @@
 ---
-- name: Install fail2ban packages
-  ansible.builtin.package:
-    name: "{{ item }}"
-  with_items:
-    - fail2ban
+- name: "fail2ban tasks"
+  tags:
+    - "fail2ban"
+  block:
+    - name: "Install fail2ban packages"
+      ansible.builtin.package:
+        name: "{{ item }}"
+      with_items:
+        - fail2ban
 
-- name: "Add sshd fail2ban jail config"
-  ansible.builtin.copy:
-    src: "00-sshd.conf"
-    dest: "/etc/fail2ban/jail.d/00-sshd.conf"
-  notify:
-    - "Reload fail2ban"
+    - name: "Add sshd fail2ban jail config"
+      ansible.builtin.copy:
+        src: "00-sshd.conf"
+        dest: "/etc/fail2ban/jail.d/00-sshd.conf"
+      notify:
+        - "Reload fail2ban"
 
-- name: "Make sure it's running"
-  ansible.builtin.systemd:
-    name: fail2ban
-    state: started
-    enabled: True
+    - name: "Make sure it's running"
+      ansible.builtin.systemd:
+        name: fail2ban
+        state: started
+        enabled: True
