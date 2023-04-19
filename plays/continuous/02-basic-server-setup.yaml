@@ -1,6 +1,6 @@
 ---
 - name: Basic setup for all servers
-  hosts: all
+  hosts: basic_server
   become: true
   roles:
     - setup-users
@@ -8,3 +8,4 @@
     - basic-server
     - git-client
     - ssh-bastion
+    - fail2ban

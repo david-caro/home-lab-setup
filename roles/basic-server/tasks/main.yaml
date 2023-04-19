@@ -30,7 +30,17 @@
     - byobu
     - golang-github-prometheus-node-exporter
 
-- name: "Add vimrc"
+
+- name: "Add vimrc - Debian"
   ansible.builtin.copy:
       src: vimrc
       dest: "/etc/vim/vimrc.local"
+  when:
+    - ansible_facts['distribution'] == "Debian"
+
+- name: "Add vimrc - other"
+  ansible.builtin.copy:
+      src: vimrc
+      dest: "/etc/vimrc.local"
+  when:
+    - ansible_facts['distribution'] != "Debian"

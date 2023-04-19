@@ -30,5 +30,5 @@ Just:
 
 Usage
 #####
-Then you can change the `cephadm_image` from the `group_vars/all.yml` file to
+Then you can change the `cephadm_image` from the `group_vars/all.yaml` file to
 that new image tag (if you changed it).

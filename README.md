@@ -80,10 +80,10 @@ node2
 + node3
 ```
 
-Now we need to add a new host var file under `host_vars/node3.yml` with the
+Now we need to add a new host var file under `host_vars/node3.yaml` with the
 desired ip:
 ```
-# host_vars/node3.yml
+# host_vars/node3.yaml
 ---
 desired_ipaddress: 192.168.1.23
 ```
@@ -92,7 +92,7 @@ desired_ipaddress: 192.168.1.23
 The first time, the system only has th `pi` user, and the following expects
 that user to exist with the default password (then the user is deleted):
 ```
-> ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook plays/one-shot/setup-raspberry-01.yml
+> ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook plays/one-shot/setup-raspberry-01.yaml
 ```
 
 The skipping of host key checking is needed the first time otherwise ansible
@@ -102,7 +102,7 @@ to remove the old ssh key from your `known_hosts` file).
 That will setup the users and ssh keys, then you have to run the second
 playbook (in a different play as it uses a different user now):
 ```
-> ansible-playbook plays/one-shot/setup-raspberry-02.yml
+> ansible-playbook plays/one-shot/setup-raspberry-02.yaml
 ```
 
 That will update the hosts file on all the nodes, change some kernel setting,
@@ -114,7 +114,7 @@ As we want Debian 11 on the k3s nodes, we have to upgrade (until the Raspberry
 OS images are out), for that you havet to run setup 03, that might take a
 while though, so prepare some coffe or something:
 ```
-> ansible-playbook plays/one-shot/setup-laptop-03.yml
+> ansible-playbook plays/one-shot/setup-laptop-03.yaml
 ```
 
 ### Refresh your laptop settings
@@ -134,7 +134,7 @@ node2 ansible_host=192.168.1.22
 Run the laptop setup playbook, needs sudo to change the `/etc/hosts` file, so
 pass the `-K` flag to prompt for it:
 ```
-> ansible-playbook plays/one-shot/setup-laptop-01.yml -K
+> ansible-playbook plays/one-shot/setup-laptop-01.yaml -K
 ```
 
 ## Install k3s
@@ -142,13 +142,13 @@ __NOTE__: this is still not working along with ceph, current setup prefers CEPH
 overs k3s so we installed CEPH only.
 Just run the playbook:
 ```
-> ansible-playbook plays/one-shot/install-k3s.yml
+> ansible-playbook plays/one-shot/install-k3s.yaml
 ```
 
 If you installed the server, you'll have to run the second part too, to get
 kubectl and the config from the server host:
 ```
-> ansible-playbook plays/one-shot/setup-laptop-02.yml
+> ansible-playbook plays/one-shot/setup-laptop-02.yaml
 ```
 
 ### Test that everything went ok
@@ -172,7 +172,7 @@ Current setup uses cephadm with a custom image with all the bugs fixed/applied
 
 Just run the playbook:
 ```
-> ansible-playbook plays/one-shot/install-ceph.yml
+> ansible-playbook plays/one-shot/install-ceph.yaml
 ```
 
 That should trigger the whole installation setup, that cephadm will take over.

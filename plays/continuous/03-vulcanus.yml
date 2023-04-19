@@ -1,8 +1,0 @@
----
-- name: Setup the work laptop
-  hosts: work
-  become: true
-  roles:
-    - role: ssh-bastion
-      tags:
-        - ssh-bastion

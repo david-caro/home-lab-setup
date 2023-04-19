@@ -47,7 +47,7 @@ apps:
         dest: "/etc/prometheus/prometheus.yml"
         file_mode: "644"
         mount_mode: "ro"
-        template: "prometheus.yml.j2"
+        template: "prometheus.yaml.j2"
     simple_volumes:
       - name: "Timezone"
         host_src: "/etc/timezone"

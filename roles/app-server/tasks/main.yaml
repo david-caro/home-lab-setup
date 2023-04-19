@@ -14,7 +14,7 @@
 - name: Create apps
   tags:
     - create-apps
-  include_tasks: create_app.yml
+  include_tasks: create_app.yaml
   loop: "{{ apps }}"
   loop_control:
     loop_var: current_app
