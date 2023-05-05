@@ -6,7 +6,7 @@ envoy_config:
     - 1234
   domains:
     - name: "media"
-      address: 127.0.0.1
+      address: 192.168.1.92
       port: 8096
       proto: http
     - name: "sudo"

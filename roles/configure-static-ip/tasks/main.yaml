@@ -1,6 +1,9 @@
 ---
 - name: configure static IP in /etc/dhcpcd.conf
   become: true
+  tags:
+    - static-ip
+    - configure-static-ip
   lineinfile:
     dest:  /etc/dhcpcd.conf
     regexp: "{{ item.regexp }}"

@@ -58,8 +58,12 @@
         image: "docker.io/envoyproxy/envoy:v1.25-latest"
         state: started
         privileged: "true"
-        expose: "443"
-        ports: "443:443"
+        expose:
+          - "443"
+          - "9901"
+        ports:
+          - "443:443"
+          - "9901:9901"
         restart_policy: "always"
         env:
           ENVOY_UID: 0
