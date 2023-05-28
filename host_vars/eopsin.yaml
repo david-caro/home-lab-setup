@@ -4,7 +4,16 @@ exports:
     options: rw,sync,no_root_squash
     nodes: cluster
   - name: /data
-    options: ro,sync,no_root_squash
+    options: rw,sync,no_root_squash,crossmnt
+    nodes: 192.168.1.101/32
+  - name: /data
+    options: rw,sync,no_root_squash,crossmnt
+    nodes: 192.168.1.102/32
+  - name: /data
+    options: rw,sync,no_root_squash,crossmnt
+    nodes: 192.168.1.103/32
+  - name: /data
+    options: ro,sync,no_root_squash,crossmnt
     nodes: 192.168.1.0/24
 
 ssh_bastion:

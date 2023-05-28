@@ -45,12 +45,18 @@ dhcpd_config:
       #- 1.1.1.1
       #- 8.8.8.8
     static-hosts:
+      - name: eopsin
+        ip4: 192.168.1.92
+        mac: 34:64:a9:9a:45:84
       - name: magnum
         ip4: 192.168.1.102
         mac: 28:7f:cf:95:c4:af
       - name: vulcanus
         ip4: 192.168.1.101
         mac: c8:58:c0:ce:a4:dc
+      - name: tastytiger
+        ip4: 192.168.1.103
+        mac: 7a:00:b6:aa:36:e5
 
 dns_config:
   forwarders:

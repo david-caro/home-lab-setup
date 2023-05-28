@@ -13,7 +13,6 @@ SUBDOMAINS = [
     "expenses",
     "grafana",
     "homeassistant",
-    "bigaswedding",
     "ssh",
     "fr.ssh",
     "sudo",
