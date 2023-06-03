@@ -4,6 +4,7 @@
   ansible.builtin.user:
     name: "{{ item.name }}"
     groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi
+    append: true
   loop: "{{ users }}"
   when: >-
     'raspberries' in group_names
@@ -13,6 +14,7 @@
   ansible.builtin.user:
     name: "{{ item.name }}"
     groups: adm,dialout,cdrom,audio,video,games,users,input
+    append: true
   loop: "{{ users }}"
   when: >-
     'raspberries' not in group_names
