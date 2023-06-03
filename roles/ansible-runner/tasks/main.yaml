@@ -1,15 +1,10 @@
 ---
-- name: "Install packages"
+- name: "Install venv packages"
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   with_items:
-    - ansible
-    - ansible-collection-ansible-netcommon
-    - ansible-collection-ansible-utils
-    - ansible-collection-containers-podman
-    - ansible-collection-community-general
-    - ansible-collection-ansible-posix
+    - python3-venv
 
 - name: "Add ansible-runner script"
   ansible.builtin.copy:
