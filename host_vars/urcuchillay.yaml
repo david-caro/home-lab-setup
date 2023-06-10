@@ -1,0 +1,10 @@
+---
+ssh_bastion:
+  remote_port: 32224
+  local_port: 22
+
+git_config:
+  dcaro:
+    email: me@dcaro.es
+  dinika:
+    email: dinikasaxenas@gmail.com
