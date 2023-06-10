@@ -1,0 +1,31 @@
+---
+- name: "Dotfiles installation"
+  tags:
+    - "dotfiles"
+  block:
+    - name: "Install dnf packages"
+      ansible.builtin.package:
+        name: "{{ item }}"
+      loop:
+        - python3-virtualenv
+        - offlineimap
+        - mutt
+        - gvim
+        - cmake
+        - gcc
+        - python3-keyring
+        - msmtp
+        - python3-click
+
+    - name: "Clone dotfiles"
+      ansible.builtin.git:
+        repo: "ssh://polaris.dcaro.es:32222/home/{{ item }}/dotfiles"
+        dest: "/home/{{ item }}/dotfiles"
+        version: "{{ ansible_hostname }}"
+        update: no
+      loop: "{{ dotfiles.users }}"
+
+    - name: "Create dotfile links"
+      ansible.builtin.shell:
+        cmd: "/home/{{ item }}/dotfiles/install_dotfiles.sh"
+      loop: "{{ dotfiles.users }}"

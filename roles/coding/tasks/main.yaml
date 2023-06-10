@@ -20,14 +20,12 @@
         - golang
         - gh
         - python3-virtualenv
-        - offlineimap
-        - mutt
         - gvim
         - google-chrome
         - cmake
         - gcc
-        - python3-keyring
         - podman
+
     - name: "Install flatpack packages"
       community.general.flatpak:
         state: present

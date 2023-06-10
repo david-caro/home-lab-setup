@@ -3,10 +3,9 @@ Description=Ssh tunnel {{ polaris_server }}:{{ ssh_bastion.remote_port }} -> {{ 
 After=network-online.target
 
 [Service]
-Environment=
 Type=exec
-# fancy way of keeping stdin and stdout
-ExecStart=/bin/ssh -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes  -NR  {{ ssh_bastion.remote_port }}:0.0.0.0:{{ ssh_bastion.local_port }} polaris.dcaro.es
+# need the bash wrapper so it searches the path, as ssh might be in different places
+ExecStart=bash -c "ssh -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes  -NR  {{ ssh_bastion.remote_port }}:0.0.0.0:{{ ssh_bastion.local_port }} polaris.dcaro.es"
 Restart=always
 RestartSec=30
 

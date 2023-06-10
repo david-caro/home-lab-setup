@@ -1,6 +1,6 @@
 ---
 ssh_bastion:
-  remote_port: 32224
+  remote_port: 32225
   local_port: 22
 
 git_config:
