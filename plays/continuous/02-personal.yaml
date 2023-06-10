@@ -1,0 +1,6 @@
+---
+- name: Setup personal servers
+  hosts: personal
+  become: true
+  roles:
+    - personal

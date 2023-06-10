@@ -1,0 +1,37 @@
+---
+- name: "persotal laptop tasks"
+  tags:
+    - "personal"
+  block:
+    - name: "Custom repos"
+      ansible.builtin.yum_repository:
+        name: "{{ repo.name }}"
+        description: "{{ repo.name }}"
+        baseurl: "{{ repo.baseurl }}"
+        gpgkey: "{{ repo.gpgkey }}"
+      loop: "{{ repos }}"
+      loop_control:
+        loop_var: "repo"
+    - name: "Install dnf packages"
+      ansible.builtin.package:
+        name: "{{ item }}"
+      loop:
+        - code
+        - golang
+        - gh
+        - python3-virtualenv
+        - offlineimap
+        - mutt
+        - gvim
+        - google-chrome
+        - cmake
+        - gcc
+        - python3-keyring
+        - podman
+    - name: "Install flatpack packages"
+      community.general.flatpak:
+        state: present
+        name: "{{ item }}"
+      loop:
+        - io.podman_desktop.PodmanDesktop
+        - com.github.iwalton3.jellyfin-media-player

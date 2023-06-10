@@ -10,6 +10,8 @@
     - prometheus-node-exporter
     - python3-firewall
     - firewalld
+    - strace
+    - htop
 
 - ansible.posix.firewalld:
     port: 9100/tcp
