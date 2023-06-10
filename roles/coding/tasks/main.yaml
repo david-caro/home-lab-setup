@@ -1,7 +1,7 @@
 ---
-- name: "persotal laptop tasks"
+- name: "Setup coding environment"
   tags:
-    - "personal"
+    - "coding"
   block:
     - name: "Custom repos"
       ansible.builtin.yum_repository:
@@ -12,6 +12,7 @@
       loop: "{{ repos }}"
       loop_control:
         loop_var: "repo"
+
     - name: "Install dnf packages"
       ansible.builtin.package:
         name: "{{ item }}"
@@ -25,6 +26,17 @@
         - cmake
         - gcc
         - podman
+        - podman-docker
+        - rvm
+
+    - name: Install nvm
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | sudo -u {{ item }} bash
+      args:
+        creates: "/home/{{ item }}/.nvm/nvm.sh"
+      loop:
+        - dinika
+        - dcaro
 
     - name: "Install flatpack packages"
       community.general.flatpak:
