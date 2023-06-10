@@ -1,6 +1,9 @@
 ---
 - name: add known nodes to the hosts file
   become: true
-  template:
-    src: hosts.j2
-    dest: /etc/hosts
+  ansible.builtin.lineinfile:
+    line: "{{ hostvars[host]['ansible_host'] }} {{ host }}"
+    path: "/etc/hosts"
+  loop: "{{ groups['all'] }}"
+  loop_control:
+    loop_var: host

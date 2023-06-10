@@ -57,6 +57,9 @@ dhcpd_config:
       - name: tastytiger
         ip4: 192.168.1.103
         mac: 7a:00:b6:aa:36:e5
+      - name: urcuchillay
+        ip4: 192.168.1.104
+        mac: f4:c8:8a:5d:dc:16
 
 dns_config:
   forwarders:
