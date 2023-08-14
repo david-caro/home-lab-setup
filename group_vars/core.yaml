@@ -27,15 +27,19 @@ envoy_config:
       proto: http
 
 dns_domains:
-  - name: "media.dcaro.es"
-  - name: "sudo.dcaro.es"
-  - name: "homeassistant.dcaro.es"
-  - name: "expenses.dcaro.es"
-  - name: "znc.dcaro.es"
-  - name: "ssh.dcaro.es"
-  - name: "grafana.dcaro.es"
-  - name: "polaris.dcaro.es"
-    ip: 68.183.240.105
+  a:
+    - name: "media.dcaro.es"
+    - name: "sudo.dcaro.es"
+    - name: "homeassistant.dcaro.es"
+    - name: "expenses.dcaro.es"
+    - name: "znc.dcaro.es"
+    - name: "ssh.dcaro.es"
+    - name: "grafana.dcaro.es"
+    - name: "polaris.dcaro.es"
+      ip: 68.183.240.105
+  cname:
+    - name: "musings.dcaro.es"
+      dest: "david-caro.github.io"
 
 dhcpd_config:
     gateway: 192.168.1.1

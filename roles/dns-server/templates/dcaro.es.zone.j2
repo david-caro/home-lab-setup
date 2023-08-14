@@ -18,7 +18,10 @@ ns1     IN      A       {{ ansible_default_ipv4.address }}
 
 
 .       IN      A       192.168.1.92
-{% for dns_domain in dns_domains %}
+{% for dns_domain in dns_domains.a %}
 {{ dns_domain.name }}.    IN      A       {{ dns_domain.ip | default(ansible_default_ipv4.address) }}
 {% endfor %}
 
+{% for dns_domain in dns_domains.cname %}
+{{ dns_domain.name }}.    IN      CNAME       {{ dns_domain.dest }}
+{% endfor %}
