@@ -38,6 +38,13 @@
     notify:
       - "Reload named"
 
+  - name: "Add greyllama.cc zone config"
+    template:
+      src: greyllama.cc.zone.j2
+      dest: "{{ '/etc/named/greyllama.cc.zone' if ansible_facts['distribution'] != 'Debian' else '/etc/bind/greyllama.cc.zone' }}" 
+    notify:
+      - "Reload named"
+
   - name: "Make sure it's running"
     ansible.builtin.systemd:
       name: "named"

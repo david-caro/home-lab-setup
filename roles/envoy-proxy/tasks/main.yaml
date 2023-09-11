@@ -79,7 +79,6 @@
         permanent: true
         state: enabled
 
-
 - name: "envoy-tunnel tasks"
   tags:
     - envoy-tunnel
@@ -90,7 +89,7 @@
         path: "/root/.ssh/"
         owner: root
         group: root
-        mode: '700'
+        mode: "700"
 
     - name: "Add ssh tunnel credentials"
       with_items:
@@ -101,7 +100,7 @@
         dest: "/root/.ssh/"
         owner: root
         group: root
-        mode: '400'
+        mode: "400"
       notify:
         - "Reload envoy-tunnel"
 
@@ -117,7 +116,6 @@
         name: envoy-tunnel
         state: started
         enabled: True
-
 
 - name: "certbot tasks"
   tags:
@@ -135,6 +133,14 @@
         src: ovh_creds.ini.j2
         dest: "/etc/ovh-creds.ini"
         mode: "0600"
+        owner: "root"
+        group: "root"
+
+    - name: "Add certbot config"
+      ansible.builtin.copy:
+        src: dcaro.es.conf
+        dest: "/etc/letsencrypt/renewal/dcaro.es.conf"
+        mode: "0400"
         owner: "root"
         group: "root"
 

@@ -4,30 +4,53 @@ envoy_config:
   ports:
     - 443
     - 1234
-  domains:
-    - name: "media"
-      address: 192.168.1.92
-      port: 8096
-      proto: http
-    - name: "sudo"
-      address: 192.168.1.12
-      port: 8080
-      proto: http
-    - name: "expenses"
-      address: node4
-      port: 8080
-      proto: http
-    - name: "homeassistant"
-      address: node3
-      port: 8123
-      proto: http
-    - name: "grafana"
-      address: node4
-      port: 18443
-      proto: http
+  backends:
+      - name: "media"
+        address: 192.168.1.92
+        port: 8096
+        proto: http
+        domains:
+          - dcaro.es
+          - greyllama.cc
+      - name: "sudo"
+        address: 192.168.1.12
+        port: 8080
+        proto: http
+        domains:
+          - dcaro.es
+          - greyllama.cc
+      - name: "expenses"
+        address: node4
+        port: 8080
+        proto: http
+        domains:
+          - dcaro.es
+          - greyllama.cc
+      - name: "homeassistant"
+        address: node3
+        port: 8123
+        proto: http
+        domains:
+          - dcaro.es
+          - greyllama.cc
+      - name: "grafana"
+        address: node4
+        port: 18443
+        proto: http
+        domains:
+          - dcaro.es
+          - greyllama.cc
 
-dns_domains:
+dns_config:
+  domains:
+    - "dcaro.es"
+    - "greyllama.cc"
   a:
+    - name: "media.greyllama.cc"
+    - name: "homeassistant.greyllama.cc"
+    - name: "expenses.greyllama.cc"
+    - name: "ssh.greyllama.cc"
+    - name: "grafana.greyllama.cc"
     - name: "media.dcaro.es"
     - name: "sudo.dcaro.es"
     - name: "homeassistant.dcaro.es"
@@ -40,32 +63,30 @@ dns_domains:
   cname:
     - name: "musings.dcaro.es"
       dest: "david-caro.github.io"
-
-dhcpd_config:
-    gateway: 192.168.1.1
-    dns-servers:
-      - "{{ ansible_host }}"
-      # we use the above for recursive resolving
-      #- 1.1.1.1
-      #- 8.8.8.8
-    static-hosts:
-      - name: eopsin
-        ip4: 192.168.1.92
-        mac: 34:64:a9:9a:45:84
-      - name: magnum
-        ip4: 192.168.1.102
-        mac: 28:7f:cf:95:c4:af
-      - name: vulcanus
-        ip4: 192.168.1.101
-        mac: c8:58:c0:ce:a4:dc
-      - name: tastytiger
-        ip4: 192.168.1.103
-        mac: 7a:00:b6:aa:36:e5
-      - name: urcuchillay
-        ip4: 192.168.1.104
-        mac: f4:c8:8a:5d:dc:16
-
-dns_config:
   forwarders:
     - 1.1.1.1
     - 8.8.8.8
+
+dhcpd_config:
+  gateway: 192.168.1.1
+  dns-servers:
+    - "{{ ansible_host }}"
+    # we use the above for recursive resolving
+    #- 1.1.1.1
+    #- 8.8.8.8
+  static-hosts:
+    - name: eopsin
+      ip4: 192.168.1.92
+      mac: 34:64:a9:9a:45:84
+    - name: magnum
+      ip4: 192.168.1.102
+      mac: 28:7f:cf:95:c4:af
+    - name: vulcanus
+      ip4: 192.168.1.101
+      mac: c8:58:c0:ce:a4:dc
+    - name: tastytiger
+      ip4: 192.168.1.103
+      mac: 7a:00:b6:aa:36:e5
+    - name: urcuchillay
+      ip4: 192.168.1.104
+      mac: f4:c8:8a:5d:dc:16

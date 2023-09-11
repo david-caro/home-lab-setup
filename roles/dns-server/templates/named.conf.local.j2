@@ -6,7 +6,9 @@
 // organization
 include "/etc/bind/zones.rfc1918";
 
-zone "dcaro.es" {
+{% for domain_name in dns_config.domains %}
+zone "{{ domain_name }}" {
     type  master;
-    file "/etc/bind/dcaro.es.zone";
+    file "/etc/bind/{{ domain_name }}.zone";
 };
+{% endfor %}

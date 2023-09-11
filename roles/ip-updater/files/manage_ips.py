@@ -20,19 +20,22 @@ SUBDOMAINS = [
     "ceph",
     "media",
     "skill-media",
-
 ]
-URL_TEMPLATE="http://www.ovh.com/nic/update?system=dyndns&hostname={subdomain}.dcaro.es&myip={ip}"
+DOMAINS = [
+    "dcaro.es",
+    "greyllama.cc",
+]
+URL_TEMPLATE = "http://www.ovh.com/nic/update?system=dyndns&hostname={subdomain}.{domain}&myip={ip}"
 
 
 LOGGER = logging.getLogger(__name__)
 
 
-
 @click.group()
 def main():
-    #result = requests.get(URL)
+    # result = requests.get(URL)
     pass
+
 
 @main.command()
 def get_my_ip_v6():
@@ -49,10 +52,10 @@ def get_my_ip_v4():
 
 
 @click.option("--static-ip", default=None)
-@click.option("--user", required=True)
+# @click.option("--user", required=True)
 @click.option("--password", required=True)
 @main.command()
-def update_ips(static_ip, user, password):
+def update_ips(static_ip, password):
     if not static_ip:
         static_path = Path("./static-ip")
         if static_path.exists():
@@ -62,14 +65,15 @@ def update_ips(static_ip, user, password):
     else:
         my_ip = static_ip
 
-    for subdomain in SUBDOMAINS:
-        result = requests.get(
-            URL_TEMPLATE.format(subdomain=subdomain, ip=my_ip),
-            auth=HTTPBasicAuth(user, password),
-        )
-        if result.status_code != 200:
-            result.raise_for_status()
-        LOGGER.info(f"Refreshed subdomain {subdomain}: {result.text}")
+    for domain in DOMAINS:
+        for subdomain in SUBDOMAINS:
+            result = requests.get(
+                URL_TEMPLATE.format(subdomain=subdomain, ip=my_ip, domain=domain),
+                auth=HTTPBasicAuth(f"{domain}-updater", password),
+            )
+            if result.status_code != 200:
+                result.raise_for_status()
+            LOGGER.info(f"Refreshed subdomain {subdomain}.{domain}: {result.text}")
 
 
 if __name__ == "__main__":

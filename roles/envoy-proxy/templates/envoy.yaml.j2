@@ -6,19 +6,19 @@ admin:
 
 static_resources:
   clusters:
-{% for domain in envoy_config["domains"] %} 
+{% for backend in envoy_config["backends"] %} 
   - connect_timeout: 10s
     dns_lookup_family: V4_ONLY
     load_assignment:
-      cluster_name: service_{{ domain["name"] }}
+      cluster_name: service_{{ backend["name"] }}
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: {{ domain["address"] }}
-                port_value: {{ domain["port"] }}
-    name: service_{{ domain["name"] }}
+                address: {{ backend["address"] }}
+                port_value: {{ backend["port"] }}
+    name: service_{{ backend["name"] }}
     type: LOGICAL_DNS
 {% endfor %}
 
@@ -35,6 +35,7 @@ static_resources:
           "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
           common_tls_context:
             tls_certificates:
+            # note that the path of the domain is the first one passed to certbot, but it has all the certificates
             - certificate_chain: {filename: "/etc/letsencrypt/live/dcaro.es/fullchain.pem"}
               private_key: {filename: "/etc/letsencrypt/live/dcaro.es/privkey.pem"}
       filters:
@@ -54,16 +55,18 @@ static_resources:
           route_config:
             name: local_route
             virtual_hosts:
-{% for domain in envoy_config["domains"] %}
+{% for backend in envoy_config["backends"] %}
             - domains:
-              - '{{ domain["name"] }}.dcaro.es'
-              - '{{ domain["name"] }}.dcaro.es:1234'
-              name: {{ domain["name"] }}
+{% for domain in backend["domains"] %}
+              - '{{ backend["name"] }}.{{ domain }}'
+              - '{{ backend["name"] }}.{{ domain }}:1234'
+{% endfor %}
+              name: {{ backend["name"] }}
               routes:
               - match:
                   prefix: /
                 route:
-                  cluster: service_{{ domain["name"] }}
+                  cluster: service_{{ backend["name"] }}
 {% endfor %}
           stat_prefix: ingress_http
     name: listener_{{ port }}

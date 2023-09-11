@@ -4,7 +4,7 @@ Description=Updates the external ip records on OVH
 [Service]
 Type=simple
 StandardOutput=journal
-ExecStart=/usr/local/bin/manage_ips.py update-ips --static-ip {{ polaris_server }} --user '{{ ovh_creds.user }}' --password '{{ ovh_creds.password }}'
+ExecStart=/usr/local/bin/manage_ips.py update-ips --static-ip {{ polaris_server }} --password '{{ ovh_creds.password }}'
 
 [Install]
 WantedBy=default.target

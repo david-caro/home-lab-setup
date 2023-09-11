@@ -5,7 +5,7 @@ After=network-online.target
 [Service]
 Environment=
 Type=exec
-ExecStart=/usr/bin/certbot certonly --dns-ovh --dns-ovh-credentials /etc/ovh-creds.ini --non-interactive --agree-tos --email david@dcaro.es -d '*.dcaro.es'
+ExecStart=/usr/bin/certbot certonly --dns-ovh --dns-ovh-credentials /etc/ovh-creds.ini --non-interactive --agree-tos --email david@dcaro.es -d '*.dcaro.es,*.greyllama.cc'
 Restart=on-failure
 RestartSec=30
 

@@ -56,10 +56,12 @@ zone "." IN {
 	file "named.ca";
 };
 
-zone "dcaro.es" {
+{% for domain_name in dns_config.domains %}
+zone "{{ domain_name }}" {
     type  master;
-    file "/etc/named/dcaro.es.zone";
+    file "/etc/named/{{ domain_name }}.zone";
 };
+{% endfor %}
 
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";

@@ -1,9 +1,10 @@
 ---
-- name: Reload envoy
-  ansible.builtin.systemd:
-    daemon_reload: true
-    name: envoy
-    state: restarted
+# TODO: find a way to reload the podman container
+#- name: Reload envoy
+#  ansible.builtin.systemd:
+#    daemon_reload: true
+#    name: envoy
+#    state: restarted
 
 - name: Reload envoy-tunnel
   ansible.builtin.systemd:
