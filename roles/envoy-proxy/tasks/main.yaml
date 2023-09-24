@@ -55,7 +55,10 @@
         - container
       containers.podman.podman_container:
         name: "envoy"
-        image: "docker.io/envoyproxy/envoy:v1.25-latest"
+        # the official envoy image uses tmalloc and crashes on rpi kernels
+        # failing to allocate memory
+        #image: "docker.io/envoyproxy/envoy:v1.25-latest"
+        image: "docker.io/thegrandpkizzle/envoy:1.26.1"
         state: started
         privileged: "true"
         expose:
