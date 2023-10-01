@@ -25,12 +25,24 @@ init() {
 ensure_venv() {
     local venv_dir="${1:?No venv_dir passed}"
     local setup_repo="${2:?No setup_repo passed}"
-    [[ -e "$venv_dir/bin/activate" ]] && return 0
+
+    if [[ -e "$venv_dir/bin/activate" ]]; then
+        source "$venv_dir/bin/activate"
+        # check if the venv is working
+        pip freeze &>/dev/null && {
+            pip install --upgrade -r "$setup_repo/requirements.txt"
+            return 0
+        }
+
+        deactivate
+        # recreate the venv
+        rm -rf "$venv_dir"
+    fi
 
     mkdir -p "$venv_dir"
     python3 -m venv "$venv_dir"
     source "$venv_dir/bin/activate"
-    pip install -r "$setup_repo/requirements.txt"
+    pip install --upgrade -r "$setup_repo/requirements.txt"
 }
 
 
