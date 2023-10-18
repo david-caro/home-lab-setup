@@ -63,6 +63,8 @@ dns_config:
   cname:
     - name: "musings.dcaro.es"
       dest: "david-caro.github.io"
+    - name: "dinika.greyllama.cc"
+      dest: "dinika.github.io"
   forwarders:
     - 1.1.1.1
     - 8.8.8.8
