@@ -47,18 +47,22 @@ dns_config:
     - "greyllama.cc"
   a:
     - name: "media.greyllama.cc"
-    - name: "homeassistant.greyllama.cc"
-    - name: "expenses.greyllama.cc"
-    - name: "ssh.greyllama.cc"
-    - name: "grafana.greyllama.cc"
     - name: "media.dcaro.es"
-    - name: "sudo.dcaro.es"
+    - name: "homeassistant.greyllama.cc"
     - name: "homeassistant.dcaro.es"
+    - name: "expenses.greyllama.cc"
     - name: "expenses.dcaro.es"
-    - name: "znc.dcaro.es"
+    - name: "ssh.greyllama.cc"
+      ip: 68.183.240.105
     - name: "ssh.dcaro.es"
+      ip: 68.183.240.105
+    - name: "grafana.greyllama.cc"
+    - name: "ssh.greyllama.cc"
+      ip: 68.183.240.105
     - name: "grafana.dcaro.es"
     - name: "polaris.dcaro.es"
+      ip: 68.183.240.105
+    - name: "polaris.greyllama.cc"
       ip: 68.183.240.105
   cname:
     - name: "musings.dcaro.es"
