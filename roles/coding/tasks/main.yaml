@@ -3,6 +3,17 @@
   tags:
     - "coding"
   block:
+    - name: Check if rebooted since the last check
+      ansible.builtin.stat:
+        path: "/tmp/ansible.coding-done"
+      register: setup_done
+
+    - name: Create the coding-done file
+      ansible.builtin.file:
+        path: "/tmp/ansible.coding-done"
+        state: touch
+      when: not setup_done.stat.exists
+
     - name: "Custom repos"
       ansible.builtin.yum_repository:
         name: "{{ repo.name }}"
@@ -28,6 +39,8 @@
         - podman
         - podman-docker
         - rvm
+      when:
+        - not setup_done.stat.exists
 
     - name: Install nvm
       ansible.builtin.shell: >
@@ -45,3 +58,5 @@
       loop:
         - io.podman_desktop.PodmanDesktop
         - com.github.iwalton3.jellyfin-media-player
+      when:
+        - not setup_done.stat.exists

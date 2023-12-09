@@ -3,11 +3,24 @@
   tags:
     - "git-client"
   block:
+    - name: Check if rebooted since the last check
+      ansible.builtin.stat:
+        path: "/tmp/ansible.git-client-done"
+      register: setup_done
+
+    - name: Create the git-client-done file
+      ansible.builtin.file:
+        path: "/tmp/ansible.git-client-done"
+        state: touch
+      when: not setup_done.stat.exists
+
     - name: "Install packages"
       ansible.builtin.package:
         name:
           - vim
           - git
+      when:
+        - not setup_done.stat.exists
 
     - name: "Add gitexcludes"
       ansible.builtin.copy:

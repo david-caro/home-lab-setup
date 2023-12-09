@@ -3,11 +3,23 @@
   tags:
     - "fail2ban"
   block:
+    - name: Check if rebooted since the last check
+      ansible.builtin.stat:
+        path: "/tmp/ansible.fail2ban-done"
+      register: setup_done
+
+    - name: Create the fail2ban-done file
+      ansible.builtin.file:
+        path: "/tmp/ansible.fail2ban-done"
+        state: touch
+      when: not setup_done.stat.exists
+
     - name: "Install fail2ban packages"
       ansible.builtin.package:
         name: "{{ item }}"
       with_items:
         - fail2ban
+      when: not setup_done.stat.exists
 
     - name: "Add sshd fail2ban jail config"
       ansible.builtin.copy:

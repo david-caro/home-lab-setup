@@ -1,8 +1,20 @@
 ---
+- name: Check if rebooted since the last check
+  ansible.builtin.stat:
+    path: "/tmp/ansible.basic-server-done"
+  register: setup_done
+
+- name: Create the basic-server-done file
+  ansible.builtin.file:
+    path: "/tmp/ansible.basic-server-done"
+    state: touch
+  when: not setup_done.stat.exists
+
 - ansible.builtin.apt:
     name: "{{ item }}"
   when:
     - ansible_facts['distribution'] == "Debian"
+    - not setup_done.stat.exists
   with_items:
     - vim
     - byobu
@@ -26,6 +38,7 @@
     name: "{{ item }}"
   when:
     - ansible_facts['distribution'] == "Fedora"
+    - not setup_done.stat.exists
   with_items:
     - vim
     - mosh

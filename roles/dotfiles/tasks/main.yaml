@@ -3,6 +3,17 @@
   tags:
     - "dotfiles"
   block:
+    - name: Check if rebooted since the last check
+      ansible.builtin.stat:
+        path: "/tmp/ansible.dotfiles-done"
+      register: setup_done
+
+    - name: Create the dotfiles-done file
+      ansible.builtin.file:
+        path: "/tmp/ansible.dotfiles-done"
+        state: touch
+      when: not setup_done.stat.exists
+
     - name: "Install dnf packages"
       ansible.builtin.package:
         name: "{{ item }}"
@@ -16,6 +27,7 @@
         - python3-keyring
         - msmtp
         - python3-click
+      when: not setup_done.stat.exists
 
     - name: "Clone dotfiles"
       ansible.builtin.git:
