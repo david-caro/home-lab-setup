@@ -73,8 +73,8 @@
           ENVOY_GID: 0
         volumes:
           - /etc/envoy.yaml:/etc/envoy/envoy.yaml:ro
-          - /etc/letsencrypt/archive/dcaro.es/fullchain1.pem:/etc/letsencrypt/live/dcaro.es/fullchain.pem:ro
-          - /etc/letsencrypt/archive/dcaro.es/privkey1.pem:/etc/letsencrypt/live/dcaro.es/privkey.pem:ro
+          - /etc/letsencrypt/live/dcaro.es/fullchain.pem:/etc/letsencrypt/live/dcaro.es/fullchain.pem:ro
+          - /etc/letsencrypt/live/dcaro.es/privkey.pem:/etc/letsencrypt/live/dcaro.es/privkey.pem:ro
 
     - name: "Add dns service to firewalld"
       ansible.posix.firewalld:
