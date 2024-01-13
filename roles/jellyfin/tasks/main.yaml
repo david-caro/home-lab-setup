@@ -5,10 +5,31 @@
     state: stopped
     enabled: False
 
-- name: "Add jellyfin service"
+- name: "Add jellyfin service file"
   ansible.builtin.copy:
     src: jellyfin.service
     dest: "/usr/lib/systemd/system/jellyfin.service"
+
+- name: "Make sure it exists"
+  containers.podman.podman_container:
+    name: "jellyfin"
+    image: "docker.io/jellyfin/jellyfin:unstable"
+    state: created
+    privileged: true
+    expose:
+      - "8096"
+    ports:
+      - "8096:8096"
+    restart_policy: "always"
+    userns: "keep-id"
+    user: "1000:1000"
+    label:
+      io.containers.autoupdate: registry
+    volumes:
+      # using :Z is not supported on NFS mounts
+      - /data/jellyfin/cache/:/cache:rw
+      - /data/jellyfin/config:/config:rw
+      - /data/storage:/media:rw
 
 - name: "Make sure it's running"
   ansible.builtin.systemd:

@@ -14,7 +14,3 @@
     - role: nfs-server
       tags:
         - nfs
-    - role: jellyfin
-      tags:
-        - jellyfin
-        - media

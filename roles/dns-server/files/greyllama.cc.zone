@@ -2,7 +2,7 @@
 ; BIND data file for the local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     dcaro.es. root.dcaro.es. (
+@       IN      SOA     greyllama.cc. root.greyllama.cc. (
                             2         ; Serial
                         604800         ; Refresh
                         86400         ; Retry
@@ -10,7 +10,7 @@ $TTL    604800
                         60 )       ; Negative Cache TTL
 
 ; Define the default name server to ns1.atadomain.io
-@       IN      NS      ns1.dcaro.es.
+@       IN      NS      ns1.greyllama.cc.
 
 ; Resolve ns1 to server IP address
 ; A record for the main DNS

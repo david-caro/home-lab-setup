@@ -30,7 +30,7 @@
         src: envoy.service
         dest: "/usr/lib/systemd/system/envoy.service"
       notify:
-        - "Reload envoy"
+        - "Reload envoy-tunnel"
       when:
         - ansible_facts['distribution'] != "Debian"
 
@@ -39,7 +39,7 @@
         src: envoy.yaml.j2
         dest: "/etc/envoy.yaml"
       notify:
-        - "Reload envoy"
+        - "Reload envoy-tunnel"
 
     - name: "Make sure envoy is running"
       ansible.builtin.systemd:

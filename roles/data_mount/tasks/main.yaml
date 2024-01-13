@@ -1,0 +1,16 @@
+---
+- name: "Create mountpoint"
+  become: true
+  ansible.builtin.file:
+    state: directory
+    dest: /data
+    mode: "777"
+
+- name: "Add exports"
+  become: true
+  ansible.posix.mount:
+    src: eopsin:/data
+    path: /data
+    opts: rw,sync,hard
+    state: mounted
+    fstype: nfs

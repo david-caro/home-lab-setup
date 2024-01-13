@@ -1,0 +1,12 @@
+---
+- name: Setup the NFS exports on the storage server
+  hosts: media
+  become: true
+  roles:
+    - role: data_mount
+      tags:
+        - data_mount
+    - role: jellyfin
+      tags:
+        - jellyfin
+        - media
