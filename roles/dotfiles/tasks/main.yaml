@@ -32,12 +32,12 @@
     - name: "Clone dotfiles"
       ansible.builtin.git:
         repo: "ssh://polaris.dcaro.es:32222/home/{{ item }}/dotfiles"
-        dest: "/home/{{ item }}/dotfiles"
+        dest: "~{{ item }}/dotfiles"
         version: "{{ ansible_hostname }}"
         update: no
       loop: "{{ dotfiles.users }}"
 
     - name: "Create dotfile links"
       ansible.builtin.shell:
-        cmd: "/home/{{ item }}/dotfiles/install_dotfiles.sh"
+        cmd: "~{{ item }}/dotfiles/install_dotfiles.sh"
       loop: "{{ dotfiles.users }}"

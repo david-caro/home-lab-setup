@@ -19,6 +19,7 @@ SUBDOMAINS = [
     "znc",
     "ceph",
     "media",
+    "atuin",
     "skill-media",
 ]
 DOMAINS = [

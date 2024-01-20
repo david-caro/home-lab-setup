@@ -12,9 +12,9 @@
 - name: "Download bash preexec and add to bashrc"
   ansible.builtin.shell:
     cmd: |
-      curl -L -o "00-bash_preexec.sh" "{{ bash_preexec_url }}"
+      curl -L -o "98-bash_preexec.sh" "{{ bash_preexec_url }}"
     chdir: "~{{ item.name }}/{{bash_libs_dir}}"
-    creates: "~{{ item.name }}/{{bash_libs_dir}}/00-bash_preexec.sh"
+    creates: "~{{ item.name }}/{{bash_libs_dir}}/98-bash_preexec.sh"
   loop: "{{ users }}"
 
 - name: "Add atuin to bashrc"
@@ -22,4 +22,13 @@
     dest: "~{{ item.name }}/.bash/99-atuin.sh"
     content: |
       eval "$(atuin init bash)"
+  loop: "{{ users }}"
+
+- name: "Add atuin config"
+  ansible.builtin.copy:
+    src: atuin_confdir/
+    dest: "~{{item.name}}/.config/atuin/"
+    mode: "750"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
   loop: "{{ users }}"

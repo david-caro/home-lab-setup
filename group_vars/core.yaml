@@ -5,41 +5,48 @@ envoy_config:
     - 443
     - 1234
   backends:
-      - name: "media"
-        address: 192.168.1.101
-        port: 8096
-        proto: http
-        domains:
-          - dcaro.es
-          - greyllama.cc
-      - name: "sudo"
-        address: 192.168.1.12
-        port: 8080
-        proto: http
-        domains:
-          - dcaro.es
-          - greyllama.cc
-      - name: "expenses"
-        address: node4
-        port: 8080
-        proto: http
-        domains:
-          - dcaro.es
-          - greyllama.cc
-      - name: "homeassistant"
-        address: node3
-        port: 8123
-        proto: http
-        domains:
-          - dcaro.es
-          - greyllama.cc
-      - name: "grafana"
-        address: node4
-        port: 18443
-        proto: http
-        domains:
-          - dcaro.es
-          - greyllama.cc
+    - name: "atuin"
+      address: 192.168.1.101
+      port: 8888
+      proto: http
+      domains:
+        - dcaro.es
+        - greyllama.cc
+    - name: "media"
+      address: 192.168.1.101
+      port: 8096
+      proto: http
+      domains:
+        - dcaro.es
+        - greyllama.cc
+    - name: "sudo"
+      address: 192.168.1.12
+      port: 8080
+      proto: http
+      domains:
+        - dcaro.es
+        - greyllama.cc
+    - name: "expenses"
+      address: node4
+      port: 8080
+      proto: http
+      domains:
+        - dcaro.es
+        - greyllama.cc
+    - name: "homeassistant"
+      address: node3
+      port: 8123
+      proto: http
+      domains:
+        - dcaro.es
+        - greyllama.cc
+    - name: "grafana"
+      address: node4
+      port: 18443
+      proto: http
+      domains:
+        - dcaro.es
+        - greyllama.cc
 
 dns_config:
   domains:
@@ -52,6 +59,7 @@ dns_config:
     - name: "homeassistant.dcaro.es"
     - name: "expenses.greyllama.cc"
     - name: "expenses.dcaro.es"
+    - name: "atuin.greyllama.cc"
     - name: "ssh.greyllama.cc"
       ip: 68.183.240.105
     - name: "ssh.dcaro.es"
