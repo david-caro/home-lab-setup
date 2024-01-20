@@ -1,0 +1,20 @@
+# ex: ts=4 sw=4 et filetype=sh
+
+_wm_ssh() {
+    _known_hosts
+    local hosts cur user
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    if [[ $cur =~ .*@.* ]]; then
+        user="${cur%@*}"
+        hosts="$(cat ~/.cache/wm-ssh/* | sed -e "s/^/$user@/")"
+    else
+        hosts="$(cat ~/.cache/wm-ssh/*)"
+    fi
+    COMPREPLY+=(
+        $(compgen -W "$hosts" -- ${cur})
+    )
+    return 0
+}
+
+
+complete -F _wm_ssh wm-ssh

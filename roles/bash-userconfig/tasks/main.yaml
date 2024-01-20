@@ -1,0 +1,36 @@
+---
+- name: "make sure bash dir {{bashrc_dir}} exists"
+  ansible.builtin.file:
+    state: directory
+    mode: "0755"
+    path: "~{{item.name}}/{{bash_libs_dir}}"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+  loop: "{{ users }}"
+
+- name: "make sure .bashrc exists"
+  ansible.builtin.copy:
+    src: bashrc
+    dest: "~{{item.name}}/.bashrc"
+    mode: "0755"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+  loop: "{{ users }}"
+
+- name: "Copy all the libs"
+  ansible.builtin.copy:
+    src: bash_libs/
+    dest: "~{{item.name}}/.bash"
+    mode: "755"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+  loop: "{{ users }}"
+
+- name: "make sure user bin dir ~/bin exists"
+  ansible.builtin.file:
+    state: directory
+    mode: "0755"
+    path: "~{{item.name}}/bin"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+  loop: "{{ users }}"

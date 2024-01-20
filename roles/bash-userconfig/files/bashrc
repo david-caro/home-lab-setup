@@ -1,0 +1,72 @@
+#!/bin/env bash
+## Managed by ansible, don't modify
+# If not running interactively, don't do anything
+[[ -z "$PS1" ]] && return
+# Is being set by gitprompt
+# PS1='\[\033[01;31m\]\w\[\033[00m\]\n\[\033[01;34m\]\u\[\033[01;32m\]@\[\033[01;34m\]\h\[\033[00m\]\$ '
+
+source /etc/profile
+
+export TERM=xterm-256color
+
+########## History control
+# ignoredups and ignorespace
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+case $TERM in
+  screen) TERM_IS_COLOR=true;;
+  xterm-color|color_xterm|rxvt|Eterm|screen*) # screen.linux|screen-w
+    TERM_IS_COLOR=true;;
+  linux) TERM_IS_COLOR=true;;
+  xterm|vt100) TERM_IS_COLOR=true;;
+  *xterm*|eterm|rxvt*) TERM_IS_COLOR=true;;
+  *) TERM_IS_COLOR=false;;
+esac
+
+if $TERM_IS_COLOR && ( dircolors --help && ls --color ) &> /dev/null; then
+  alias ls="ls --color=auto"
+  alias ll="ls --color=auto -la"
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+else
+  # No color, so put a slash at the end of directory names, etc. to differentiate.
+  alias ls="ls -F"
+  alias ll="ls -lFa"
+fi
+
+# Alias definitions.
+if [[ -f ~/.bash_aliases ]]; then
+    . ~/.bash_aliases
+fi
+
+######### EDITORS STUFF
+export EDITOR="vim"
+
+######## Path mangling
+export PATH="$PATH:~/bin"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Force xdg-open to use gnome mimetypes when opening files
+export XDG_CURRENT_DESKTOP=GNOME
+
+### source extra bash stuff
+for bashfile in ~/.bash/*.sh; do
+    if [[ -e "$bashfile" ]]; then
+        source "$bashfile"
+    fi
+done
+
+######## Autocomplete files
+for complete_file in ~/.bash/*.complete; do
+    if [[ -e "$complete_file" ]]; then
+        source "$complete_file"
+    fi
+done

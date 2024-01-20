@@ -1,0 +1,25 @@
+---
+- name: "Download atuin"
+  ansible.builtin.shell:
+    cmd: |
+      curl -L "{{ atuin_url }}" \
+      | tar xvz --strip-components=1 atuin-{{ atuin_version }}-{{ ansible_architecture }}-unknown-linux-gnu/atuin \
+      && chown {{item.name}}:{{item.name}} atuin
+    chdir: "~{{ item.name }}/bin"
+    creates: "~{{ item.name }}/bin/atuin"
+  loop: "{{ users }}"
+
+- name: "Download bash preexec and add to bashrc"
+  ansible.builtin.shell:
+    cmd: |
+      curl -L -o "00-bash_preexec.sh" "{{ bash_preexec_url }}"
+    chdir: "~{{ item.name }}/{{bash_libs_dir}}"
+    creates: "~{{ item.name }}/{{bash_libs_dir}}/00-bash_preexec.sh"
+  loop: "{{ users }}"
+
+- name: "Add atuin to bashrc"
+  ansible.builtin.copy:
+    dest: "~{{ item.name }}/.bash/99-atuin.sh"
+    content: |
+      eval "$(atuin init bash)"
+  loop: "{{ users }}"

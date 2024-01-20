@@ -23,9 +23,9 @@
   become: true
   ansible.posix.authorized_key:
     state: present
-    user: "{{ item.name }}"
-    key: "{{ item.ssh_public_key }}"
-  loop: "{{ users }}"
+    user: "{{ item.0.name }}"
+    key: "{{ item.1 }}"
+  loop: "{{ users | subelements('ssh_public_keys')  }}"
 
 - name: enable ssh (raspberry)
   become: true
@@ -51,6 +51,6 @@
     dest: "/etc/sudoers.d/010_{{ item.name }}-nopasswd"
     owner: root
     group: root
-    mode: '0440'
+    mode: "0440"
     content: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
   loop: "{{ users }}"

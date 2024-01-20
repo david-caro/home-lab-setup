@@ -10,8 +10,8 @@
   ansible.posix.authorized_key:
     state: present
     user: kubeadmin
-    key: "{{ item.ssh_public_key }}"
-  loop: "{{ users }}"
+    key: "{{ item.1 }}"
+  loop: "{{ users | subelements('ssh_public_keys') }}"
 
 - name: allow passwordless sudo for kuebadmin
   become: true
@@ -19,7 +19,7 @@
     dest: "/etc/sudoers.d/010_kubeadmin-nopasswd"
     owner: root
     group: root
-    mode: '0440'
+    mode: "0440"
     content: "kubeadmin ALL=(ALL) NOPASSWD: ALL"
 
 - name: copy k3s installer
