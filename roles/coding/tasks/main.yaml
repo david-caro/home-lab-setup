@@ -17,9 +17,10 @@
     - name: "Custom repos"
       ansible.builtin.yum_repository:
         name: "{{ repo.name }}"
-        description: "{{ repo.name }}"
+        description: "{{ repo.description }}"
         baseurl: "{{ repo.baseurl }}"
         gpgkey: "{{ repo.gpgkey }}"
+        enabled: true
       loop: "{{ repos }}"
       loop_control:
         loop_var: "repo"
@@ -39,6 +40,7 @@
         - podman
         - podman-docker
         - rvm
+        - protonvpn
       when:
         - not setup_done.stat.exists
 

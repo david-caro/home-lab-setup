@@ -104,3 +104,6 @@ dhcpd_config:
     - name: urcuchillay
       ip4: 192.168.1.104
       mac: f4:c8:8a:5d:dc:16
+    - name: punnypanda
+      ip4: 192.168.1.105
+      mac: 9c:b6:d0:bd:25:d3

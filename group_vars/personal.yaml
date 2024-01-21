@@ -1,16 +1,24 @@
 repos:
-  - name: Copr repo for system76 owned by szydell
+  - name: system76
+    description: Copr repo for system76 owned by szydell
     baseurl: https://download.copr.fedorainfracloud.org/results/szydell/system76/fedora-$releasever-$basearch/
     gpgkey: https://download.copr.fedorainfracloud.org/results/szydell/system76/pubkey.gpg
-  - name: Visual Studio Code
+  - name: code
+    description: Visual Studio Code
     baseurl: https://packages.microsoft.com/yumrepos/vscode
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
   - name: google-chrome
+    description: google chrome
     baseurl: https://dl.google.com/linux/chrome/rpm/stable/x86_64
     gpgkey: https://dl.google.com/linux/linux_signing_key.pub
-  - name: packages for the GitHub CLI
+  - name: github
+    description: packages for the GitHub CLI
     baseurl: https://cli.github.com/packages/rpm
     gpgkey: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x23F3D4EA75716059
+  - name: protonvpn
+    description: Proton VPN
+    baseurl: https://repo.protonvpn.com/fedora-$releasever-stable
+    gpgkey: https://cli.github.com/packages/rpm
 
 dotfiles:
   users:
