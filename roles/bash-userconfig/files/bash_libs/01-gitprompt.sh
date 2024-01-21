@@ -36,7 +36,7 @@ GIT_PROMPT_UNTRACKED="…"
 GIT_PROMPT_CLEAN="${BGreen}✔"
 
 PROMPT_START="$IBlack$Time12a$ResetColor $Yellow$PathShort$ResetColor"
-PROMPT_END="\n${Blue}\u${ResetColor}@${Yellow}\h${ResetColor}\$ "
+PROMPT_END="\n${Blue}\u${ResetColor}@${Magenta}\h${ResetColor}\$ "
 
 
 function update_current_git_vars() {
