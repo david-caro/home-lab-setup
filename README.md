@@ -47,7 +47,7 @@ You might also want to install ansible-collection-ansible-posix.noarch if it's
 not already installed. It's used for setting up ssh keys (in setup_users tasks).
 
 ```
-> dnf install ansible-collection-ansible-posix.noarch
+> sudo dnf install ansible-collection-ansible-posix.noarch
 ```
 
 And you will need also some galaxy modules:

@@ -72,19 +72,37 @@ apps:
     nbd_volumes: []
     ports:
       - "3306:3306/tcp"
+
+  - name: "expenses_postgres"
+    image: "docker.io/postgres:latest"
+    rbd_volumes:
+      - name: "expenses_postgres"
+        size: "1GB"
+        dest: "/var/lib/postgresql/data"
+        mount_mode: "rw"
+    nfs_volumes: []
+    file_volumes: []
+    simple_volumes: []
+    nbd_volumes: []
+    ports:
+      - "5432:5432/tcp"
+    env:
+      POSTGRES_USER: "{{expenses_db_config.DB_USERNAME}}"
+      POSTGRES_PASSWORD: "{{expenses_db_config.DB_PASSWORD}}"
+      POSTGRES_DB: expenses
+ 
   - name: "expenses_app"
-    image: "quay.io/farting_lizards/expenses:latest"
+    image: "quay.io/farting_lizards/expenses:20240428"
     rbd_volumes: []
     nfs_volumes: []
     file_volumes: []
     simple_volumes: []
     nbd_volumes: []
     env:
-      DB_PASSWORD: "{{expenses_db_config.DB_PASSWORD}}"
-      DB_USERNAME: "{{expenses_db_config.DB_USERNAME}}"
-      DB_HOST: "{{expenses_db_config.DB_HOST}}"
+      DB_URL: "postgresql://{{expenses_db_config.DB_USERNAME}}:{{expenses_db_config.DB_PASSWORD}}@{{expenses_db_config.DB_HOST}}:/expenses"   
     ports:
-      - "8081:8080/tcp"
+      - "8081:8000/tcp"
+
   - name: "expenses_nginx"
     image: "docker.io/library/nginx"
     rbd_volumes: []
