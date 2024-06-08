@@ -90,7 +90,7 @@ apps:
       POSTGRES_USER: "{{expenses_db_config.DB_USERNAME}}"
       POSTGRES_PASSWORD: "{{expenses_db_config.DB_PASSWORD}}"
       POSTGRES_DB: expenses
- 
+
   - name: "expenses_app"
     image: "quay.io/farting_lizards/expenses:20240428"
     rbd_volumes: []
@@ -99,7 +99,7 @@ apps:
     simple_volumes: []
     nbd_volumes: []
     env:
-      DB_URL: "postgresql://{{expenses_db_config.DB_USERNAME}}:{{expenses_db_config.DB_PASSWORD}}@{{expenses_db_config.DB_HOST}}:/expenses"   
+      DB_URL: "postgresql://{{expenses_db_config.DB_USERNAME}}:{{expenses_db_config.DB_PASSWORD}}@{{expenses_db_config.DB_HOST}}:/expenses"
     ports:
       - "8081:8000/tcp"
 
@@ -124,6 +124,17 @@ apps:
     nbd_volumes: []
     ports:
       - "8080:80/tcp"
+
+  - name: "whatismyip_app"
+    image: "quay.io/farting_lizards/iphinter:latest"
+    rbd_volumes: []
+    nfs_volumes: []
+    file_volumes: []
+    simple_volumes: []
+    nbd_volumes: []
+    env: {}
+    ports:
+      - "8082:7777/tcp"
 
 ssh_bastion:
   local_port: 22

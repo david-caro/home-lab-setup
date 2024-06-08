@@ -47,6 +47,12 @@ envoy_config:
       domains:
         - dcaro.es
         - greyllama.cc
+    - name: "whatismyip"
+      address: node4
+      port: 8082
+      proto: http
+      domains:
+        - greyllama.cc
 
 dns_config:
   domains:
