@@ -72,6 +72,8 @@ dns_config:
       ip: 68.183.240.105
     - name: "polaris.greyllama.cc"
       ip: 68.183.240.105
+    - name: "whatismyip.greyllama.cc"
+      ip: 68.183.240.105
   cname:
     - name: "musings.dcaro.es"
       dest: "david-caro.github.io"
