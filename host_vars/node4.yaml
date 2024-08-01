@@ -33,6 +33,12 @@ apps:
       - "18443:18443/tcp"
   - name: "prometheus"
     image: "docker.io/prom/prometheus:latest"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--storage.tsdb.retention.size=15GB"
     nbd_volumes: []
     rbd_volumes:
       - name: "prometheus_data01"
