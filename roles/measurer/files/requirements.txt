@@ -1,0 +1,4 @@
+adafruit-circuitpython-lis3dh
+Adafruit_CircuitPython_DHT
+click
+prometheus-client

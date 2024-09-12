@@ -12,6 +12,7 @@
         - certbot
         - envoy-proxy
         - ip-updater
+
   roles:
     - envoy-proxy
     - fail2ban

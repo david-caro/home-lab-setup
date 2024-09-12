@@ -22,29 +22,45 @@ rule_files:
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
-
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
-
     static_configs:
     - targets: ['localhost:9090']
 
-  - job_name: 'node'
+  - job_name: 'https_nodes'
+    # metrics_path defaults to '/metrics'
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+      ca_file: /etc/prometheus/node-exporter.crt
+    basic_auth:
+      username: prometheus
+      password: {{ prometheus_creds_config['exporter_password'] }}
+    static_configs:
+    - targets:
+{% for node in groups['polaris'] %}
+      - "{{ hostvars[node]['ansible_host'] }}:9100"
+{% endfor %}
 
+  - job_name: 'node'
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
-
     static_configs:
     - targets:
 {% for node in groups['all'] %}
       - "{{ hostvars[node]['ansible_host'] }}:9100"
 {% endfor %}
 
-  - job_name: 'proxy'
+  - job_name: 'minions'
+{% for node in groups['minions'] %}
+    static_configs:
+    - targets:
+      - "{{ hostvars[node]['ansible_host'] }}:8000"
+{% endfor %}
 
+  - job_name: 'proxy'
     metrics_path: '/stats/prometheus'
     # scheme defaults to 'http'.
-
     static_configs:
     - targets:
       # envoy stats

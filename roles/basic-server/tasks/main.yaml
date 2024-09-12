@@ -32,7 +32,7 @@
     immediate: true
   when:
     - ansible_facts['distribution'] == "Debian"
-    - ansible_hostname != 'vulcanus' 
+    - ansible_hostname != 'vulcanus'
 
 - ansible.builtin.package:
     name: "{{ item }}"
@@ -43,19 +43,18 @@
     - vim
     - mosh
     - byobu
-    - golang-github-prometheus-node-exporter
-
+    - node-exporter
 
 - name: "Add vimrc - Debian"
   ansible.builtin.copy:
-      src: vimrc
-      dest: "/etc/vim/vimrc.local"
+    src: vimrc
+    dest: "/etc/vim/vimrc.local"
   when:
     - ansible_facts['distribution'] == "Debian"
 
 - name: "Add vimrc - other"
   ansible.builtin.copy:
-      src: vimrc
-      dest: "/etc/vimrc.local"
+    src: vimrc
+    dest: "/etc/vimrc.local"
   when:
     - ansible_facts['distribution'] != "Debian"

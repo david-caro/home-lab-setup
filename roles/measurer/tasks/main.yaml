@@ -1,0 +1,64 @@
+---
+- name: Copy requirements
+  ansible.builtin.copy:
+    src: requirements.txt
+    dest: "measurer-requirements.txt"
+
+- name: Create/update venv
+  ansible.builtin.pip:
+    chdir: "~"
+    requirements: measurer-requirements.txt
+    virtualenv: venv
+
+- name: Ensure user systemd config dir exists
+  ansible.builtin.file:
+    state: directory
+    path: ".config/systemd/user"
+
+- name: Install prometheus-measurer-exporter.py script
+  ansible.builtin.copy:
+    src: prometheus-measurer-exporter.py
+    dest: "prometheus-measurer-exporter.py"
+
+- name: Install prometheus-measurer-exporter-wrapper.sh wrapper
+  ansible.builtin.copy:
+    src: prometheus-measurer-exporter-wrapper.sh
+    dest: "prometheus-measurer-exporter-wrapper.sh"
+    mode: "u=rwx,g=rwx,o="
+
+- name: Install measurer service file
+  ansible.builtin.copy:
+    src: prometheus-measurer-exporter.service
+    dest: ".config/systemd/user/prometheus-measurer-exporter.service"
+
+- name: "Add exporter service to firewalld"
+  become: true
+  ansible.posix.firewalld:
+    port: 8000/tcp
+    permanent: true
+    state: enabled
+
+- name: "Make sure measurer is running"
+  ansible.builtin.systemd:
+    scope: user
+    name: prometheus-measurer-exporter
+    state: started
+    enabled: True
+
+- name: Install rebooter.sh script
+  ansible.builtin.copy:
+    src: rebooter.sh
+    dest: "rebooter.sh"
+    mode: "u=rwx,g=rwx,o="
+
+- name: Install rebooter service file
+  ansible.builtin.copy:
+    src: rebooter.service
+    dest: ".config/systemd/user/rebooter.service"
+
+- name: "Make sure rebooter is running"
+  ansible.builtin.systemd:
+    scope: user
+    name: rebooter
+    state: started
+    enabled: True

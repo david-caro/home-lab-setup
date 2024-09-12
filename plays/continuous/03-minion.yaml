@@ -1,0 +1,5 @@
+---
+- name: Basic setup for all minions
+  hosts: minions
+  roles:
+    - measurer

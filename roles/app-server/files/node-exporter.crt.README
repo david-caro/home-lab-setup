@@ -1,0 +1,11 @@
+To regenerate the cert use:
+```
+# Generate private key (edcsa with secp521r1 curve)
+openssl ecparam -name secp521r1 -genkey -noout -out node-exporter.key
+
+# Generate certificate request with that key
+openssl req -new -sha256 -key node-exporter.key -out node-exporter.csr
+
+# create self-signed certificate for 10y
+openssl x509 -req -days 3650 -in node-exporter.csr -signkey node-exporter.key -out node-exporter.crt
+```

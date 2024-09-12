@@ -54,6 +54,12 @@ apps:
         file_mode: "644"
         mount_mode: "ro"
         template: "prometheus.yaml.j2"
+      - name: "Node expotrer ssl cert"
+        host_src: "/mnt/node-exporter.crt"
+        dest: "/etc/prometheus/node-exporter.crt"
+        file_mode: "640"
+        mount_mode: "ro"
+        local_src: "node-exporter.crt"
     simple_volumes:
       - name: "Timezone"
         host_src: "/etc/timezone"
