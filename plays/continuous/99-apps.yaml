@@ -12,7 +12,7 @@
 
     - name: "load prometheus secrets"
       include_vars:
-        file: "{{ secrets_repo_path }}/home_automation/prometheus_creds.yaml.yml"
+        file: "{{ secrets_repo_path }}/home_automation/prometheus_creds.yml"
         name: prometheus_creds_config
       no_log: true
       tags:

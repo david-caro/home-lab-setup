@@ -8,14 +8,18 @@
       loop: "{{ current_app.nbd_volumes }}"
       loop_control:
         loop_var: current_volume
-      when: current_app.nbd_volumes is defined
+      when:
+        - current_app.nbd_volumes is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Mount nbd volumes for app '{{ current_app.name }}'"
       include_tasks: mount_nbd_volume.yaml
       loop: "{{ current_app.nbd_volumes }}"
       loop_control:
         loop_var: current_volume
-      when: current_app.nbd_volumes is defined
+      when:
+        - current_app.nbd_volumes is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Populate nbd volumes for app '{{ current_app.name }}' "
       include_tasks: populate_nbd_volume.yaml
@@ -25,20 +29,25 @@
       when:
         - current_app.nbd_volumes is defined
         - current_app.nbd_volumes.src is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Create rbd volumes for app '{{ current_app.name }}'"
       include_tasks: create_rbd_volume.yaml
       loop: "{{ current_app.rbd_volumes }}"
       loop_control:
         loop_var: current_volume
-      when: current_app.rbd_volumes is defined
+      when:
+        - current_app.rbd_volumes is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Mount rbd volumes for app '{{ current_app.name }}'"
       include_tasks: mount_rbd_volume.yaml
       loop: "{{ current_app.rbd_volumes }}"
       loop_control:
         loop_var: current_volume
-      when: current_app.rbd_volumes is defined
+      when:
+        - current_app.rbd_volumes is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Populate rbd volumes for app '{{ current_app.name }}' "
       include_tasks: populate_rbd_volume.yaml
@@ -48,25 +57,32 @@
       when:
         - current_app.rbd_volumes is defined
         - current_app.rbd_volumes.src is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Mount nfs volumes for app '{{ current_app.name }}'"
       include_tasks: mount_nfs_volume.yaml
       loop: "{{ current_app.nfs_volumes }}"
       loop_control:
         loop_var: current_volume
-      when: current_app.nfs_volumes is defined
+      when:
+        - current_app.nfs_volumes is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Create file volumes for app '{{ current_app.name }}'"
       include_tasks: create_file_volume.yaml
       loop: "{{ current_app.file_volumes }}"
       loop_control:
         loop_var: current_volume
-      when: current_app.file_volumes is defined
+      when:
+        - current_app.file_volumes is defined
+        - only_apps is not defined or current_app.name in only_apps
 
     - name: "Start app '{{ current_app.name }}'"
       tags:
         - podman
         - container
+      when:
+        - only_apps is not defined or current_app.name in only_apps
       containers.podman.podman_container:
         name: "{{ current_app.name }}"
         image: "{{ current_app.image }}"

@@ -48,7 +48,9 @@ scrape_configs:
     static_configs:
     - targets:
 {% for node in groups['all'] %}
+{% if node not in groups['polaris'] %}
       - "{{ hostvars[node]['ansible_host'] }}:9100"
+{% endif %}
 {% endfor %}
 
   - job_name: 'minions'
