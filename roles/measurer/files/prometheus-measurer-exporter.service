@@ -1,6 +1,5 @@
 [Unit]
 Description=Prometheus measurer (temp/hum) exporter
-After=network-online.target
 
 [Service]
 Environment=
@@ -10,4 +9,4 @@ Restart=always
 RestartSec=30
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
