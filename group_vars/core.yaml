@@ -79,6 +79,8 @@ dns_config:
       dest: "david-caro.github.io"
     - name: "dinika.greyllama.cc"
       dest: "dinika.github.io"
+    - name: "blog.dinika.greyllama.cc"
+      dest: "blog.dinika.github.io"
   forwarders:
     - 1.1.1.1
     - 8.8.8.8
