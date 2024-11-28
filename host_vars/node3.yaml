@@ -1,46 +1,6 @@
 ---
 desired_ipaddress: 192.168.1.23
-apps:
-  - name: "mosquitto"
-    image: "docker.io/library/eclipse-mosquitto"
-    nbd_volumes:
-      - name: "mosquitto01"
-        contents: "{{ secrets_repo_path }}/home-lab-secrets/home_automation/mosquitto"
-        size: "50MB"
-        dest: "/mosquitto/config"
-        mount_mode: "rw"
-    ports:
-      - "1883:1883/tcp"
-
-  - name: "zigbee2mqtt"
-    image: "docker.io/zigbee2mqtt/zigbee2mqtt-edge-aarch64"
-    nbd_volumes:
-      - name: "zigbee2mqtt01"
-        contents: "{{ secrets_repo_path }}/home_automation/zigbee2mqtt"
-        size: "50MB"
-        dest: "/app/data"
-        mount_mode: "rw"
-    privileged: true
-    device: "/dev/ttyACM0"
-    entrypoint: "/usr/bin/node"
-    command: "/app/index.js"
-    workdir: "/app"
-    ports: []
-
-  - name: "homeassistant"
-    image: "docker.io/homeassistant/home-assistant:stable"
-    nbd_volumes:
-      - name: "homeassistant01"
-        size: "500MB"
-        dest: "/config"
-        mount_mode: "rw"
-    simple_volumes:
-      - name: "Dbus"
-        host_src: "/var/run/dbus"
-        dest: "/run/dbus"
-        mount_mode: "ro"
-    ports:
-      - "8123:8123/tcp"
+apps: []
 
 ssh_bastion:
   local_port: 22
