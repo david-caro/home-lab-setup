@@ -3,6 +3,8 @@
   hosts: personal
   become: true
   roles:
+    - role: set-hosts
+      tags: set-hosts
     - role: bash-userconfig
       tags: bash-userconfig
     - role: atuin
