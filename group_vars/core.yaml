@@ -114,3 +114,6 @@ dhcpd_config:
     - name: hephaestus
       ip4: 192.168.1.106
       mac: d2:17:4a:1e:6a:f6
+    - name: acme
+      ip4: 192.168.1.107
+      mac: a6:25:a4:c6:7c:ad
