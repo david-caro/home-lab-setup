@@ -29,7 +29,7 @@
     - name: "Add polaris public key"
       ansible.builtin.known_hosts:
         name: "polaris.dcaro.es"
-        key: "polaris.dcaro.es ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC3zLlcuEFXRppefTgQ2S1ycfdEzhLSVXpEGVG0iv4djzHBIBPOonpEp3IdmcpkzVGD1659e/UJx83KpNbiepEebxmTz49pl4oH27pYdVIsYCUdIKKLyPTa5M55ElZx773MTZTJQBPK92oeBUiF/RWER8W0716KrZgBJSAlF64IHP7wuqzOk34h/AM7ooUBsRLpewLbJn8fTFnNgK/LiFqeoF2IYAUzcqI5SWOatQccdnK79fJhfi+xjo9FQGn7XdySmjmByyL9BYZ0mSnGrkqaSSIMRyS2nNSC2mOzzdiGY13yebdS9kgVqghODQ4I5IuyAVk0HC0eRdqwHSEwN5E7T08TkaIEBL5YE+8jiJoZw1of+TCOvfCFYfbHMU3WxrwbNREerjHGuP9WCLD8+pnpxH7LTjdCHAkvW8oFzdd7udy64TTCefUPxLfO1+NJLLH4rMdOw2pXA6Sg78qBHnPJdKlkOb966HFmNqOhGRfCFH8XJtIdUNraXxJEqf8LLPs= root@polaris-1"
+        key: "polaris.dcaro.es ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCmOOnlfMDmkcCwfn/n3C1H4gYRTXHo4VjvdmVPAQo/bquemE5tOAuD8KjwJ/3OGDp+RZO0BiUEKiiA1WsK6dmzYpF4HkixzWTs3IUrRUj4OJCMnG5gtnLJi3B7OnTVj3Zt92buzjckHMJCwtgmekRqpAngE5hYbOpHM/uoDJhbejOCENrW/4ABrwgqr4fW7XZ+iwem8oJhsUZ5l0dB4kUxtOdmYuU9ApYuxMhrCQkjp+sCbs75cZqo5EHVB4r8eSv5YtfvSpMtafCbJONLKRLrNY0uyYa8lF6AWvZ478BRGtyySwWGCKlmaNTd70hA9Vq+wbA+q9XfDIyMQaLrEIvB51xYroIa1tjd0ahFGwbSo8mXx0cSGPWcm1zAmZgjbRxWdGQ9ILjjS6dM5cOQtdeZZJhSsl/hVhP4UDugRsw27jevQmOOjlsN2Ageppk5zz9c2Tue+c7+QW+DbMyjQoQSWlqu+jmjhTCnezEPrYWplhl14/pKBtl6ebK5Rf2YDpU="
 
     - name: "Add ssh bastion service"
       ansible.builtin.template:
