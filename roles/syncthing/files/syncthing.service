@@ -1,0 +1,11 @@
+[Unit]
+Description=Syncthing service for dcaro
+
+[Service]
+User=dcaro
+Group=dcaro
+Restart=always
+ExecStart=/bin/bash -c 'exec $HOME/bin/syncthing'
+
+[Install]
+WantedBy=multi-user.target

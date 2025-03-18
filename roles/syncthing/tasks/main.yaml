@@ -1,0 +1,18 @@
+---
+- name: "Disable firewalld"
+  ansible.builtin.systemd:
+    name: firewalld
+    state: stopped
+    enabled: False
+
+- name: "Add syncthing service file"
+  ansible.builtin.copy:
+    src: syncthing.service
+    dest: "/usr/lib/systemd/system/syncthing@dcaro.service"
+
+- name: "Make sure it's running"
+  ansible.builtin.systemd:
+    daemon-reload: True
+    name: syncthing@dcaro
+    state: started
+    enabled: True

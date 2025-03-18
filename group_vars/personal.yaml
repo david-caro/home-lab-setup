@@ -18,7 +18,7 @@ repos:
   - name: protonvpn
     description: Proton VPN
     baseurl: https://repo.protonvpn.com/fedora-$releasever-stable
-    gpgkey: https://cli.github.com/packages/rpm
+    gpgkey: https://repo.protonvpn.com/fedora-$releasever-stable/public_key.asc
 
 dotfiles:
   users:

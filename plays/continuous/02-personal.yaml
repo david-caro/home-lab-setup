@@ -11,5 +11,7 @@
       tags: atuin
     - role: coding
       tags: coding
+    - role: syncthing
+      tags: syncthing
     # - role: dotfiles
     #   tags: dotfiles
