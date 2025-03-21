@@ -101,7 +101,8 @@ dhcpd_config:
       mac: 28:7f:cf:95:c4:af
     - name: vulcanus
       ip4: 192.168.1.101
-      mac: c8:58:c0:ce:a4:dc
+      #mac: c8:58:c0:ce:a4:dc
+      mac: 30:23:03:05:69:11
     - name: tastytiger
       ip4: 192.168.1.103
       mac: 7a:00:b6:aa:36:e5
