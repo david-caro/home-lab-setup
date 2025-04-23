@@ -40,7 +40,8 @@
         - podman
         - podman-docker
         - rvm
-        - protonvpn
+        - protonvpn-cli
+        - proton-vpn-gnome-desktop
       when:
         - not setup_done.stat.exists
 
