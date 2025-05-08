@@ -1,5 +1,5 @@
 ---
-- name: Setup all appliactions in the server
+- name: Setup all applications in the server
   hosts: all
   gather_facts: false
   become: true
@@ -17,5 +17,13 @@
       no_log: true
       tags:
         - prometheus
+
+    - name: "load atuin secrets"
+      include_vars:
+        file: "{{ secrets_repo_path }}/home_automation/atuin_creds.yml"
+        name: atuin_creds_config
+      no_log: true
+      tags:
+        - atuin
   roles:
     - app-server

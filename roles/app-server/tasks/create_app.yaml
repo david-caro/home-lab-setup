@@ -78,22 +78,27 @@
         - only_apps is not defined or current_app.name in only_apps
 
     - name: "Start app '{{ current_app.name }}'"
+      become: true
+      become_user: "{{ current_app.become_user | default('root') }}"
       tags:
         - podman
         - container
       when:
         - only_apps is not defined or current_app.name in only_apps
       containers.podman.podman_container:
-        name: "{{ current_app.name }}"
-        image: "{{ current_app.image }}"
-        state: started
-        privileged: "{{ current_app.privileged | default(false) }}"
-        ports: "{{ current_app.ports | default([]) }}"
         command: "{{ current_app.command | default(omit) }}"
-        restart_policy: "always"
+        device: "{{ current_app.device | default(omit) }}"
         entrypoint: "{{ current_app.entrypoint | default(omit) }}"
-        workdir: "{{ current_app.workdir | default(omit) }}"
         env: "{{ current_app.env | default({}) }}"
+        image: "{{ current_app.image }}"
+        name: "{{ current_app.name }}"
+        network: "{{ current_app.network | default(omit) }}"
+        ports: "{{ current_app.ports | default([]) }}"
+        privileged: "{{ current_app.privileged | default(false) }}"
+        restart_policy: "always"
+        state: started
+        userns: "{{ current_app.userns | default(omit) }}"
+        user: "{{ current_app.user | default(omit) }}"
         # file volumes at the end so they are mounted inside the other ones if
         # needed
         volumes: >-
@@ -106,4 +111,4 @@
             + current_app.file_volumes | default([])
             ) | to_podman_volumes
           }}
-        device: "{{ current_app.device | default(omit) }}"
+        workdir: "{{ current_app.workdir | default(omit) }}"

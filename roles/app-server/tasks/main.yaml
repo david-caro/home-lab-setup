@@ -11,6 +11,12 @@
     - rbd-nbd
   when: apps is defined
 
+- name: Got apps
+  tags:
+    - create-apps
+  ansible.builtin.debug:
+    msg: "Apps: {{ apps }}"
+
 - name: Create apps
   tags:
     - create-apps

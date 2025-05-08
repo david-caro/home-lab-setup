@@ -2,3 +2,90 @@
 ssh_bastion:
   remote_port: 32223
   local_port: 22
+
+apps:
+  - name: "atuin_postgresql"
+    image: "docker.io/library/postgres:14"
+    user: "root"
+    restart_policy: "unless-stopped"
+    rbd_volumes: []
+    file_volumes: []
+    nbd_volumes: []
+    simple_volumes:
+      - name: "database"
+        host_src: "/data/storage/atuin/database"
+        dest: "/var/lib/postgresql/data/"
+        mount_mode: "rw"
+    env:
+      POSTGRES_USER: "{{atuin_creds_config.atuin_db_user}}"
+      POSTGRES_PASSWORD: "{{atuin_creds_config.atuin_db_password}}"
+      POSTGRES_DB: "atuin"
+    ports:
+      - "5432:5432/tcp"
+  - name: "jellyfin"
+    image: "docker.io/jellyfin/jellyfin:latest"
+    user: "1001:1001"
+    restart_policy: "unless-stopped"
+    rbd_volumes: []
+    file_volumes: []
+    nbd_volumes: []
+    simple_volumes:
+      - name: "cache"
+        host_src: "/data/jellyfin/cache"
+        dest: "/cache"
+        mount_mode: "rw"
+      - name: "config"
+        host_src: "/data/jellyfin/config"
+        dest: "/config"
+        mount_mode: "rw"
+      - name: "web_config_file"
+        host_src: "/data/jellyfin/config.json"
+        dest: "/jellyfin/jellyfin-web/config.json"
+        mount_mode: "rw"
+      - name: "media"
+        host_src: "/data/storage"
+        dest: "/media"
+        mount_mode: "rw"
+    privileged: true
+    ports:
+      - "8096:8096/tcp"
+  - name: "atuin_server"
+    become_user: "dcaro"
+    image: "ghcr.io/atuinsh/atuin:latest"
+    userns: keep-id
+    # so it can access postgresql on the host
+    network: host
+    command: ["server", "start"]
+    entrypoint: atuin
+    env:
+      ATUIN_HOST: "0.0.0.0"
+      ATUIN_PORT: 8888
+      ATUIN_OPEN_REGISTRATION: false
+      ATUIN_DB_URI: "postgres://{{atuin_creds_config.atuin_db_user}}:{{atuin_creds_config.atuin_db_password}}@vulcanus:5432/atuin"
+    rbd_volumes: []
+    file_volumes: []
+    simple_volumes: []
+    nbd_volumes: []
+  - name: "gitea"
+    become_user: "dcaro"
+    image: "docker.gitea.com/gitea:latest"
+    user: "0:0"
+    userns: "keep-id:uid=1001,gid=1001"
+    rbd_volumes: []
+    file_volumes: []
+    nbd_volumes: []
+    simple_volumes:
+      - name: "gitea"
+        host_src: "/data/gitea"
+        dest: "/data/gitea"
+        mount_mode: "rw,z"
+      - name: "repos"
+        host_src: "/data/storage/repos"
+        dest: "/repos"
+        mount_mode: "rw,z"
+    workdir: "/data/gitea"
+    env:
+      HOME: "/data/gitea"
+    ports:
+      - "8097:3000/tcp"
+      - "2222:22/tcp"
