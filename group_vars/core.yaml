@@ -124,4 +124,4 @@ dhcpd_config:
       mac: ea:b5:67:fd:a7:4f
     - name: acme
       ip4: 192.168.1.107
-      mac: a6:25:a4:c6:7c:ad
+      mac: 9e:9c:af:c0:bf:fb
