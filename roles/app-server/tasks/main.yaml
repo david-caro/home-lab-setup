@@ -16,6 +16,7 @@
     - create-apps
   ansible.builtin.debug:
     msg: "Apps: {{ apps }}"
+  when: apps is defined
 
 - name: Create apps
   tags:
