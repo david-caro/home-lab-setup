@@ -1,13 +1,28 @@
 ---
+- name: Determine available groups
+  getent:
+    database: group
+
+- name: setup users (raspberry with i2c)
+  become: true
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: gpio,i2c,spi
+    append: true
+  loop: "{{ users }}"
+  when: >-
+    'i2c' in ansible_facts.getent_group
+
 - name: setup users (raspberry)
   become: true
   ansible.builtin.user:
     name: "{{ item.name }}"
-    groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi
+    groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev
     append: true
   loop: "{{ users }}"
   when: >-
     'raspberries' in group_names
+
 
 - name: setup users (other)
   become: true
