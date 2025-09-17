@@ -89,7 +89,11 @@ dns_config:
     - name: "blog.dinika.greyllama.cc"
       dest: "blog.dinika.github.io"
   forwarders:
+    # opendns
+    - 208.67.222.222
+    # cloudflare
     - 1.1.1.1
+    # google
     - 8.8.8.8
 
 dhcpd_config:
