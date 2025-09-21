@@ -27,7 +27,9 @@ log-facility local7;
 
 subnet 192.168.1.0 netmask 255.255.255.0 {
   interface eth0;
-  range 192.168.1.50 192.168.1.254;
+  range 192.168.1.50 192.168.1.91;
+  range 192.168.1.93 192.168.1.99;
+  range 192.168.1.110 192.168.1.254;
   option routers {{ dhcpd_config['gateway'] }};
 }
 
