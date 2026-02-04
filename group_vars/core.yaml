@@ -89,6 +89,8 @@ dns_config:
     - name: "blog.dinika.greyllama.cc"
       dest: "blog.dinika.github.io"
   forwarders:
+    # router
+    - 192.168.1.1
     # opendns
     - 208.67.222.222
     # cloudflare
