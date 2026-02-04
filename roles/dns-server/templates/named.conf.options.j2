@@ -18,6 +18,15 @@ options {
         recursion yes;
 	allow-query     { any; };
 
+    // keep cache useful (tune to your policy)
+    max-cache-ttl 3600;        // 1h
+    max-ncache-ttl 600;        // 10m (negative caching)
+    // optional: allow serving stale while revalidating
+    stale-answer-enable yes;
+
+    // if you have lots of repeated queries, prefetch helps
+    prefetch 2 9;
+
 	//========================================================================
 	// If BIND logs error messages about the root key being expired,
 	// you will need to update your keys.  See https://www.isc.org/bind-keys
