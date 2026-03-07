@@ -121,7 +121,7 @@ dhcpd_config:
       mac: 7a:00:b6:aa:36:e5
     - name: urcuchillay
       ip4: 192.168.1.104
-      mac: f6:d5:bc:cd:f8:36
+      mac: ca:23:48:51:db:78
     - name: punnypanda
       ip4: 192.168.1.105
       mac: 9c:b6:d0:bd:25:d3
