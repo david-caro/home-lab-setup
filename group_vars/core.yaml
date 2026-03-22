@@ -34,7 +34,7 @@ envoy_config:
         - dcaro.es
         - greyllama.cc
     - name: "homeassistant"
-      address: node2
+      address: 192.168.1.101
       port: 8123
       proto: http
       domains:

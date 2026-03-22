@@ -22,6 +22,7 @@ apps:
       POSTGRES_DB: "atuin"
     ports:
       - "5432:5432/tcp"
+
   - name: "jellyfin"
     image: "docker.io/jellyfin/jellyfin:latest"
     user: "1001:1001"
@@ -49,14 +50,15 @@ apps:
     privileged: true
     ports:
       - "8096:8096/tcp"
+
   - name: "atuin_server"
     become_user: "dcaro"
     image: "ghcr.io/atuinsh/atuin:latest"
     userns: keep-id
     # so it can access postgresql on the host
     network: host
-    command: ["server", "start"]
-    entrypoint: atuin
+    command: ["start"]
+    #entrypoint: atuin
     env:
       ATUIN_HOST: "0.0.0.0"
       ATUIN_PORT: 8888
@@ -66,6 +68,7 @@ apps:
     file_volumes: []
     simple_volumes: []
     nbd_volumes: []
+
   - name: "gitea"
     become_user: "dcaro"
     image: "docker.gitea.com/gitea:latest"
@@ -89,3 +92,28 @@ apps:
     ports:
       - "8097:3000/tcp"
       - "2222:22/tcp"
+
+  - name: "mosquitto"
+    image: "docker.io/library/eclipse-mosquitto"
+    simple_volumes:
+      - name: "mosquitto"
+        host_src: "/data/mosquitto"
+        dest: "/mosquitto/config"
+        #contents: "{{ secrets_repo_path }}/home-lab-secrets/home_automation/mosquitto"
+        mount_mode: "rw,z"
+    ports:
+      - "1883:1883/tcp"
+
+  - name: "homeassistant"
+    image: "docker.io/homeassistant/home-assistant:stable"
+    simple_volumes:
+      - name: "homeassistant"
+        host_src: /data/homeassistant
+        dest: "/config"
+        mount_mode: "rw,z"
+      - name: "Dbus"
+        host_src: "/var/run/dbus"
+        dest: "/run/dbus"
+        mount_mode: "ro"
+    ports:
+      - "8123:8123/tcp"

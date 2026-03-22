@@ -11,6 +11,8 @@
       tags:
         - certbot
         - envoy-proxy
+        - proxy
+        - envoy
         - ip-updater
 
   roles:
