@@ -18,7 +18,7 @@ apps:
     simple_volumes:
       - name: "zigbee2mqtt"
         #contents: "{{ secrets_repo_path }}/home_automation/zigbee2mqtt"
-        host_src: "/mnt/zigbee2mqtt"
+        host_src: "/mnt/zigbee2mqtt01"
         dest: "/app/data"
         mount_mode: "rw,z"
     #  nbd_volumes:
