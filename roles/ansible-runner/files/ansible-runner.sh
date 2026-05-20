@@ -15,7 +15,7 @@ init() {
    # bootstrap the setup
    [[ -d "$OPS_DIR" ]] || mkdir -p "$OPS_DIR"
    [[ -d "$SECRETS_DIR" ]] || {
-       git clone git@github.com:david-caro/home-lab-secrets.git "$SECRETS_DIR"
+       git clone git@git.greyllama.cc:Farting_lizards/home-lab-secrets.git "$SECRETS_DIR"
    }
    [[ -d "$SETUP_DIR" ]] || {
        git clone git@github.com:david-caro/home-lab-setup.git "$SETUP_DIR"
