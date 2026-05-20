@@ -128,7 +128,8 @@
       ansible.builtin.package:
         name:
           - "certbot"
-          - "python3-certbot-dns-ovh"
+          # not available at the moment :/
+          #- "python3-certbot-dns-ovh"
         state: present
 
     - name: "Add ovh creds"
