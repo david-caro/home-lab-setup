@@ -17,7 +17,6 @@ SUBDOMAINS = [
     "fr.ssh",
     "sudo",
     "znc",
-    "ceph",
     "media",
     "atuin",
     "skill-media",

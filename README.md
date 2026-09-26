@@ -164,25 +164,3 @@ with:
 > kubectl cluster-info
 ```
 
-## Install CEPH
-There's a few issues that we had to deal with when installing CEPH.
-Current setup uses cephadm with a custom image with all the bugs fixed/applied
-(until they are released/backported upstream).
-
-
-Just run the playbook:
-```
-> ansible-playbook plays/one-shot/install-ceph.yaml
-```
-
-That should trigger the whole installation setup, that cephadm will take over.
-It usually takes a few minutes for everything to get setup (pulling images,
-starting containers...), to check the progress you can login to one of the
-nodes and run:
-```
-node1> sudo cephadm shell -- ceph orch ps
-```
-And/or:
-```
-node1> sudo cephadm shell -- ceph orch ls
-```
