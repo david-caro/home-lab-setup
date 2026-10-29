@@ -40,14 +40,14 @@
         - podman
         - podman-docker
         - rvm
-        - protonvpn-cli
+        - proton-vpn-cli
         - proton-vpn-gnome-desktop
       when:
         - not setup_done.stat.exists
 
     - name: Install nvm
       ansible.builtin.shell: >
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | sudo -u {{ item }} bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | sudo -u {{ item }} bash
       args:
         creates: "/home/{{ item }}/.nvm/nvm.sh"
       loop:
