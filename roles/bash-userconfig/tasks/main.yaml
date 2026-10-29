@@ -1,5 +1,5 @@
 ---
-- name: "make sure bash dir {{bashrc_dir}} exists"
+- name: "make sure bash dir {{bash_libs_dir}} exists"
   ansible.builtin.file:
     state: directory
     mode: "0755"
