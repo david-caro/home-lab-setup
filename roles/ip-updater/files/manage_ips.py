@@ -9,7 +9,6 @@ import click
 
 SUBDOMAINS = [
     "emby",
-    "eopsin",
     "expenses",
     "grafana",
     "homeassistant",

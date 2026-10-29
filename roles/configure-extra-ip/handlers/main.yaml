@@ -1,5 +1,0 @@
----
-- name: Manually add extra IP
-  become: true
-  shell:
-    cmd: "ifup eth0:0"

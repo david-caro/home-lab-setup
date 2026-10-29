@@ -18,10 +18,3 @@
     line: "{{ desired_ipaddress }} {{ inventory_hostname }}"
     state: present
 
-- name: set hostname-k3s entry in /etc/hosts
-  become: true
-  lineinfile:
-    dest: /etc/hosts
-    line: "{{ desired_ipaddress }} {{ inventory_hostname }}-k3s"
-    state: present
-

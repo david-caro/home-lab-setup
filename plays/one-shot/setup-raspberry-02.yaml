@@ -7,5 +7,4 @@
     - disable-ssh-password
     - remove-pi-user
     - set-hosts
-      #- configure-extra-ip
     - activate-cgroup-support

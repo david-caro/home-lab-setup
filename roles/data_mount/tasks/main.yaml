@@ -9,7 +9,7 @@
 - name: "Add exports"
   become: true
   ansible.posix.mount:
-    src: eopsin:/data
+    src: vulcanus:/data
     path: /data
     opts: rw,sync,hard
     state: mounted

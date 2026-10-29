@@ -28,7 +28,7 @@ Now insert the card in the raspberry pi, and plug in:
 then turn it on, we are going to setup ssh so we can do everything else
 remotely.
 
-## Install the users, and preparation for k3s
+## Install the users
 Once the rpi boots up and gives you login:
 ```
 login: pi
@@ -57,9 +57,7 @@ And you will need also some galaxy modules:
 
 Then you'll have to run the setup pi using the playbook, first add the new host
 to the inventory, first to the `raspberries` group, with the current ip of the
-server, and then to the `cluster` and `k3servers` groups:
-
-If it's an k3s agent:
+server, and then to the `cluster`:
 ```
 # inventory.ini
 [raspberries]
@@ -73,11 +71,6 @@ node1
 node2
 + node3
 
-[k3servers]
-# there should be an odd number of hosts in this group
-node1
-node2
-+ node3
 ```
 
 Now we need to add a new host var file under `host_vars/node3.yaml` with the
@@ -109,14 +102,6 @@ That will update the hosts file on all the nodes, change some kernel setting,
 and finish up the basic installation.
 
 
-#### Upgrading to Debian 11
-As we want Debian 11 on the k3s nodes, we have to upgrade (until the Raspberry
-OS images are out), for that you havet to run setup 03, that might take a
-while though, so prepare some coffe or something:
-```
-> ansible-playbook plays/one-shot/setup-laptop-03.yaml
-```
-
 ### Refresh your laptop settings
 Now that we have the host set properly, we can update the inventory with the
 correct ip, and update our laptop hosts settings:
@@ -136,31 +121,3 @@ pass the `-K` flag to prompt for it:
 ```
 > ansible-playbook plays/one-shot/setup-laptop-01.yaml -K
 ```
-
-## Install k3s
-__NOTE__: this is still not working along with ceph, current setup prefers CEPH
-overs k3s so we installed CEPH only.
-Just run the playbook:
-```
-> ansible-playbook plays/one-shot/install-k3s.yaml
-```
-
-If you installed the server, you'll have to run the second part too, to get
-kubectl and the config from the server host:
-```
-> ansible-playbook plays/one-shot/setup-laptop-02.yaml
-```
-
-### Test that everything went ok
-
-You can now run, from your laptop:
-```
-> kubectl get pods --all-namespaces
-```
-
-And you should see a bunch of pods around :), you can check the cluster status
-with:
-```
-> kubectl cluster-info
-```
-

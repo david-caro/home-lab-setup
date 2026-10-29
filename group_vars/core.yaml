@@ -106,9 +106,6 @@ dhcpd_config:
     #- 1.1.1.1
     #- 8.8.8.8
   static-hosts:
-    - name: eopsin
-      ip4: 192.168.1.92
-      mac: 34:64:a9:9a:45:84
     - name: magnum
       ip4: 192.168.1.102
       mac: 28:7f:cf:95:c4:af
