@@ -1,6 +1,45 @@
 # home-lab-setup
 Scripts and code to setup and maintain my home lab
 
+## Helix and language servers
+
+The [Helix role](roles/helix/README.md) installs the editor and language servers
+separately for each selected user. Run it on a host in the `personal` inventory
+group with:
+
+```sh
+ansible-galaxy collection install community.general
+ansible-playbook plays/continuous/02-personal.yaml --tags helix --limit hephaestus -K
+```
+
+Replace `hephaestus` with the desired inventory host. Accounts must already
+exist. The role defaults to the repository's `users` list; set `helix_users`
+in host or group variables to select specific accounts:
+
+```yaml
+helix_users:
+  - name: dcaro
+```
+
+Commands are installed or linked in `~/bin`. Add it to PATH before launching
+Helix:
+
+```sh
+export PATH="$HOME/bin:$PATH"
+hx --health yaml
+```
+
+Packages and supporting files live under `~/.local/share/helix/`, including
+`node_lsps`, `cargo_lsps`, `go_lsps`, and the Python virtual environment.
+The role also deploys [config.toml](roles/helix/files/config.toml) and
+[languages.toml](roles/helix/files/languages.toml) to `~/.config/helix/`.
+
+Build tools and language runtimes must be installed beforehand. To have the
+role install its Fedora system dependencies with sudo, add
+`-e helix_install_system_dependencies=true` to the playbook command.
+See the [role documentation](roles/helix/README.md) for prerequisites,
+installation sources, architecture support, and reinstall instructions.
+
 # Install
 ## Install the basic OS
 Download the latest Raspberry Pi OS arm64 Lite image:

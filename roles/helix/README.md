@@ -8,6 +8,15 @@ exist. Home directories are read from passwd, including custom home paths.
 All executables are installed or linked in the selected user's `~/bin`.
 Add that directory to the user's PATH before launching `hx`.
 
+The personal playbook includes this role. To run only Helix setup:
+
+```sh
+ansible-galaxy collection install community.general
+ansible-playbook plays/continuous/02-personal.yaml --tags helix --limit hephaestus -K
+```
+
+Replace the host name as needed. To use the role in another playbook:
+
 ```yaml
 - hosts: personal
   roles:
@@ -29,9 +38,10 @@ with root privileges. Override `helix_system_packages` for other distributions.
 
 Installation locations:
 
-- Helix and clangd: release archives under `~/.local/share/helix/`, with
+- Helix, clangd, and harper-ls: release archives under `~/.local/share/helix/`, with
   executable links in `~/bin`. Helix's bundled runtime is linked at
-  `~/.config/helix/runtime`.
+  `~/.config/helix/runtime`. Harper uses an upstream prebuilt release instead
+  of compiling harper-core.
 - rust-analyzer: release binary under `~/.local/share/helix/`, linked in `~/bin`.
 - npm servers: prefix `~/.local/share/helix/node_lsps`, placing packages in
   its `lib/node_modules` directory and linking its commands into `~/bin`.
@@ -75,4 +85,18 @@ The role copies `files/languages.toml` to each selected user's
 and Markdown. The configuration uses Zathura for LaTeX forward search;
 install Zathura separately if needed. The role also copies `files/config.toml`
 to `~/.config/helix/config.toml`, enabling the `dark_high_contrast` theme,
-soft wrapping, and the custom status line.
+soft wrapping, and the custom status line. Changes to these deployed files
+are overwritten by the next role run; edit the role's source files to keep
+configuration changes.
+
+After installation, ensure `~/bin` is on PATH and check server availability:
+
+```sh
+export PATH="$HOME/bin:$PATH"
+hx --health yaml
+hx --health markdown
+```
+
+These checks confirm that executables and editor support files are available;
+they do not verify that a language server stays running. Restart Helix after
+rerunning the role to use updated tools and configuration.

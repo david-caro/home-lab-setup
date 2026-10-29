@@ -48,7 +48,6 @@ helix_cargo_packages:
     binary: markdown-oxide
     git: https://github.com/Feel-ix-343/markdown-oxide.git
   - { package: texlab, binary: texlab }  # languages.toml calls this texlab-lsp
-  - { package: harper-ls, binary: harper-ls }
   - { package: systemd-lsp, binary: systemd-lsp }
   - { package: taplo-cli, binary: taplo }
 
@@ -66,6 +65,10 @@ helix_rust_analyzer_url: "https://github.com/rust-lang/rust-analyzer/releases/la
 
 # Upstream clangd Linux releases support x86_64; override this list for other builds.
 helix_release_packages:
+  - name: harper-ls
+    repository: Automattic/harper
+    asset_pattern: "^harper-ls-{{ ansible_architecture }}-unknown-linux-gnu\\.tar\\.gz$"
+    binary: harper-ls
   - name: helix
     repository: helix-editor/helix
     asset_pattern: "^helix-.*-{{ ansible_architecture }}-linux\\.tar\\.xz$"

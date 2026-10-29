@@ -25,6 +25,24 @@
       loop_control:
         loop_var: "repo"
 
+    # DNF5 may skip updated signing subkeys when the primary key already exists.
+    # Import the current key directly, as recommended by Google.
+    - name: Download the current Google Linux signing key
+      ansible.builtin.get_url:
+        url: https://dl.google.com/linux/linux_signing_key.pub
+        dest: /etc/pki/rpm-gpg/google-linux-signing-key.pub
+        mode: "0644"
+        force: true
+      register: google_signing_key
+
+    - name: Refresh Google Linux signing subkeys in RPM
+      ansible.builtin.command:
+        argv:
+          - rpm
+          - --import
+          - /etc/pki/rpm-gpg/google-linux-signing-key.pub
+      changed_when: google_signing_key.changed
+
     - name: "Install dnf packages"
       ansible.builtin.package:
         name: "{{ item }}"
@@ -34,7 +52,7 @@
         - gh
         - python3-virtualenv
         - gvim
-        - google-chrome
+        - google-chrome-stable
         - cmake
         - gcc
         - podman
@@ -42,8 +60,6 @@
         - rvm
         - proton-vpn-cli
         - proton-vpn-gnome-desktop
-      when:
-        - not setup_done.stat.exists
 
     - name: Install nvm
       ansible.builtin.shell: >

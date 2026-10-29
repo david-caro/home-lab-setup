@@ -21,7 +21,7 @@
     - config.toml
     - languages.toml
 
-- name: Install Helix and clangd release archives
+- name: Install Helix and language server release archives
   ansible.builtin.include_tasks: release.yaml
   loop: "{{ helix_release_packages }}"
   loop_control:

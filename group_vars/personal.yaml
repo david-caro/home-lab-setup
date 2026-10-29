@@ -14,7 +14,7 @@ repos:
   - name: github
     description: packages for the GitHub CLI
     baseurl: https://cli.github.com/packages/rpm
-    gpgkey: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x23F3D4EA75716059
+    gpgkey: https://cli.github.com/packages/githubcli-archive-keyring.asc
   - name: protonvpn
     description: Proton VPN
     baseurl: https://repo.protonvpn.com/fedora-$releasever-stable
