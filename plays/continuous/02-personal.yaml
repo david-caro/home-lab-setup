@@ -13,5 +13,7 @@
       tags: coding
     - role: syncthing
       tags: syncthing
+    - role: helix
+      hags: helix
     # - role: dotfiles
     #   tags: dotfiles

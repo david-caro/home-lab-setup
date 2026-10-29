@@ -1,0 +1,40 @@
+---
+- name: Setup Helix and language servers
+  tags:
+    - helix
+    - coding
+  block:
+    - name: Determine the connection user without privilege escalation
+      ansible.builtin.command: id -un
+      become: false
+      register: helix_connection_user
+      changed_when: false
+      check_mode: false
+
+    - name: Install optional system build and runtime dependencies
+      become: true
+      ansible.builtin.package:
+        name: "{{ helix_system_packages }}"
+        state: present
+      when: helix_install_system_dependencies | bool
+
+    - name: Look up installation users and their home directories
+      ansible.builtin.getent:
+        database: passwd
+      become: false
+
+    - name: Install Helix tools for each user
+      ansible.builtin.include_tasks:
+        file: user.yaml
+        apply:
+          become: "{{ helix_user.name != helix_connection_user.stdout }}"
+          become_user: "{{ helix_user.name }}"
+          environment:
+            HOME: "{{ helix_home }}"
+            PATH: "{{ helix_home }}/bin:{{ helix_home }}/.cargo/bin:/usr/local/bin:/usr/bin:/bin"
+      vars:
+        helix_home: "{{ getent_passwd[helix_user.name][4] }}"
+      loop: "{{ helix_users }}"
+      loop_control:
+        loop_var: helix_user
+        label: "{{ helix_user.name }}"

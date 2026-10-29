@@ -1,0 +1,178 @@
+---
+- name: Create user installation directories
+  ansible.builtin.file:
+    path: "{{ helix_home }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - bin
+    - .local/share/helix
+    - .local/share/helix/node_lsps/bin
+    - .local/share/helix/cargo_lsps/bin
+    - .local/share/helix/go_lsps/bin
+    - .config/helix
+
+- name: Install user Helix configuration
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ helix_home }}/.config/helix/{{ item }}"
+    mode: "0644"
+  loop:
+    - config.toml
+    - languages.toml
+
+- name: Install Helix and clangd release archives
+  ansible.builtin.include_tasks: release.yaml
+  loop: "{{ helix_release_packages }}"
+  loop_control:
+    loop_var: helix_release
+
+- name: Download rust-analyzer
+  ansible.builtin.get_url:
+    url: "{{ helix_rust_analyzer_url }}"
+    dest: "{{ helix_home }}/.local/share/helix/rust-analyzer.gz"
+    mode: "0644"
+    force: false
+
+- name: Decompress rust-analyzer
+  ansible.builtin.command:
+    argv:
+      - gzip
+      - -dk
+      - "{{ helix_home }}/.local/share/helix/rust-analyzer.gz"
+    creates: "{{ helix_home }}/.local/share/helix/rust-analyzer"
+
+- name: Make rust-analyzer executable
+  ansible.builtin.file:
+    path: "{{ helix_home }}/.local/share/helix/rust-analyzer"
+    mode: "0755"
+
+- name: Expose rust-analyzer in the user binary directory
+  ansible.builtin.file:
+    src: "{{ helix_home }}/.local/share/helix/rust-analyzer"
+    dest: "{{ helix_home }}/bin/rust-analyzer"
+    state: link
+
+- name: Install Node language servers
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+    state: present
+  loop: "{{ helix_npm_packages }}"
+  environment:
+    npm_config_prefix: "{{ helix_home }}/.local/share/helix/node_lsps"
+
+- name: Find installed Node language server commands
+  ansible.builtin.find:
+    paths: "{{ helix_home }}/.local/share/helix/node_lsps/bin"
+    file_type: link
+    excludes: ansible-language-server
+  register: helix_node_commands
+
+- name: Expose Node language server commands in the user binary directory
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ helix_home }}/bin/{{ item.path | basename }}"
+    state: link
+  loop: "{{ helix_node_commands.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+
+- name: Install Python language servers in an isolated environment
+  ansible.builtin.pip:
+    name: "{{ helix_python_packages }}"
+    virtualenv: "{{ helix_home }}/.local/share/helix/python"
+    virtualenv_command: python3 -m venv
+    state: present
+
+- name: Expose Python language servers on PATH
+  ansible.builtin.file:
+    src: "{{ helix_home }}/.local/share/helix/python/bin/{{ item }}"
+    dest: "{{ helix_home }}/bin/{{ item }}"
+    state: link
+  loop:
+    - ansible
+    - ansible-config
+    - ansible-doc
+    - ansible-inventory
+    - ansible-playbook
+    - ansible-lint
+    - yamllint
+    - djlsp
+    - ty
+    - ruff
+    - pylsp
+
+- name: Launch Ansible language server with its Python dependencies on PATH
+  ansible.builtin.copy:
+    dest: "{{ helix_home }}/bin/ansible-language-server"
+    mode: "0755"
+    follow: false
+    content: |
+      #!/bin/sh
+      export PATH={{ (helix_home + '/.local/share/helix/python/bin') | quote }}:"$PATH"
+      exec {{ (helix_home + '/.local/share/helix/node_lsps/bin/ansible-language-server') | quote }} "$@"
+
+- name: Install Rust language servers
+  ansible.builtin.command:
+    argv: >-
+      {{ ['cargo', 'install', '--locked', '--root',
+          helix_home + '/.local/share/helix/cargo_lsps']
+         + (['--git', item.git] if item.git is defined else [])
+         + [item.package] }}
+    creates: "{{ helix_home }}/.local/share/helix/cargo_lsps/bin/{{ item.binary }}"
+  loop: "{{ helix_cargo_packages }}"
+
+- name: Expose Rust language servers in the user binary directory
+  ansible.builtin.file:
+    src: "{{ helix_home }}/.local/share/helix/cargo_lsps/bin/{{ item.binary }}"
+    dest: "{{ helix_home }}/bin/{{ item.binary }}"
+    state: link
+    force: true
+  loop: "{{ helix_cargo_packages }}"
+
+- name: Install Go language servers
+  ansible.builtin.command:
+    argv:
+      - go
+      - install
+      - "{{ item.package }}"
+    creates: "{{ helix_home }}/.local/share/helix/go_lsps/bin/{{ item.binary }}"
+  environment:
+    GOBIN: "{{ helix_home }}/.local/share/helix/go_lsps/bin"
+    GOTOOLCHAIN: "{{ helix_go_toolchain }}"
+  loop: "{{ helix_go_packages }}"
+
+- name: Expose Go language servers in the user binary directory
+  ansible.builtin.file:
+    src: "{{ helix_home }}/.local/share/helix/go_lsps/bin/{{ item.binary }}"
+    dest: "{{ helix_home }}/bin/{{ item.binary }}"
+    state: link
+    force: true
+  loop: "{{ helix_go_packages }}"
+
+- name: Expose Helm language server under its Helix command name
+  ansible.builtin.file:
+    src: "{{ helix_home }}/bin/helm-ls"
+    dest: "{{ helix_home }}/bin/helm_ls"
+    state: link
+
+- name: Install Ruby language server
+  ansible.builtin.command:
+    argv:
+      - gem
+      - install
+      - --norc
+      - --user-install
+      - --bindir
+      - "{{ helix_home }}/bin"
+      - --no-document
+      - ruby-lsp
+    creates: "{{ helix_home }}/bin/ruby-lsp"
+
+- name: Download Marksman
+  ansible.builtin.get_url:
+    url: "{{ helix_marksman_url }}"
+    dest: "{{ helix_home }}/bin/marksman"
+    mode: "0755"
+    force: false

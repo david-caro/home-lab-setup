@@ -1,0 +1,77 @@
+---
+helix_users: "{{ users | default([{'name': helix_connection_user.stdout}]) }}"
+helix_install_system_dependencies: false
+helix_go_toolchain: auto
+
+# Fedora package names, matching the coding role's target distribution.
+helix_system_packages:
+  - cargo
+  - gcc
+  - gcc-c++
+  - make
+  - pkgconf-pkg-config
+  - openssl-devel
+  - golang
+  - nodejs
+  - npm
+  - python3
+  - python3-pip
+  - ruby
+  - ruby-devel
+  - tar
+  - xz
+  - unzip
+  - gzip
+
+helix_npm_packages:
+  - bash-language-server
+  - dockerfile-language-server-nodejs  # docker-langserver
+  - yaml-language-server
+  - vscode-langservers-extracted  # vscode-html-language-server and vscode-json-language-server
+  - intelephense
+  - typescript
+  - typescript-language-server
+  - "@vue/language-server"  # vue-language-server
+  - "@ansible/ansible-language-server"
+
+helix_python_packages:
+  - ansible-core
+  - ansible-lint
+  - yamllint
+  - django-template-lsp  # djlsp
+  - ty
+  - ruff
+  - python-lsp-server  # pylsp
+
+helix_cargo_packages:
+  - package: markdown-oxide
+    binary: markdown-oxide
+    git: https://github.com/Feel-ix-343/markdown-oxide.git
+  - { package: texlab, binary: texlab }  # languages.toml calls this texlab-lsp
+  - { package: harper-ls, binary: harper-ls }
+  - { package: systemd-lsp, binary: systemd-lsp }
+  - { package: taplo-cli, binary: taplo }
+
+helix_go_packages:
+  - { package: "golang.org/x/tools/gopls@latest", binary: gopls }
+  - { package: "github.com/hashicorp/terraform-ls@latest", binary: terraform-ls }
+  - { package: "github.com/mrjosh/helm-ls@latest", binary: helm-ls }
+
+helix_marksman_architectures:
+  x86_64: x64
+  aarch64: arm64
+helix_marksman_url: "https://github.com/artempyanykh/marksman/releases/latest/download/marksman-linux-{{ helix_marksman_architectures[ansible_architecture] }}"
+
+helix_rust_analyzer_url: "https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-{{ ansible_architecture }}-unknown-linux-gnu.gz"
+
+# Upstream clangd Linux releases support x86_64; override this list for other builds.
+helix_release_packages:
+  - name: helix
+    repository: helix-editor/helix
+    asset_pattern: "^helix-.*-{{ ansible_architecture }}-linux\\.tar\\.xz$"
+    binary: hx
+  - name: clangd
+    repository: clangd/clangd
+    asset_pattern: "^clangd-linux-.*\\.zip$"
+    binary: clangd
+    architecture: x86_64

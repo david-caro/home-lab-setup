@@ -1,6 +1,8 @@
 ---
 routers: 192.168.1.1
 bash_libs_dir: .bash
+helix_users:
+  - name: dcaro
 users:
   - name: dcaro
     ssh_public_keys:

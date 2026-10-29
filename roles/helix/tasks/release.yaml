@@ -1,0 +1,69 @@
+---
+- name: Check whether the release binary is installed
+  ansible.builtin.stat:
+    path: "{{ helix_home }}/bin/{{ helix_release.binary }}"
+  register: helix_release_binary
+
+- name: Install missing release binary
+  when: not helix_release_binary.stat.exists
+  block:
+    - name: Check release architecture support
+      ansible.builtin.assert:
+        that:
+          - helix_release.architecture | default(ansible_architecture) == ansible_architecture
+        fail_msg: "Override helix_release_packages with a {{ ansible_architecture }} build of {{ helix_release.name }}."
+
+    - name: Look up the latest release
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/{{ helix_release.repository }}/releases/latest"
+        return_content: true
+      register: helix_release_metadata
+      check_mode: false
+
+    - name: Select the release archive
+      ansible.builtin.set_fact:
+        helix_release_assets: "{{ helix_release_metadata.json.assets | selectattr('name', 'match', helix_release.asset_pattern) | list }}"
+
+    - name: Verify that exactly one archive matches
+      ansible.builtin.assert:
+        that:
+          - helix_release_assets | length == 1
+        fail_msg: "No unique release asset matches {{ helix_release.asset_pattern }}."
+
+    - name: Create the release installation directory
+      ansible.builtin.file:
+        path: "{{ helix_home }}/.local/share/helix/{{ helix_release.name }}"
+        state: directory
+        mode: "0755"
+
+    - name: Extract the release archive
+      ansible.builtin.unarchive:
+        src: "{{ helix_release_assets[0].browser_download_url }}"
+        dest: "{{ helix_home }}/.local/share/helix/{{ helix_release.name }}"
+        remote_src: true
+
+    - name: Locate the release executable
+      ansible.builtin.find:
+        paths: "{{ helix_home }}/.local/share/helix/{{ helix_release.name }}"
+        patterns: "{{ helix_release.binary }}"
+        recurse: true
+        file_type: file
+      register: helix_release_executable
+
+    - name: Verify the release contains one executable
+      ansible.builtin.assert:
+        that:
+          - helix_release_executable.matched == 1
+
+    - name: Expose the release executable in the user binary directory
+      ansible.builtin.file:
+        src: "{{ helix_release_executable.files[0].path }}"
+        dest: "{{ helix_home }}/bin/{{ helix_release.binary }}"
+        state: link
+
+    - name: Expose the bundled Helix runtime
+      ansible.builtin.file:
+        src: "{{ helix_release_executable.files[0].path | dirname }}/runtime"
+        dest: "{{ helix_home }}/.config/helix/runtime"
+        state: link
+      when: helix_release.name == 'helix'

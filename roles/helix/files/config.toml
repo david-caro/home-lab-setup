@@ -1,0 +1,23 @@
+theme="dark_high_contrast"
+
+[editor]
+soft-wrap.enable=true
+whitespace.render="all"
+
+[editor.file-picker]
+hidden = false
+
+[editor.statusline]
+left = [
+  "mode",
+  "spinner",
+  "file-absolute-path",
+  "file-modification-indicator",
+  "read-only-indicator",
+  "version-control",
+]
+
+
+[keys.normal]
+# always force-save
+"space"."s" = [":w!", "keep_primary_selection"]

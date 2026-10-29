@@ -1,0 +1,76 @@
+[language-server.harper-ls]
+# spelling
+command = "harper-ls"
+args = ["--stdio"]
+config = { harper-ls = { diagnosticSeverity = "error", linters = { long_sentences = false } } }
+
+[language-server.texlab-lsp]
+# LaTeX
+command = "texlab"
+args = []
+
+[language-server.texlab-lsp.config.texlab.chktex]
+onOpenAndSave = true
+onEdit = true
+
+[language-server.texlab-lsp.config.texlab.forwardSearch]
+executable = "zathura"
+args = [ "--synctex-forward", "%l:%c:%f", "%p" ]
+
+[language-server.texlab-lsp.config.texlab.build]
+# auxDirectory = "build"
+# logDirectory = "build"
+# pdfDirectory = "build"
+
+forwardSearchAfter = true
+onSave = true
+
+
+# executable = "tectonic"
+# args = [
+#  "-X",
+#  "compile",
+#  "--synctex",
+#  "--keep-logs",
+#  "--keep-intermediates",
+#  "--outdir=build",
+#  "%f",
+#  ]
+
+[[language]]
+name = "latex"
+language-servers = ["texlab-lsp"]
+
+[[language]]
+name = "git-commit"
+language-servers =["harper-ls" ]
+
+[[language]]
+name = "markdown"
+language-servers = ["marksman", "markdown-oxide", "harper-ls"]
+file-types = ["md"]
+
+
+[[language]]
+name = "python"
+auto-format = true
+
+[[language]]
+name = "bash"
+indent = { tab-width = 4, unit = "    " }
+language-servers = ["bash-language-server", "harper-ls"]
+formatter = { command = "shfmt", args = ["-i", "4"] }
+auto-format = true
+file-types = ["sh", "bash", "bats"]
+
+
+[[language]]
+name = "mail"
+scope = "source.mail"
+file-types = ["mail", "eml", { glob = "/var/tmp/mutt*" }]
+#injection-regex = "mutt|mail|eml|email"
+soft-wrap.enable = true
+# text-width = 80 < this is the default
+soft-wrap.wrap-at-text-width = true
+formatter = { command = "mailfmt" }
+auto-format = true
