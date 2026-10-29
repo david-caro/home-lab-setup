@@ -6,9 +6,6 @@
     name: "{{ item }}"
   with_items:
     - btrfs-progs
-    # current debian 11 kernel for raspberry has no rbd module in it, so we use
-    # the nbd client
-    - rbd-nbd
   when: apps is defined
 
 - name: Got apps

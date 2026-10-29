@@ -3,15 +3,15 @@ desired_ipaddress: 192.168.1.24
 apps:
   - name: "grafana"
     image: "docker.io/grafana/grafana:latest"
-    rbd_volumes:
-      - name: "grafana_data01"
-        size: "1GB"
-        dest: "/var/lib/grafana"
-        mount_mode: "rw"
-      - name: "grafana_logs01"
-        size: "50MB"
-        dest: "/var/log/grafana"
-        mount_mode: "rw"
+    # rbd_volumes:
+    #   - name: "grafana_data01"
+    #     size: "1GB"
+    #     dest: "/var/lib/grafana"
+    #     mount_mode: "rw"
+    #   - name: "grafana_logs01"
+    #     size: "50MB"
+    #     dest: "/var/log/grafana"
+    #     mount_mode: "rw"
     file_volumes:
       - name: "Grafana config"
         host_src: "/mnt/grafana.ini"
@@ -28,7 +28,14 @@ apps:
         host_src: "/etc/localtime"
         dest: "/etc/localtime"
         mount_mode: "ro"
-    nbd_volumes: []
+      - name: "grafana_data01"
+        host_src: "/mnt/grafana_data01"
+        dest: "/var/lib/grafana"
+        mount_mode: "rw"
+      - name: "grafana_logs01"
+        host_src: "/mnt/grafana_logs01"
+        dest: "/var/log/grafana"
+        mount_mode: "rw"
     ports:
       - "18443:18443/tcp"
   - name: "prometheus"
@@ -39,13 +46,12 @@ apps:
       - "--web.console.libraries=/usr/share/prometheus/console_libraries"
       - "--web.console.templates=/usr/share/prometheus/consoles"
       - "--storage.tsdb.retention.size=15GB"
-    nbd_volumes: []
-    rbd_volumes:
-      - name: "prometheus_data01"
-        size: "10GB"
-        dest: "/prometheus"
-        mount_mode: "rw"
-        contents: "{{ secrets_repo_path }}/prometheus"
+    # rbd_volumes:
+    #   - name: "prometheus_data01"
+    #     size: "10GB"
+    #     dest: "/prometheus"
+    #     mount_mode: "rw"
+    #     contents: "{{ secrets_repo_path }}/prometheus"
     nfs_volumes: []
     file_volumes:
       - name: "Prometheus config"
@@ -69,33 +75,44 @@ apps:
         host_src: "/etc/localtime"
         dest: "/etc/localtime"
         mount_mode: "ro"
+      - name: "prometheus_data01"
+        host_src: "/mnt/prometheus_data01"
+        dest: "/prometheus"
+        mount_mode: "rw"
+        contents: "{{ secrets_repo_path }}/prometheus"
     ports:
       - "9090:9090/tcp"
   - name: "expenses_db"
     image: "docker.io/arm64v8/mariadb:latest"
-    rbd_volumes:
-      - name: "expenses_db"
-        size: "1GB"
-        dest: "/var/lib/mysql"
-        mount_mode: "rw"
+    # rbd_volumes:
+    #   - name: "expenses_db"
+    #     size: "1GB"
+    #     dest: "/var/lib/mysql"
+    #     mount_mode: "rw"
     nfs_volumes: []
     file_volumes: []
-    simple_volumes: []
-    nbd_volumes: []
+    simple_volumes:
+      - name: "expenses_db"
+        host_src: "/mnt/expenses_db"
+        dest: "/var/lib/mysql"
+        mount_mode: "rw"
     ports:
       - "3306:3306/tcp"
 
   - name: "expenses_postgres"
     image: "docker.io/postgres:latest"
-    rbd_volumes:
-      - name: "expenses_postgres"
-        size: "1GB"
-        dest: "/var/lib/postgresql/data"
-        mount_mode: "rw"
+    # rbd_volumes:
+    #   - name: "expenses_postgres"
+    #     size: "1GB"
+    #     dest: "/var/lib/postgresql/data"
+    #     mount_mode: "rw"
     nfs_volumes: []
     file_volumes: []
-    simple_volumes: []
-    nbd_volumes: []
+    simple_volumes:
+      - name: "expenses_postgres"
+        host_src: "/mnt/expenses_postgres"
+        dest: "/var/lib/postgresql/data"
+        mount_mode: "rw"
     ports:
       - "5432:5432/tcp"
     env:
@@ -109,7 +126,6 @@ apps:
     nfs_volumes: []
     file_volumes: []
     simple_volumes: []
-    nbd_volumes: []
     env:
       DB_URL: "postgresql://{{expenses_db_config.DB_USERNAME}}:{{expenses_db_config.DB_PASSWORD}}@{{expenses_db_config.DB_HOST}}:/expenses"
     ports:
@@ -133,7 +149,6 @@ apps:
         mount_mode: "ro"
         local_src: "{{ secrets_repo_path }}/home_automation/expenses/expenses_nginx.conf"
     simple_volumes: []
-    nbd_volumes: []
     ports:
       - "8080:80/tcp"
 
@@ -143,7 +158,6 @@ apps:
     nfs_volumes: []
     file_volumes: []
     simple_volumes: []
-    nbd_volumes: []
     env: {}
     ports:
       - "8082:7777/tcp"
